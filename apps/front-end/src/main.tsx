@@ -1,8 +1,8 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import Header from './Components/header/header';
-import Footer from './Components/footer/footer';
+import Header from './components/header/header';
+import Footer from './components/footer/footer';
 
 
 const root = ReactDOM.createRoot(
