@@ -12,7 +12,7 @@ export class CreateUserDto {
   @IsNotEmpty({
     message: 'Username cannot be empty',
   })
-  username: string;
+  usuario: string;
 
   @IsEmail()
   @IsNotEmpty({
