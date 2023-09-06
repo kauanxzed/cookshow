@@ -87,7 +87,7 @@ const SearchBar: React.FC = () => {
       <div className="w-full">
         <div className="flex flex-wrap items-center border-2 border-orange-500 rounded-lg p-1 md:p-2">
           <span
-            className="text-lg mr-1 md:mr-2"
+            className="text-lg mr-1 md:mr-2 "
             aria-label="magnifying glass"
             role="img"
           >
@@ -101,7 +101,7 @@ const SearchBar: React.FC = () => {
               <span>{chip}</span>
               <button
                 onClick={() => handleRemoveChip(index)}
-                className="ml-1 md:ml-2 text-white"
+                className="ml-1 relative bottom-0.5 md:ml-2 text-white"
               >
                 x
               </button>
