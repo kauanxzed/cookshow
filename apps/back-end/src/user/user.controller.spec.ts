@@ -39,8 +39,10 @@ describe('UserController', () => {
       const userEntityMock = {...userMock} as UserEntity;
       jest.spyOn(userService, 'create').mockResolvedValueOnce(userEntityMock);
       //Act
-      
+      const result = await userController.create(userMock)
       //Assert
+      expect(result).toBeDefined();
+      expect(result).toHaveBeenCalledTimes(1);
     })
   })
 });
