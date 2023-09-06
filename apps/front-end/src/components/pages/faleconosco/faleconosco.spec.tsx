@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Header from './header';
+import Faleconosco from './faleconosco';
 
-describe('Header', () => {
+describe('Faleconosco', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Header />);
+    const { baseElement } = render(<Faleconosco />);
     expect(baseElement).toBeTruthy();
   });
 });
