@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-
+import { UserModule } from '../user/user.module';
+import { UserEntity } from '../user/entities/user.entity';
 
 @Module({
   imports: [
+    UserModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -14,10 +15,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: process.env.DB_NAME,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      entities: [], 
-    })
+      entities: [],
+      logging: true,
+    }),
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
