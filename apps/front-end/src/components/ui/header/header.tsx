@@ -7,13 +7,13 @@ function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="bg-white text-black p-5">
-      <div className="container mx-auto">
-        <div className="flex justify-between items-center">
+    <div className="bg-white text-black p-5 shadow-md">
+      <div className="container mx-auto ">
+        <div className="flex justify-between items-center ">
           <Link to="/">
             <h1 className="text-3xl md:text-4xl font-bold font-orelega">
-              <span className="text-orange-500">Cook</span>
-              <span className="text-black">Show</span>
+              <span className="text-orange-500 ">COOK</span>
+              <span className="text-black  ">SHOW</span>
             </h1>
           </Link>
           {/* Menu mobile (visível apenas em telas pequenas) */}
@@ -64,23 +64,23 @@ function Header() {
           </div>
           {/* Menu para desktop (visível apenas em telas maiores) */}
           <div className="hidden md:flex">
-            <a href="!#" className="mx-3 text-center">
-              <Link to="/perfil">
-                <UserIcon className="h-5 w-5 md:h-8 md:w-8 mx-auto mb-1 text-orange-500" />
-              </Link>
-              Perfil
+            <a
+              href="/perfil"
+              className="mx-14 text-center text-xl hover:text-orange-600 "
+            >
+              PERFIL
             </a>
-            <a href="!#" className="mx-3 text-center">
-              <Link to="/favoritos">
-                <StarIcon className="h-5 w-5 md:h-8 md:w-8 mx-auto mb-1 text-orange-500" />
-              </Link>
-              Favoritos
+            <a
+              href="/favoritos"
+              className="mx-14 text-center text-xl hover:text-orange-600 "
+            >
+              FAVORITOS
             </a>
-            <a href="!#" className="mx-3 text-center">
-              <Link to="/sair">
-                <LogoutIcon className="h-5 w-5 md:h-8 md:w-8 mx-auto mb-1 text-orange-500" />
-              </Link>
-              Sair
+            <a
+              href="/sair"
+              className="mx-14 text-center text-xl hover:text-orange-600 "
+            >
+              SAIR
             </a>
           </div>
         </div>
