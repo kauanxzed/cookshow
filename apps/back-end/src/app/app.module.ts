@@ -16,7 +16,7 @@ import { readFileSync } from 'fs';
       database: process.env.DB_NAME,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      entities: [],
+      entities: [UserEntity],
       logging: true,
       ssl: {
         rejectUnauthorized: false,

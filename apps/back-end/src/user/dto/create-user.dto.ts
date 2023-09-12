@@ -15,13 +15,17 @@ export class CreateUserDto {
   usuario: string;
 
   @IsEmail()
-  @IsNotEmpty({
-    message: 'Email cannot be empty',
-  })
+  @IsNotEmpty()
   email: string;
 
   @IsStrongPassword(
-    {},
+    {
+      minLength: 6,
+      minLowercase: 1,
+      minNumbers: 1,
+      minSymbols: 1,
+      minUppercase: 1,
+    },
     {
       message: 'Password not strong enough',
     }
