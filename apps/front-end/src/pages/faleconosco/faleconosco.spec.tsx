@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import Footer from './footer';
+import Faleconosco from './faleconosco';
 
-describe('Footer', () => {
+describe('Faleconosco', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Footer />);
+    const { baseElement } = render(<Faleconosco />);
     expect(baseElement).toBeTruthy();
   });
 });
