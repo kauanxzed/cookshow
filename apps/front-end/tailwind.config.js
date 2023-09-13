@@ -12,6 +12,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        orelega: ['Orelega One', 'cursive'],
+      },
       colors: {
         orange: {
           500: '#ff8c00',

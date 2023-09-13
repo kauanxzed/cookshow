@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { GrFacebook } from 'react-icons/gr';
-import Logo from '../../Imagens/images.jpg';
+import Logo from '../../assets/images/background.png';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -31,17 +31,17 @@ function LoginForm() {
           className="object-cover w-full h-full"
         />
       </div>
-      <div className="lg:w-1/3 flex flex-col items-start mt-14 ml-9 lg:ml-20 lg:mt-0 lg:px-6 h-full">
-        <div className="flex flex-col items-start lg:items-start w-full lg:h-full justify-center space-y-6 lg:space-y-3 py-6 lg:py-0 lg:pt-0 lg:mb-20">
+      <div className="lg:w-1/3 flex flex-col items-start mt-14 ml-9 lg:items-start lg:justify-center lg:mt-0 lg:px-6 h-full md:w-1/2 sm:w-full sm:mt-6 sm:ml-6">
+        <div className="flex flex-col items-start lg:items-start w-full lg:h-full justify-center space-y-6 py-6 lg:py-0 lg:pt-0 lg:mb-20">
           <h1 className="text-3xl mb-9 font-bold text-orange-400 font-orelega lg:mt-0 lg:mb-6 lg:self-center">
-            <span className="text-3xl mb-9 ml-24 font-bold text-orange-400 lg:ml-0  lg:hidden">
+            <span className="text-3xl mb-9 ml-20 font-bold text-orange-400 lg:ml-0 lg:hidden">
               COOK
             </span>
-            <span className="text-3xl mb-9 font-bold text-black  lg:hidden">
+            <span className="text-3xl mb-9 font-bold text-black lg:hidden">
               SHOW
             </span>
           </h1>
-          <p className="text-3xl mb-5  font-bold text-orange-400 ">
+          <p className="text-3xl mb-5 font-bold text-orange-400">
             Bem <br /> vindo!
           </p>
           <div className="mb-4 w-80">
@@ -77,7 +77,7 @@ function LoginForm() {
             >
               Login
             </button>
-            <button className="p-2 bg-gray-800 mt-5 text-white rounded-lg w-36 ">
+            <button className="p-2 bg-gray-800 mt-5 text-white rounded-lg w-36 hover:bg-gray-700">
               Cadastre-se
             </button>
           </div>
@@ -97,7 +97,7 @@ function LoginForm() {
           </div>
           <div className="flex ml-1 mt-12 flex-col space-y-4 mb-4 w-80">
             <button className="flex  items-center p-4 border-2 border-gray-700 bg-white text-black rounded-md w-full hover:bg-gray-300 ">
-              <FcGoogle size={20} className="mr-2 ml-12 " />
+              <FcGoogle size={20} className="mr-1 ml-12 " />
               Continue com Google
             </button>
             <button className="flex items-center p-4 border-2 border-gray-700 text-black rounded-md w-full hover:bg-gray-300">
