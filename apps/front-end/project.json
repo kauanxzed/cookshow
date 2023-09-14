@@ -68,6 +68,7 @@
         "lintFilePatterns": ["apps/front-end/**/*.{ts,tsx,js,jsx}"]
       }
     },
+
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {
