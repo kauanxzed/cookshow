@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { GrFacebook } from 'react-icons/gr';
 import Logo from '../../assets/images/background.png';
+import { Link } from 'react-router-dom';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -77,9 +78,11 @@ function LoginForm() {
             >
               Login
             </button>
-            <button className="p-2 bg-gray-800 mt-5 text-white rounded-lg w-36 hover:bg-gray-700">
-              Cadastre-se
-            </button>
+            <Link to="/register">
+              <button className="p-2 bg-gray-800 mt-5 text-white rounded-lg w-36 hover:bg-gray-700">
+                Cadastre-se
+              </button>
+            </Link>
           </div>
           <div className="flex space-x-4 mb-4 w-80 justify-between">
             <div className="flex items-center">

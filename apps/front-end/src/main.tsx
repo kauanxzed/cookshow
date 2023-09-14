@@ -5,6 +5,7 @@ import Perfil from '../src/pages/login/login';
 import ReactDOM from 'react-dom/client';
 import FaleConosco from './pages/faleconosco/faleconosco';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Register from '../src/pages/register/register';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -23,6 +24,7 @@ root.render(
         }
       />
       <Route path="/perfil" element={<Perfil />} />
+      <Route path="/register" element={<Register />} />
       <Route
         path="/"
         element={
