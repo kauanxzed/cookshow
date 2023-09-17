@@ -24,7 +24,7 @@ export class UserEntity {
   senha: string;
 
   @Column({ name: 'foto_perfil', nullable: true })
-  foto_perfil: string;
+  foto_perfil?: string;
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
@@ -32,9 +32,9 @@ export class UserEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updated_at: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deleted_at: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deleted_at?: Date;
 
   @OneToMany(() => RecipeEntity, (recipe) => recipe.user)
-  receitas: RecipeEntity[];
+  receitas?: RecipeEntity[];
 }

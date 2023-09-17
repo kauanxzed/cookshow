@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -14,14 +15,15 @@ export class RecipeEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.receitas)
+  @ManyToOne(() => UserEntity)
+  @JoinColumn({ name: 'id_usuario' })
   user: UserEntity;
 
   @Column({ name: 'titulo', nullable: false })
   titulo: string;
 
-  @Column({ name: 'subtitulo' })
-  subtitulo: string;
+  @Column({ name: 'subtitulo', nullable: true })
+  subtitulo?: string;
 
   @Column({ name: 'descricao', nullable: false })
   descricao: string;
@@ -32,7 +34,7 @@ export class RecipeEntity {
   @Column({ name: 'dificuldade', nullable: false })
   dificuldade: string;
 
-  @Column({ name: 'calorias' })
+  @Column({ name: 'calorias', nullable: false }) // propriedade não tem que estar na entity
   calorias: number;
 
   @Column({ name: 'imagem', nullable: false })
@@ -44,6 +46,6 @@ export class RecipeEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updated_at: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
-  deleted_at: Date;
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deleted_at?: Date;
 }

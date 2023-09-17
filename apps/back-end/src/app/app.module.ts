@@ -4,10 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../user/user.module';
 import { UserEntity } from '../user/entities/user.entity';
 import { readFileSync } from 'fs';
+import { RecipeModule } from '../recipe/recipe.module';
+import { RecipeEntity } from '../recipe/entities/recipe.entity';
 
 @Module({
   imports: [
     UserModule,
+    RecipeModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -16,7 +19,7 @@ import { readFileSync } from 'fs';
       database: process.env.DB_NAME,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      entities: [UserEntity],
+      entities: [UserEntity, RecipeEntity],
       logging: true,
       ssl: {
         rejectUnauthorized: false,

@@ -5,6 +5,7 @@ import {
   IsStrongPassword,
   IsUrl,
   MinLength,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateUserDto {
@@ -39,5 +40,6 @@ export class CreateUserDto {
   senha: string;
 
   @IsUrl()
+  @IsOptional()
   foto_perfil?: string;
 }
