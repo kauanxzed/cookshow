@@ -37,11 +37,11 @@ describe('RecipeService', () => {
       ],
     }).compile();
 
-    userService = module.get<UserService>(UserService);
     recipeService = module.get<RecipeService>(RecipeService);
     recipeRepository = module.get<Repository<RecipeEntity>>(
       getRepositoryToken(RecipeEntity)
     );
+    userService = module.get<UserService>(UserService);
     userRepository = module.get<Repository<UserEntity>>(
       getRepositoryToken(UserEntity)
     );
@@ -53,6 +53,7 @@ describe('RecipeService', () => {
     expect(recipeService).toBeDefined();
     expect(recipeRepository).toBeDefined();
   });
+
   const recipeMock = {
     id: '1',
     titulo: 'titulo',
