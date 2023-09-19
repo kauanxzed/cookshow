@@ -20,19 +20,12 @@ export class UserService {
     return await this.userRepository.save(createdUser);
   }
 
-  findAll() {
-    return `This action returns all user`;
-  }
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    const foundedUser = await this.userRepository
+      .createQueryBuilder('usuario')
+      .where('usuario.email = :email', { email })
+      .getOne();
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    return foundedUser;
   }
 }

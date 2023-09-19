@@ -16,5 +16,6 @@ import { SharedUtilServerImpl } from '@cook-show/shared/util-server';
     },
     UserService,
   ],
+  exports: [UserModule],
 })
 export class UserModule {}
