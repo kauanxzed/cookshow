@@ -2,7 +2,7 @@
   "root": true,
   "ignorePatterns": ["**/*"],
   "plugins": ["@nx"],
-  "overrides": [
+  "overrides": [ 
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
