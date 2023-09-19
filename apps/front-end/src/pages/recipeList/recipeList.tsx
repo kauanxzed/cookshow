@@ -1,6 +1,13 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import alimentos from './alimentos';
 import bgRecipeList from "../../assets/images/bgRecipeList.png"
+import Recipe from './recipe';
+import prato1 from "../../assets/images/prato1.png"
+import prato2 from "../../assets/images/prato2.png"
+import prato3 from "../../assets/images/prato3.png"
+import prato4 from "../../assets/images/prato4.png"
+import prato5 from "../../assets/images/prato5.png"
+import prato6 from "../../assets/images/prato6.png"
 
 const recipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
@@ -31,12 +38,12 @@ const recipeList: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-full max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto justify-start items-center space-y-2 p-4 sm:p-8 mt-8 md:mt-4 lg:mt-0">
-      <div className="w-full bg-[url('/apps/front-end/src/assets/images/bgRecipeList.png')]" >
+    <div className="flex flex-col max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto items-center space-y-2">
+      <div className="w-screen flex items-center justify-center p-8 bg-cover bg-center" style={{ backgroundImage: `url(${bgRecipeList})`, width: 'calc(100vw - 16px)' }}>
         <div
           className={`flex flex-wrap items-center border-2 ${
             isInputFocused ? 'border-orange-500' : 'border-gray-300'
-          } rounded-lg p-1 md:p-2`}
+          } rounded-lg p-1 md:p-2 w-1/2 bg-white`}
         >
           <span
             className="text-lg mr-1 md:mr-2"
@@ -63,11 +70,12 @@ const recipeList: React.FC = () => {
                 stroke-dashoffset="0"
                 font-family="none"
                 font-weight="none"
+                
                 font-size="none"
                 text-anchor="none"
               >
                 <g transform="scale(5.33333,5.33333)">
-                  <path d="M20.5,6c-7.99037,0 -14.5,6.50964 -14.5,14.5c0,7.99036 6.50963,14.5 14.5,14.5c3.45636,0 6.63371,-1.22096 9.12891,-3.25l9.81055,9.81055c0.37623,0.39185 0.9349,0.54969 1.46055,0.41265c0.52565,-0.13704 0.93616,-0.54754 1.07319,-1.07319c0.13704,-0.52565 -0.0208,-1.08432 -0.41265,-1.46055l-9.81055,-9.81055c2.02904,-2.4952 3.25,-5.67255 3.25,-9.12891c0,-7.99036 -6.50963,-14.5 -14.5,-14.5zM20.5,9c6.36905,0 11.5,5.13096 11.5,11.5c0,3.10261 -1.2238,5.90572 -3.20898,7.9707c-0.12237,0.08994 -0.23037,0.19794 -0.32031,0.32031c-2.06499,1.98518 -4.86809,3.20898 -7.9707,3.20898c-6.36905,0 -11.5,-5.13096 -11.5,-11.5c0,-6.36904 5.13095,-11.5 11.5,-11.5z"></path>
+                  <path  d="M20.5,6c-7.99037,0 -14.5,6.50964 -14.5,14.5c0,7.99036 6.50963,14.5 14.5,14.5c3.45636,0 6.63371,-1.22096 9.12891,-3.25l9.81055,9.81055c0.37623,0.39185 0.9349,0.54969 1.46055,0.41265c0.52565,-0.13704 0.93616,-0.54754 1.07319,-1.07319c0.13704,-0.52565 -0.0208,-1.08432 -0.41265,-1.46055l-9.81055,-9.81055c2.02904,-2.4952 3.25,-5.67255 3.25,-9.12891c0,-7.99036 -6.50963,-14.5 -14.5,-14.5zM20.5,9c6.36905,0 11.5,5.13096 11.5,11.5c0,3.10261 -1.2238,5.90572 -3.20898,7.9707c-0.12237,0.08994 -0.23037,0.19794 -0.32031,0.32031c-2.06499,1.98518 -4.86809,3.20898 -7.9707,3.20898c-6.36905,0 -11.5,-5.13096 -11.5,-11.5c0,-6.36904 5.13095,-11.5 11.5,-11.5z"></path>
                 </g>
               </g>
             </svg>
@@ -97,6 +105,15 @@ const recipeList: React.FC = () => {
             className="p-1 flex-1 min-w-0 focus:outline-none"
           />
         </div>
+      </div>
+      <div className="w-full h-screen flex flex-wrap">
+        <Recipe image = {prato1} imageAlt='foto representando o prato Pizza margherita' title='pizza marGherIta' category='ITALIANO' owner='fabiana' time='0h50min' 
+        description='"Receita de pizza Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"'/>
+        <Recipe image = {prato2} imageAlt='foto representando o prato' title='teste2' category='teste2' owner='teste2' time='2' description='test'/>
+        <Recipe image = {prato3} imageAlt='foto representando o prato' title='teste3' category='teste3' owner='teste3' time='3' description='teste3'/>
+        <Recipe image = {prato4} imageAlt='foto representando o prato' title='teste4' category='teste4' owner='teste4' time='4' description='teste4'/>
+        <Recipe image = {prato5} imageAlt='foto representando o prato' title='teste5' category='teste5' owner='teste5' time='5' description='teste5'/>
+        <Recipe image = {prato6} imageAlt='foto representando o prato' title='teste6' category='teste6' owner='teste6' time='6' description='teste6'/>
       </div>
     </div>
   );

@@ -2,3 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 /* You can add global styles to this file, and also import other style files */
+
+.text-color-orange {
+    color: #9C4B00
+}
+
+.text-color-gray {
+    color: #999999
+}
