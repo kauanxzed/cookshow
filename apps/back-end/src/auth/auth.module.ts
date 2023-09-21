@@ -3,6 +3,10 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
+import {
+  SharedUtilServer,
+  SharedUtilServerImpl,
+} from '@cook-show/shared/util-server';
 
 @Module({
   imports: [
@@ -14,7 +18,13 @@ import { UserModule } from '../user/user.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    {
+      provide: SharedUtilServer,
+      useClass: SharedUtilServerImpl,
+    },
+  ],
   exports: [AuthModule],
 })
 export class AuthModule {}
