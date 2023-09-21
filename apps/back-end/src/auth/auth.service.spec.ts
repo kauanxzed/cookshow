@@ -35,7 +35,12 @@ describe('AuthService', () => {
             findByEmail: jest.fn(),
           },
         },
-        JwtService,
+        {
+          provide: JwtService,
+          useValue: {
+            signAsync: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
