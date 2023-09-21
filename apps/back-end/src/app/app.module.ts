@@ -4,12 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../user/user.module';
 import { UserEntity } from '../user/entities/user.entity';
 import { readFileSync } from 'fs';
+import { AuthModule } from '../auth/auth.module';
 import { IngredientModule } from '../ingredient/ingredient.module';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
 
 @Module({
   imports: [
     UserModule,
+    AuthModule,
     IngredientModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
