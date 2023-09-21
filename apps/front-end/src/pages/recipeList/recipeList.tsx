@@ -8,6 +8,9 @@ import prato3 from "../../assets/images/prato3.png"
 import prato4 from "../../assets/images/prato4.png"
 import prato5 from "../../assets/images/prato5.png"
 import prato6 from "../../assets/images/prato6.png"
+import person1 from "../../assets/images/person1.png"
+import person2 from "../../assets/images/person2.png"
+import person3 from "../../assets/images/person3.png"
 
 const recipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
@@ -106,14 +109,42 @@ const recipeList: React.FC = () => {
           />
         </div>
       </div>
-      <div className="w-full h-screen flex flex-wrap">
+      <div className="w-full h-full flex flex-wrap">
         <Recipe image = {prato1} imageAlt='foto representando o prato Pizza margherita' title='pizza marGherIta' category='ITALIANO' owner='fabiana' time='0h50min' 
-        description='"Receita de pizza Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"'/>
-        <Recipe image = {prato2} imageAlt='foto representando o prato' title='teste2' category='teste2' owner='teste2' time='2' description='test'/>
-        <Recipe image = {prato3} imageAlt='foto representando o prato' title='teste3' category='teste3' owner='teste3' time='3' description='teste3'/>
-        <Recipe image = {prato4} imageAlt='foto representando o prato' title='teste4' category='teste4' owner='teste4' time='4' description='teste4'/>
-        <Recipe image = {prato5} imageAlt='foto representando o prato' title='teste5' category='teste5' owner='teste5' time='5' description='teste5'/>
-        <Recipe image = {prato6} imageAlt='foto representando o prato' title='teste6' category='teste6' owner='teste6' time='6' description='teste6'/>
+        description='"Receita de pizza Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"' 
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {50} />
+
+        <Recipe image = {prato2} imageAlt='foto representando o prato Sopa de Rámen' title='Sopa de Rámen' category='CHINÊS' owner='Yuri' time='1h30min' 
+        description='Diferente e delicioso!'
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {42} />
+
+        <Recipe image = {prato3} imageAlt='foto representando o prato shakshuka' title='shakshuka' category='ORIENTE MÉDIO' owner='Thiago' time='0h05min' 
+        description='Rápido e sofisticado.' 
+        person1 = {person1} person2 = {person2} person3 = {person3}moreLikes = {90} />
+
+        <Recipe image = {prato4} imageAlt='foto representando o prato Torta de carne com ovo' title='Torta de carne com ovo' category='GREGO' owner='Marcela' time='1h10min' 
+        description='Diferente e delicioso!' 
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {26} />
+
+        <Recipe image = {prato5} imageAlt='foto representando o prato Picadinho' title='Picadinho' category='BRASILEIRO' owner='Rafa' time='2h00min' 
+        description='Típico prato brasileiro!' 
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {26} />
+
+        <Recipe image = {prato6} imageAlt='foto representando o prato Carne de panela desfiada' title='Carne de panela desfiada' category='CHINÊS' owner='Yuri' time='1h30min'
+         description='Diferente e delicioso!' 
+         person1 = {person1} person2 = {person2} />
+
+        <Recipe image = {prato4} imageAlt='foto representando o prato Torta de carne com ovo' title='Torta de carne com ovo' category='GREGO' owner='Marcela' time='1h10min' 
+        description='Diferente e delicioso!' 
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {26} />
+
+        <Recipe image = {prato5} imageAlt='foto representando o prato Picadinho' title='Picadinho' category='BRASILEIRO' owner='Rafa' time='2h00min' 
+        description='Típico prato brasileiro!'
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {26} />
+
+        <Recipe image = {prato6} imageAlt='foto representando o prato Carne de panela desfiada' title='Carne de panela desfiada' category='CHINÊS' owner='Yuri' time='1h30min' 
+        description='Diferente e delicioso!'
+        person1 = {person1} person2 = {person2} />
       </div>
     </div>
   );
