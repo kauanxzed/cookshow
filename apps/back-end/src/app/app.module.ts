@@ -4,10 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from '../user/user.module';
 import { UserEntity } from '../user/entities/user.entity';
 import { readFileSync } from 'fs';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
     UserModule,
+    AuthModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',

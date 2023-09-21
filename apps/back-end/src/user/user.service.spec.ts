@@ -45,7 +45,7 @@ describe('UserService', () => {
     it('Should create a user', async () => {
       //Arange
       const userMock = {
-        username: 'test',
+        usuario: 'test',
         email: 'teste@teste.com',
         senha: '123',
         foto_perfil: 'https://google.com',
