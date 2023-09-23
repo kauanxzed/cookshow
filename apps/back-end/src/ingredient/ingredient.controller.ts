@@ -1,15 +1,6 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
-import { UpdateIngredientDto } from './dto/update-ingredient.dto';
 
 @Controller('ingredient')
 export class IngredientController {
@@ -20,26 +11,13 @@ export class IngredientController {
     return this.ingredientService.create(createIngredientDto);
   }
 
+  @Get(':name')
+  async findByName(@Param('name') name: string) {
+    return await this.ingredientService.findByName(name);
+  }
+
   @Get()
-  findAll() {
-    return this.ingredientService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ingredientService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateIngredientDto: UpdateIngredientDto
-  ) {
-    return this.ingredientService.update(+id, updateIngredientDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ingredientService.remove(+id);
+  async findAll() {
+    return await this.ingredientService.findAll();
   }
 }

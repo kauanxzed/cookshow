@@ -15,19 +15,19 @@ export class IngredientEntity {
   @Column({ name: 'nome' })
   nome: string;
 
-  @Column({ name: 'calorias' })
+  @Column({ name: 'calorias', type: 'numeric', precision: 5, scale: 2 })
   calorias: number;
 
-  @Column({ name: 'carboidratos' })
+  @Column({ name: 'carboidratos', type: 'numeric', precision: 5, scale: 2 })
   carboidratos: number;
 
-  @Column({ name: 'proteinas' })
+  @Column({ name: 'proteinas', type: 'numeric', precision: 5, scale: 2 })
   proteinas: number;
 
-  @Column({ name: 'gordura' })
+  @Column({ name: 'gordura', type: 'numeric', precision: 5, scale: 2 })
   gordura: number;
 
-  @Column({ name: 'porcao' })
+  @Column({ name: 'porcao', type: 'numeric', precision: 5, scale: 2 })
   porcao: number;
 
   @CreateDateColumn({ name: 'created_at' })
