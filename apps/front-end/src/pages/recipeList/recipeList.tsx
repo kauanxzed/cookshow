@@ -41,8 +41,8 @@ const recipeList: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto items-center space-y-2">
-      <div className="w-screen flex items-center justify-center p-8 bg-cover bg-center" style={{ backgroundImage: `url(${bgRecipeList})`, width: 'calc(100vw - 16px)' }}>
+    <div className="flex flex-col w-full md:max-w-2xl lg:max-w-4xl mx-auto items-center space-y-2">
+      <div className="w-screen flex items-center justify-center p-8 bg-cover bg-center" style={{ backgroundImage: `url(${bgRecipeList})` }}>
         <div
           className={`flex flex-wrap items-center border-2 ${
             isInputFocused ? 'border-orange-500' : 'border-gray-300'
@@ -112,27 +112,27 @@ const recipeList: React.FC = () => {
       <div className="w-full h-full flex flex-wrap">
         <Recipe image = {prato1} imageAlt='foto representando o prato Pizza margherita' title='pizza marGherIta' category='ITALIANO' owner='fabiana' hours={0} minutes={50} 
         description='"Receita de PIZZA Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"' 
-        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {50} id='teste1'/>
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {50} id='teste1' rating={4.8} />
 
         <Recipe image = {prato2} imageAlt='foto representando o prato Sopa de Rámen' title='Sopa de Rámen' category='CHINÊS' owner='Yuri' hours={1} minutes={30} 
         description='Diferente e delicioso!'
-        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {42} id='teste2'/>
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {42} id='teste2' rating={4.4} />
 
         <Recipe image = {prato3} imageAlt='foto representando o prato shakshuka' title='shakshuka' category='ORIENTE MÉDIO' owner='Thiago' hours={0} minutes={5} 
         description='Rápido e sofisticado.' 
-        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {90} id='teste3'/>
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {90} id='teste3' rating={4.9} />
 
         <Recipe image = {prato4} imageAlt='foto representando o prato Torta de carne com ovo' title='Torta de carne com ovo' category='GREGO' owner='Marcela' hours={1} minutes={10} 
         description='Diferente e delicioso!' 
-        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {26} id='teste4'/>
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {26} id='teste4' rating={4.7} />
 
         <Recipe image = {prato5} imageAlt='foto representando o prato Picadinho' title='Picadinho' category='BRASILEIRO' owner='Rafa' hours={2} minutes={0} 
         description='Típico prato brasileiro!' 
-        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {26} id='teste5'/>
+        person1 = {person1} person2 = {person2} person3 = {person3} moreLikes = {26} id='teste5' rating={4.8} />
 
         <Recipe image = {prato6} imageAlt='foto representando o prato Carne de panela desfiada' title='Carne de panela desfiada' category='CHINÊS' owner='Yuri' hours={1} minutes={30} 
          description='Diferente e delicioso!' 
-         person1 = {person1} person2 = {person2} id='teste6'/>
+         person1 = {person1} person2 = {person2} id='teste6' rating={4.1}/>
       </div>
     </div>
   );
