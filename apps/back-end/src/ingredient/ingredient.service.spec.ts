@@ -297,12 +297,22 @@ describe('IngredientService', () => {
       jest
         .spyOn(ingredientService, 'findById')
         .mockResolvedValueOnce(ingredientEntity);
-      jest.spyOn(ingredientRepository, 'create').mockReturnValueOnce();
+      jest
+        .spyOn(ingredientRepository, 'create')
+        .mockReturnValueOnce(updatedIngredient);
+      jest.spyOn(ingredientRepository, 'update').mockResolvedValueOnce({
+        raw: [],
+        affected: 1,
+        generatedMaps: [],
+      });
       // Act
       await ingredientService.update(1, updateIngredientDto);
       // Assert
-      expect(ingredientRepository.save).toBeCalledTimes(1);
-      expect(ingredientRepository.save).toHaveBeenCalledWith(ingredientEntity);
+      expect(ingredientRepository.create).toBeCalledTimes(1);
+      expect(ingredientRepository.update).toHaveBeenCalledWith(
+        updatedIngredient.id,
+        updatedIngredient
+      );
     });
 
     it('should not update an ingredient', async () => {
@@ -313,10 +323,64 @@ describe('IngredientService', () => {
         .mockResolvedValueOnce(ingredientEntity);
       // Act
       await expect(
-        ingredientService.update(1, createIngredientDto)
+        ingredientService.update(1, updatedIngredient)
       ).rejects.toThrowError('Ingrediente não encontrado');
       // Assert
       expect(ingredientRepository.save).toBeCalledTimes(0);
+    });
+  });
+
+  describe('Delete', () => {
+    let ingredientEntity: IngredientEntity;
+
+    beforeEach(async () => {
+      ingredientEntity = {
+        id: 1,
+        nome: 'Arroz',
+        calorias: 130,
+        carboidratos: 28,
+        proteinas: 2.7,
+        gordura: 0.3,
+        porcao: 100,
+        created_at: new Date(),
+        updated_at: new Date(),
+      } as IngredientEntity;
+    });
+
+    it('should delete an ingredient', async () => {
+      // Arrange
+      jest.spyOn(ingredientRepository, 'delete').mockResolvedValueOnce({
+        raw: [],
+        affected: 1,
+      });
+      jest
+        .spyOn(ingredientService, 'findById')
+        .mockResolvedValueOnce(ingredientEntity);
+      jest.spyOn(ingredientRepository, 'update').mockResolvedValueOnce({
+        raw: [],
+        affected: 1,
+        generatedMaps: [],
+      });
+      // Act
+      await ingredientService.delete(1);
+      // Assert
+      expect(ingredientRepository.update).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not delete an ingredient', async () => {
+      // Arrange
+      jest.spyOn(ingredientService, 'findById').mockResolvedValueOnce(null);
+      jest.spyOn(ingredientRepository, 'update').mockResolvedValueOnce({
+        raw: [],
+        affected: 0,
+        generatedMaps: [],
+      });
+      // Act
+      await expect(ingredientService.delete(1)).rejects.toThrowError(
+        'Ingrediente não encontrado'
+      );
+      // Assert
+      expect(ingredientRepository.update).toHaveBeenCalledTimes(0);
     });
   });
 });

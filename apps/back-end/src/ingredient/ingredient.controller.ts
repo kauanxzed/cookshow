@@ -1,6 +1,15 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { IngredientService } from './ingredient.service';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
+import { UpdateIngredientDto } from './dto/update-ingredient.dto';
 
 @Controller('ingredient')
 export class IngredientController {
@@ -19,5 +28,18 @@ export class IngredientController {
   @Get()
   async findAll() {
     return await this.ingredientService.findAll();
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: number,
+    @Body() updateIngredientDto: UpdateIngredientDto
+  ) {
+    return await this.ingredientService.update(id, updateIngredientDto);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    return await this.ingredientService.delete(id);
   }
 }

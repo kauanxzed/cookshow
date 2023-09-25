@@ -37,6 +37,16 @@ export class IngredientService {
     await this.ingredientRepository.update(id, ingredient);
   }
 
+  async delete(id: number): Promise<void> {
+    const foundIngredient = await this.findById(id);
+
+    if (!foundIngredient) {
+      throw new BadRequestException('Ingrediente não encontrado');
+    }
+
+    await this.ingredientRepository.update(id, { deleted_at: new Date() });
+  }
+
   async findByName(name: string): Promise<IngredientEntity | null> {
     const foundIngredient = await this.ingredientRepository
       .createQueryBuilder('ingredientes')
