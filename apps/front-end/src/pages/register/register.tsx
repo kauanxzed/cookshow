@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Logo from '../../assets/images/background.png';
+
 import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
@@ -68,7 +68,7 @@ function LoginForm() {
   return (
     <div className="flex overflow-hidden lg:flex-row h-screen">
       <div className="hidden lg:flex lg:w-2/3">
-        <img src={Logo} alt="Logo" className="object-cover w-full h-full" />
+        <img  alt="Logo" className="object-cover w-full h-full" />
       </div>
       <div className="lg:w-1/3 flex flex-col items-start mt-14 ml-9 lg:items-start lg:justify-center lg:mt-0 lg:px-6 h-full scale-[0.85] md:w-1/2 sm:w-full sm:mt-6 sm:ml-6">
         <div className="flex flex-col items-start lg:items-start w-full lg:h-full justify-center space-y-4 py-6 lg:py-0 lg:pt-0 lg:mb-20">
