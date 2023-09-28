@@ -27,4 +27,13 @@ export class UserService {
 
     return foundedUser;
   }
+
+  async findById(id: string): Promise<UserEntity | null> {
+    const foundUser = await this.userRepository
+      .createQueryBuilder('usuario')
+      .where('usuario.id = :id', { id })
+      .getOne();
+
+    return foundUser;
+  }
 }

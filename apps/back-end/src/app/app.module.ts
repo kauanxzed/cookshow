@@ -7,12 +7,15 @@ import { readFileSync } from 'fs';
 import { AuthModule } from '../auth/auth.module';
 import { IngredientModule } from '../ingredient/ingredient.module';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
+import { RecipeModule } from '../recipe/recipe.module';
+import { RecipeEntity } from '../recipe/entities/recipe.entity';
 
 @Module({
   imports: [
     UserModule,
     AuthModule,
     IngredientModule,
+    RecipeModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -21,7 +24,7 @@ import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
       database: process.env.DB_NAME,
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      entities: [UserEntity, IngredientEntity],
+      entities: [UserEntity, RecipeEntity, IngredientEntity],
       logging: true,
       ssl: {
         rejectUnauthorized: false,
