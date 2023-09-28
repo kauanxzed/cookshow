@@ -38,12 +38,19 @@ describe('UserController', () => {
         senha: '123',
         foto_perfil: 'https://google.com',
       };
-      const userEntityMock = { ...userMock } as UserEntity;
+      const userEntityMock = {
+        ...userMock,
+        id: '1',
+        created_at: new Date(),
+        updated_at: new Date(),
+      } as UserEntity;
+
       jest.spyOn(userService, 'create').mockResolvedValueOnce(userEntityMock);
       //Act
       const result = await userController.create(userMock);
       //Assert
       expect(result).toBeDefined();
+      expect(userService.create).toHaveBeenCalledTimes(1);
     });
   });
 });
