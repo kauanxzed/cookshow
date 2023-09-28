@@ -10,7 +10,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private sharedUtilServer: SharedUtilServer
+    private readonly sharedUtilServer: SharedUtilServer
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
