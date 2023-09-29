@@ -33,7 +33,4 @@ export class UserEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deleted_at?: Date;
-
-  @OneToMany(() => RecipeEntity, (recipe) => recipe.user)
-  receitas?: RecipeEntity[];
 }
