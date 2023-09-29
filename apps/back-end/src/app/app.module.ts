@@ -19,11 +19,7 @@ import { RecipeEntity } from '../recipe/entities/recipe.entity';
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      database: process.env.DB_NAME,
-      username: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
+      url: 'postgresql://doadmin:AVNS_u7JP2b6pyh878E8w61I@db-postgresql-nyc1-36951-do-user-14647314-0.b.db.ondigitalocean.com:25060/defaultdb?statusColor=686B6F&env=development&name=DigitalOcean&tLSMode=2&usePrivateKey=false&safeModeLevel=0&advancedSafeModeLevel=0&driverVersion=0',
       entities: [UserEntity, RecipeEntity, IngredientEntity],
       logging: true,
       ssl: {

@@ -7,10 +7,12 @@ import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { SharedUtilServer } from '@cook-show/shared/util-server';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/entities/user.entity';
+import { IngredientService } from '../ingredient/ingredient.service';
 
 describe('RecipeService', () => {
   let recipeService: RecipeService;
   let userService: UserService;
+  let ingredientService: IngredientService;
   let recipeRepository: Repository<RecipeEntity>;
   let userRepository: Repository<UserEntity>;
 
@@ -34,6 +36,7 @@ describe('RecipeService', () => {
           provide: getRepositoryToken(RecipeEntity),
           useClass: Repository,
         },
+        IngredientService,
       ],
     }).compile();
 
@@ -45,6 +48,7 @@ describe('RecipeService', () => {
     userRepository = module.get<Repository<UserEntity>>(
       getRepositoryToken(UserEntity)
     );
+    ingredientService = module.get<IngredientService>(IngredientService);
   });
 
   it('should be defined', () => {
@@ -52,6 +56,7 @@ describe('RecipeService', () => {
     expect(userRepository).toBeDefined();
     expect(recipeService).toBeDefined();
     expect(recipeRepository).toBeDefined();
+    expect(ingredientService).toBeDefined();
   });
 
   const recipeMock = {
@@ -133,6 +138,22 @@ describe('RecipeService', () => {
       const result = await recipeService.findByTitle(title);
       //Assert
       expect(result).toEqual(recipeMock);
+    });
+  });
+
+  describe('Add ingredient to recipe', () => {
+    it('should add an ingredient to a recipe', async () => {
+      //Arrange
+      const recipeId = '1';
+      const ingredientId = 1;
+      //Act
+      const result = await recipeService.addRecipeIngredient(
+        recipeId,
+        ingredientId
+      );
+      //Assert
+      expect(result).toEqual(recipeMock);
+      expect(recipeRepository.save).toBeCalledWith(recipeMock);
     });
   });
 });
