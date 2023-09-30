@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from '../user/user.service';
 import { UserEntity } from '../user/entities/user.entity';
 import { IngredientService } from '../ingredient/ingredient.service';
+import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
 
 @Injectable()
 export class RecipeService {
@@ -16,6 +17,8 @@ export class RecipeService {
     private readonly ingredientService: IngredientService,
     @Inject(UserService)
     private readonly userService: UserService,
+    @InjectRepository(RecipeIngredientEntity)
+    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
   ) {}
 
   async create(createRecipeDto: CreateRecipeDto): Promise<RecipeEntity> {
@@ -59,18 +62,24 @@ export class RecipeService {
   async addRecipeIngredient(
     recipeId: string,
     ingredientId: number,
+    ingredientPortion: number,
   ): Promise<void> {
     const recipe = await this.findById(recipeId);
     if (!recipe) {
       throw new BadRequestException('Recipe not found');
     }
 
-    const ingredient = await this.ingredientService.findById(ingredientId);
+    /*const ingredient = await this.ingredientService.findById(ingredientId);
     if (!ingredient) {
       throw new BadRequestException('Ingredient not found');
     }
 
-    recipe.ingredients.push(ingredient);
-    await this.recipeRepository.save(recipe);
+    const recipeIngredient = this.recipeIngredientRepository.create({
+      recipe: recipe,
+      ingredient: ingredient,
+      portion: ingredientPortion,
+    });*/
+
+    //await this.recipeIngredientRepository.save(recipeIngredient);
   }
 }

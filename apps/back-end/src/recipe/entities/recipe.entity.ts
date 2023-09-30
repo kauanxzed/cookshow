@@ -10,7 +10,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
-import { IngredientEntity } from '../../ingredient/entities/ingredient.entity';
+import { RecipeIngredientEntity } from './recipe-ingredient.entity';
 
 @Entity({ name: 'receita' })
 export class RecipeEntity {
@@ -42,8 +42,11 @@ export class RecipeEntity {
   @Column({ name: 'imagem', nullable: false })
   imagem: string;
 
-  @OneToMany(() => IngredientEntity, (ingredient: IngredientEntity) => ingredient.recipe)
-  ingredients: IngredientEntity[];
+  @OneToMany(
+    () => RecipeIngredientEntity,
+    (recipeIngredient: RecipeIngredientEntity) => recipeIngredient.ingredient,
+  )
+  ingredients: RecipeIngredientEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
