@@ -18,7 +18,7 @@ export class RecipeService {
     @Inject(UserService)
     private readonly userService: UserService,
     @InjectRepository(RecipeIngredientEntity)
-    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
+    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>
   ) {}
 
   async create(createRecipeDto: CreateRecipeDto): Promise<RecipeEntity> {
@@ -28,7 +28,7 @@ export class RecipeService {
     }
 
     const user = (await this.userService.findById(
-      createRecipeDto.userId,
+      createRecipeDto.userId
     )) as UserEntity;
 
     const recipeEntityDto = {
@@ -44,42 +44,55 @@ export class RecipeService {
     const foundRecipe = await this.recipeRepository
       .createQueryBuilder('receita')
       .where('receita.titulo = :titulo', { titulo: title })
+      .andWhere('receita.deleted_at IS NULL')
       .getOne();
 
     return foundRecipe;
   }
 
   async findById(id: string): Promise<RecipeEntity | null> {
-    const foundRecipe = await this.recipeRepository
-      .createQueryBuilder('receita')
-      .where('receita.id = :id', { id })
-      .leftJoin('receita.ingredientes', 'ingrediente')
-      .getOne();
+    try {
+      const foundRecipe = await this.recipeRepository
+        .createQueryBuilder('recipe')
+        .leftJoinAndMapMany(
+          'recipe.ingredients',
+          RecipeIngredientEntity,
+          'recipeIngredient',
+          'recipeIngredient.recipe = recipe.id'
+        )
+        .where('recipe.id = :id', { id })
+        .andWhere('recipe.deleted_at IS NULL')
+        .getOne();
 
-    return foundRecipe;
+      return foundRecipe;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   async addRecipeIngredient(
     recipeId: string,
     ingredientId: number,
-    ingredientPortion: number,
+    ingredientPortion: number
   ): Promise<void> {
     const recipe = await this.findById(recipeId);
     if (!recipe) {
       throw new BadRequestException('Recipe not found');
     }
 
-    /*const ingredient = await this.ingredientService.findById(ingredientId);
+    const ingredient = await this.ingredientService.findById(ingredientId);
     if (!ingredient) {
       throw new BadRequestException('Ingredient not found');
     }
 
-    const recipeIngredient = this.recipeIngredientRepository.create({
-      recipe: recipe,
-      ingredient: ingredient,
-      portion: ingredientPortion,
-    });*/
-
-    //await this.recipeIngredientRepository.save(recipeIngredient);
+    await this.recipeIngredientRepository
+      .createQueryBuilder()
+      .insert()
+      .values({
+        ingredient: ingredient,
+        recipe: recipe,
+        portion: ingredientPortion,
+      })
+      .execute();
   }
 }

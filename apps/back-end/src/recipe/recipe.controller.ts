@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 
@@ -15,12 +15,17 @@ export class RecipeController {
   async addRecipeIngredient(
     @Param('recipeId') recipeId: string,
     @Param('ingredientId') ingredientId: number,
-    @Body('portion') portion: number,
+    @Body('portion') portion: number
   ) {
     return await this.recipeService.addRecipeIngredient(
       recipeId,
       ingredientId,
-      portion,
+      portion
     );
+  }
+
+  @Get('/:recipeId')
+  async findById(@Param('recipeId') recipeId: string) {
+    return await this.recipeService.findById(recipeId);
   }
 }

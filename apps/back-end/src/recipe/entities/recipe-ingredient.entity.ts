@@ -4,20 +4,13 @@ import { IngredientEntity } from '../../ingredient/entities/ingredient.entity';
 
 @Entity({ name: 'receita_ingredientes' })
 export class RecipeIngredientEntity {
-  @PrimaryColumn({ name: 'id_ingrediente' })
-  idIngredient: number;
-
-  @PrimaryColumn({ name: 'id_receita' })
-  idRecipe: string;
-
-  @ManyToOne(
-    () => IngredientEntity,
-    (ingredient: IngredientEntity) => ingredient.recipes,
-  )
+  @PrimaryColumn({ name: 'id_ingrediente', type: 'int4' })
+  @ManyToOne(() => IngredientEntity, (ingredient) => ingredient.recipes)
   @JoinColumn({ name: 'id_ingrediente' })
   ingredient: IngredientEntity;
 
-  @ManyToOne(() => RecipeEntity, (recipe: RecipeEntity) => recipe.ingredients)
+  @PrimaryColumn({ name: 'id_receita', type: 'uuid' })
+  @ManyToOne(() => RecipeEntity, (recipe) => recipe.ingredients)
   @JoinColumn({ name: 'id_receita' })
   recipe: RecipeEntity;
 
