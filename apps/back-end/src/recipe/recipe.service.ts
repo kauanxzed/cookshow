@@ -18,7 +18,7 @@ export class RecipeService {
     @Inject(UserService)
     private readonly userService: UserService,
     @InjectRepository(RecipeIngredientEntity)
-    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>
+    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
   ) {}
 
   async create(createRecipeDto: CreateRecipeDto): Promise<RecipeEntity> {
@@ -28,7 +28,7 @@ export class RecipeService {
     }
 
     const user = (await this.userService.findById(
-      createRecipeDto.userId
+      createRecipeDto.userId,
     )) as UserEntity;
 
     const recipeEntityDto = {
@@ -58,7 +58,7 @@ export class RecipeService {
           'recipe.ingredients',
           RecipeIngredientEntity,
           'recipeIngredient',
-          'recipeIngredient.recipe = recipe.id'
+          'recipeIngredient.recipe = recipe.id',
         )
         .where('recipe.id = :id', { id })
         .andWhere('recipe.deleted_at IS NULL')
@@ -73,26 +73,30 @@ export class RecipeService {
   async addRecipeIngredient(
     recipeId: string,
     ingredientId: number,
-    ingredientPortion: number
+    ingredientPortion: number,
   ): Promise<void> {
-    const recipe = await this.findById(recipeId);
-    if (!recipe) {
-      throw new BadRequestException('Recipe not found');
-    }
+    try {
+      const recipe = await this.findById(recipeId);
+      if (!recipe) {
+        throw new BadRequestException('Recipe not found');
+      }
 
-    const ingredient = await this.ingredientService.findById(ingredientId);
-    if (!ingredient) {
-      throw new BadRequestException('Ingredient not found');
-    }
+      const ingredient = await this.ingredientService.findById(ingredientId);
+      if (!ingredient) {
+        throw new BadRequestException('Ingredient not found');
+      }
 
-    await this.recipeIngredientRepository
-      .createQueryBuilder()
-      .insert()
-      .values({
-        ingredient: ingredient,
-        recipe: recipe,
-        portion: ingredientPortion,
-      })
-      .execute();
+      await this.recipeIngredientRepository
+        .createQueryBuilder()
+        .insert()
+        .values({
+          ingredient: ingredient,
+          recipe: recipe,
+          portion: ingredientPortion,
+        })
+        .execute();
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }
