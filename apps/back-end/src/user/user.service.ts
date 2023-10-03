@@ -10,19 +10,26 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly sharedUtilServer: SharedUtilServer
+    private readonly sharedUtilServer: SharedUtilServer,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    createUserDto.senha = await this.sharedUtilServer.hash(createUserDto.senha);
-    const createdUser = await this.userRepository.create(createUserDto);
-    return await this.userRepository.save(createdUser);
+    try {
+      createUserDto.senha = await this.sharedUtilServer.hash(
+        createUserDto.senha,
+      );
+      const createdUser = this.userRepository.create(createUserDto);
+      return await this.userRepository.save(createdUser);
+    } catch (error) {
+      throw new Error('Erro ao criar usuário');
+    }
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
     const foundedUser = await this.userRepository
       .createQueryBuilder('usuario')
       .where('usuario.email = :email', { email })
+      .andWhere('usuario.deleted_at IS NULL')
       .getOne();
 
     return foundedUser;
@@ -32,6 +39,7 @@ export class UserService {
     const foundUser = await this.userRepository
       .createQueryBuilder('usuario')
       .where('usuario.id = :id', { id })
+      .andWhere('usuario.deleted_at IS NULL')
       .getOne();
 
     return foundUser;
