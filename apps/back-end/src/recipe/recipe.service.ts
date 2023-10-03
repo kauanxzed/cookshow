@@ -36,8 +36,12 @@ export class RecipeService {
       user,
     };
 
-    const recipe = this.recipeRepository.create(recipeEntityDto);
-    return await this.recipeRepository.save(recipe);
+    try {
+      const recipe = this.recipeRepository.create(recipeEntityDto);
+      return await this.recipeRepository.save(recipe);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   async findByTitle(title: string): Promise<RecipeEntity | null> {
@@ -51,23 +55,19 @@ export class RecipeService {
   }
 
   async findById(id: string): Promise<RecipeEntity | null> {
-    try {
-      const foundRecipe = await this.recipeRepository
-        .createQueryBuilder('recipe')
-        .leftJoinAndMapMany(
-          'recipe.ingredients',
-          RecipeIngredientEntity,
-          'recipeIngredient',
-          'recipeIngredient.recipe = recipe.id',
-        )
-        .where('recipe.id = :id', { id })
-        .andWhere('recipe.deleted_at IS NULL')
-        .getOne();
+    const foundRecipe = await this.recipeRepository
+      .createQueryBuilder('recipe')
+      .leftJoinAndMapMany(
+        'recipe.ingredients',
+        RecipeIngredientEntity,
+        'recipeIngredient',
+        'recipeIngredient.recipe = recipe.id',
+      )
+      .where('recipe.id = :id', { id })
+      .andWhere('recipe.deleted_at IS NULL')
+      .getOne();
 
-      return foundRecipe;
-    } catch (error) {
-      throw new BadRequestException(error.message);
-    }
+    return foundRecipe;
   }
 
   async addRecipeIngredient(
