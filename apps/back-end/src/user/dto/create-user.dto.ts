@@ -30,7 +30,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'The password of the user',
-    example: ['Abc123!@#'],
+    example: ['Abc123!@$'],
   })
   @IsStrongPassword(
     {
