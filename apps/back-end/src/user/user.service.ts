@@ -14,6 +14,15 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const emailExist = await this.userRepository
+      .createQueryBuilder('usuario')
+      .where('usuario.email = :email', { email: createUserDto.email })
+      .getOne();
+
+    if (emailExist) {
+      throw new Error('Email já cadastrado');
+    }
+
     createUserDto.senha = await this.sharedUtilServer.hash(createUserDto.senha);
     const createdUser = await this.userRepository.create(createUserDto);
     return await this.userRepository.save(createdUser);
