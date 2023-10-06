@@ -23,7 +23,7 @@ describe('IngredientService', () => {
 
     ingredientService = module.get<IngredientService>(IngredientService);
     ingredientRepository = module.get<Repository<IngredientEntity>>(
-      getRepositoryToken(IngredientEntity)
+      getRepositoryToken(IngredientEntity),
     );
   });
 
@@ -57,20 +57,16 @@ describe('IngredientService', () => {
     it('should create an ingredient', async () => {
       // Arrange
       jest.spyOn(ingredientService, 'findByName').mockResolvedValueOnce(null);
-      jest
-        .spyOn(ingredientRepository, 'create')
-        .mockReturnValueOnce(ingredientEntity);
-      jest
-        .spyOn(ingredientRepository, 'save')
-        .mockResolvedValueOnce(ingredientEntity);
+
+      jest.spyOn(ingredientRepository, 'createQueryBuilder').mockReturnValue({
+        insert: jest.fn().mockReturnThis(),
+        values: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValueOnce({ raw: [ingredientEntity] }),
+      } as unknown as SelectQueryBuilder<IngredientEntity>);
       // Act
       await ingredientService.create(createIngredientDto);
       // Assert
-      expect(ingredientRepository.create).toHaveBeenCalledWith(
-        createIngredientDto
-      );
-      expect(ingredientRepository.save).toBeCalledTimes(1);
-      expect(ingredientRepository.save).toHaveBeenCalledWith(ingredientEntity);
+      expect(ingredientRepository.createQueryBuilder).toBeCalledTimes(1);
     });
 
     it('should not create an ingredient', async () => {
@@ -86,7 +82,7 @@ describe('IngredientService', () => {
         .mockResolvedValueOnce(ingredientEntity);
       // Act
       await expect(
-        ingredientService.create(createIngredientDto)
+        ingredientService.create(createIngredientDto),
       ).rejects.toThrowError('Ingrediente já cadastrado');
       // Assert
       expect(ingredientRepository.save).toBeCalledTimes(0);
@@ -118,6 +114,7 @@ describe('IngredientService', () => {
     it('should find a ingredient by its name', async () => {
       const queryBuilder = {
         where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
         getOne: jest.fn().mockResolvedValueOnce(ingredientEntity),
       } as unknown as SelectQueryBuilder<IngredientEntity>;
 
@@ -126,7 +123,7 @@ describe('IngredientService', () => {
         .mockReturnValue(queryBuilder);
       // Act
       const result = await ingredientService.findByName(
-        createIngredientDto.nome
+        createIngredientDto.nome,
       );
       // Assert
       expect(result).toEqual(ingredientEntity);
@@ -136,6 +133,7 @@ describe('IngredientService', () => {
       // Arrange
       const queryBuilder = {
         where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
         getOne: jest.fn().mockResolvedValueOnce(null),
       } as unknown as SelectQueryBuilder<IngredientEntity>;
 
@@ -166,6 +164,7 @@ describe('IngredientService', () => {
 
       const queryBuilder = {
         where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
         getOne: jest.fn().mockResolvedValueOnce(ingredientEntity),
       } as unknown as SelectQueryBuilder<IngredientEntity>;
 
@@ -182,6 +181,7 @@ describe('IngredientService', () => {
       // Arrange
       const queryBuilder = {
         where: jest.fn().mockReturnThis(),
+        andWhere: jest.fn().mockReturnThis(),
         getOne: jest.fn().mockResolvedValueOnce(null),
       } as unknown as SelectQueryBuilder<IngredientEntity>;
 
@@ -297,22 +297,16 @@ describe('IngredientService', () => {
       jest
         .spyOn(ingredientService, 'findById')
         .mockResolvedValueOnce(ingredientEntity);
-      jest
-        .spyOn(ingredientRepository, 'create')
-        .mockReturnValueOnce(updatedIngredient);
-      jest.spyOn(ingredientRepository, 'update').mockResolvedValueOnce({
-        raw: [],
-        affected: 1,
-        generatedMaps: [],
-      });
+      jest.spyOn(ingredientRepository, 'createQueryBuilder').mockReturnValue({
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValueOnce({ raw: [updatedIngredient] }),
+      } as unknown as SelectQueryBuilder<IngredientEntity>);
       // Act
       await ingredientService.update(1, updateIngredientDto);
       // Assert
-      expect(ingredientRepository.create).toBeCalledTimes(1);
-      expect(ingredientRepository.update).toHaveBeenCalledWith(
-        updatedIngredient.id,
-        updatedIngredient
-      );
+      expect(ingredientRepository.createQueryBuilder).toBeCalledTimes(1);
     });
 
     it('should not update an ingredient', async () => {
@@ -323,7 +317,7 @@ describe('IngredientService', () => {
         .mockResolvedValueOnce(ingredientEntity);
       // Act
       await expect(
-        ingredientService.update(1, updatedIngredient)
+        ingredientService.update(1, updatedIngredient),
       ).rejects.toThrowError('Ingrediente não encontrado');
       // Assert
       expect(ingredientRepository.save).toBeCalledTimes(0);
@@ -349,22 +343,19 @@ describe('IngredientService', () => {
 
     it('should delete an ingredient', async () => {
       // Arrange
-      jest.spyOn(ingredientRepository, 'delete').mockResolvedValueOnce({
-        raw: [],
-        affected: 1,
-      });
       jest
         .spyOn(ingredientService, 'findById')
         .mockResolvedValueOnce(ingredientEntity);
-      jest.spyOn(ingredientRepository, 'update').mockResolvedValueOnce({
-        raw: [],
-        affected: 1,
-        generatedMaps: [],
-      });
+      jest.spyOn(ingredientRepository, 'createQueryBuilder').mockReturnValue({
+        update: jest.fn().mockReturnThis(),
+        set: jest.fn().mockReturnThis(),
+        where: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValueOnce({ raw: [ingredientEntity] }),
+      } as unknown as SelectQueryBuilder<IngredientEntity>);
       // Act
       await ingredientService.delete(1);
       // Assert
-      expect(ingredientRepository.update).toHaveBeenCalledTimes(1);
+      expect(ingredientRepository.createQueryBuilder).toBeCalledTimes(1);
     });
 
     it('should not delete an ingredient', async () => {
@@ -377,7 +368,7 @@ describe('IngredientService', () => {
       });
       // Act
       await expect(ingredientService.delete(1)).rejects.toThrowError(
-        'Ingrediente não encontrado'
+        'Ingrediente não encontrado',
       );
       // Assert
       expect(ingredientRepository.update).toHaveBeenCalledTimes(0);

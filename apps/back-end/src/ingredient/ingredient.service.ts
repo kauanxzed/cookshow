@@ -19,10 +19,13 @@ export class IngredientService {
     }
 
     try {
-      const ingredient = this.ingredientRepository.create(createIngredientDto);
-      await this.ingredientRepository.save(ingredient);
+      this.ingredientRepository
+        .createQueryBuilder()
+        .insert()
+        .values(createIngredientDto)
+        .execute();
     } catch (error) {
-      throw new BadRequestException('Ingrediente não pode ser criado');
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -36,10 +39,14 @@ export class IngredientService {
     }
 
     try {
-      const ingredient = this.ingredientRepository.create(updateIngredientDto);
-      await this.ingredientRepository.update(id, ingredient);
+      await this.ingredientRepository
+        .createQueryBuilder()
+        .update(IngredientEntity)
+        .set({ ...updateIngredientDto })
+        .where('id = :id', { id })
+        .execute();
     } catch (error) {
-      throw new BadRequestException('Ingrediente não pode ser atualizado');
+      throw new BadRequestException(error.message);
     }
   }
 
@@ -51,9 +58,14 @@ export class IngredientService {
     }
 
     try {
-      await this.ingredientRepository.update(id, { deleted_at: new Date() });
+      await this.ingredientRepository
+        .createQueryBuilder()
+        .update(IngredientEntity)
+        .set({ deleted_at: new Date() })
+        .where('id = :id', { id })
+        .execute();
     } catch (error) {
-      throw new BadRequestException('Ingrediente não pode ser deletado');
+      throw new BadRequestException(error.message);
     }
   }
 
