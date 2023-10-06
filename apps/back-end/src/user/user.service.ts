@@ -18,10 +18,14 @@ export class UserService {
       createUserDto.senha = await this.sharedUtilServer.hash(
         createUserDto.senha,
       );
-      const createdUser = this.userRepository.create(createUserDto);
-      return await this.userRepository.save(createdUser);
+      const user = await this.userRepository
+        .createQueryBuilder()
+        .insert()
+        .values(createUserDto)
+        .execute();
+      return user.raw[0];
     } catch (error) {
-      throw new Error('Erro ao criar usuário');
+      throw new Error(error.message);
     }
   }
 

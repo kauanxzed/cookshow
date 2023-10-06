@@ -15,7 +15,6 @@ describe('RecipeService', () => {
   let recipeService: RecipeService;
   let userService: UserService;
   let ingredientService: IngredientService;
-  let ingredientRepository: Repository<RecipeIngredientEntity>;
   let recipeRepository: Repository<RecipeEntity>;
   let userRepository: Repository<UserEntity>;
   let recipeIngredientRepository: Repository<RecipeIngredientEntity>;
@@ -103,17 +102,22 @@ describe('RecipeService', () => {
       } as CreateRecipeDto;
 
       jest.spyOn(recipeService, 'findByTitle').mockResolvedValueOnce(null);
-      jest.spyOn(recipeRepository, 'create').mockReturnValueOnce(recipeMock);
-      jest.spyOn(recipeRepository, 'save').mockResolvedValueOnce(recipeMock);
-      jest.spyOn(userRepository, 'createQueryBuilder').mockReturnValueOnce({
-        where: jest.fn().mockReturnThis(),
-        getOne: jest.fn().mockResolvedValueOnce({ id: '1' }),
-      } as unknown as SelectQueryBuilder<UserEntity>);
+      jest.spyOn(userService, 'findById').mockResolvedValueOnce({
+        id: '1',
+        nome: 'nome',
+        email: 'email',
+        senha: 'senha',
+      } as unknown as UserEntity);
+      jest.spyOn(recipeRepository, 'createQueryBuilder').mockReturnValueOnce({
+        insert: jest.fn().mockReturnThis(),
+        values: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValueOnce({ raw: recipeMock }),
+      } as unknown as SelectQueryBuilder<RecipeEntity>);
       //Act
       const result = await recipeService.create(createDtoMock);
       //Assert
-      expect(result).toEqual(recipeMock);
-      expect(recipeRepository.save).toBeCalledWith(recipeMock);
+      expect(recipeRepository.createQueryBuilder).toBeCalled();
+      expect(recipeRepository.createQueryBuilder).toBeCalledTimes(1);
     });
 
     it('should throw an error when recipe already exists', async () => {

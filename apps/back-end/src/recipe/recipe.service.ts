@@ -37,8 +37,13 @@ export class RecipeService {
     };
 
     try {
-      const recipe = this.recipeRepository.create(recipeEntityDto);
-      return await this.recipeRepository.save(recipe);
+      const recipe = await this.recipeRepository
+        .createQueryBuilder()
+        .insert()
+        .values(recipeEntityDto)
+        .execute();
+
+      return recipe.raw[0];
     } catch (error) {
       throw new BadRequestException(error.message);
     }
