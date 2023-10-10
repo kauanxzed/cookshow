@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
@@ -14,15 +14,28 @@ export class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const emailExist = await this.findByEmail(createUserDto.email);
+
+    if (emailExist) {
+      throw new HttpException('Email already used', 400);
+    }
+
     createUserDto.senha = await this.sharedUtilServer.hash(createUserDto.senha);
-    const createdUser = await this.userRepository.create(createUserDto);
-    return await this.userRepository.save(createdUser);
+    const createdUser = await this.userRepository
+      .createQueryBuilder()
+      .insert()
+      .into(UserEntity)
+      .values(createUserDto)
+      .execute();
+
+    return createdUser.raw;
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
     const foundedUser = await this.userRepository
       .createQueryBuilder('usuario')
       .where('usuario.email = :email', { email })
+      .andWhere('usuario.deleted_at IS NULL')
       .getOne();
 
     return foundedUser;
