@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { GrFacebook } from 'react-icons/gr';
 import Logo from '../../assets/images/background.png';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -21,6 +22,13 @@ function LoginForm() {
       alert('Por favor, insira um email válido.');
       return;
     }
+axios.get('http://localhost:4200/perfil', {
+  params:
+  : email,
+  password: password
+}
+),
+
   };
 
   return (
