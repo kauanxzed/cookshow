@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom/client';
 import FaleConosco from './pages/faleconosco/faleconosco';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Register from '../src/pages/register/register';
+import ModalDefault from './pages/mockModal/modal';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -35,6 +36,7 @@ root.render(
           </>
         }
       />
+      <Route path="/modal" element={<ModalDefault />} />
     </Routes>
   </BrowserRouter>
 );
