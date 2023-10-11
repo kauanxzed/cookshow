@@ -5,6 +5,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'usuario' })
@@ -32,4 +33,7 @@ export class UserEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deleted_at?: Date;
+
+  @OneToMany(() => RecipeEntity, (recipe: RecipeEntity) => recipe.user)
+  receitas?: RecipeEntity[];
 }

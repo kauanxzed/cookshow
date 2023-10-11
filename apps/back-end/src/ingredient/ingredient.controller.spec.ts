@@ -8,7 +8,10 @@ describe('IngredientController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [IngredientController],
-      providers: [IngredientService],
+      providers: [
+        IngredientService,
+        { provide: 'IngredientEntityRepository', useValue: {} },
+      ],
     }).compile();
 
     controller = module.get<IngredientController>(IngredientController);

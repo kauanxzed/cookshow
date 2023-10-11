@@ -20,15 +20,19 @@ export class UserService {
       throw new HttpException('Email already used', 400);
     }
 
-    createUserDto.senha = await this.sharedUtilServer.hash(createUserDto.senha);
-    const createdUser = await this.userRepository
-      .createQueryBuilder()
-      .insert()
-      .into(UserEntity)
-      .values(createUserDto)
-      .execute();
-
-    return createdUser.raw;
+    try {
+      createUserDto.senha = await this.sharedUtilServer.hash(
+        createUserDto.senha
+      );
+      const user = await this.userRepository
+        .createQueryBuilder()
+        .insert()
+        .values(createUserDto)
+        .execute();
+      return user.raw[0];
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
@@ -45,6 +49,7 @@ export class UserService {
     const foundUser = await this.userRepository
       .createQueryBuilder('usuario')
       .where('usuario.id = :id', { id })
+      .andWhere('usuario.deleted_at IS NULL')
       .getOne();
 
     return foundUser;

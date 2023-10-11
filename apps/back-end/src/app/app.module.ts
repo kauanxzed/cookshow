@@ -9,6 +9,7 @@ import { IngredientModule } from '../ingredient/ingredient.module';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
 import { RecipeModule } from '../recipe/recipe.module';
 import { RecipeEntity } from '../recipe/entities/recipe.entity';
+import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.entity';
 
 @Module({
   imports: [
@@ -24,7 +25,12 @@ import { RecipeEntity } from '../recipe/entities/recipe.entity';
       database: 'defaultdb',
       username: 'doadmin',
       password: 'AVNS_u7JP2b6pyh878E8w61I',
-      entities: [UserEntity, RecipeEntity, IngredientEntity],
+      entities: [
+        UserEntity,
+        RecipeEntity,
+        IngredientEntity,
+        RecipeIngredientEntity,
+      ],
       logging: true,
       ssl: {
         rejectUnauthorized: false,
