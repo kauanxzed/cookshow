@@ -4,6 +4,7 @@ import { GrFacebook } from 'react-icons/gr';
 import Logo from '../../assets/images/background.png';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { error } from 'console';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -22,14 +23,23 @@ function LoginForm() {
       alert('Por favor, insira um email válido.');
       return;
     }
-axios.get('http://localhost:4200/perfil', {
-  params:
-  : email,
-  password: password
-}
-),
+    const url = "/api/auth"
 
-  };
+    axios.post(url, {
+      email: email,
+      senha: password
+    },{
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept' : 'application/json',
+      }
+    }) 
+    .then(Response => {
+      const data = Response.data
+      console.log(Response);
+    }).catch(err => console.log(err.response));
+
+  }
 
   return (
     <div className="flex overflow-hidden lg:flex-row h-screen">
