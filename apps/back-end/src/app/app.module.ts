@@ -10,6 +10,7 @@ import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
 import { RecipeModule } from '../recipe/recipe.module';
 import { RecipeEntity } from '../recipe/entities/recipe.entity';
 import { CommentEntity } from '../comments/entities/comment.entity';
+import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.entity';
 
 @Module({
   imports: [
@@ -25,7 +26,13 @@ import { CommentEntity } from '../comments/entities/comment.entity';
       database: 'defaultdb',
       username: 'doadmin',
       password: 'AVNS_u7JP2b6pyh878E8w61I',
-      entities: [UserEntity, RecipeEntity, IngredientEntity, CommentEntity],
+      entities: [
+        UserEntity,
+        RecipeEntity,
+        IngredientEntity,
+        RecipeIngredientEntity,
+        CommentEntity,
+      ],
       logging: true,
       ssl: {
         rejectUnauthorized: false,

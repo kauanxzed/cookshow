@@ -3,11 +3,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { RecipeIngredientEntity } from '../../recipe/entities/recipe-ingredient.entity';
 
-@Entity('ingredientes')
+@Entity({ name: 'ingredientes' })
 export class IngredientEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
@@ -29,6 +31,12 @@ export class IngredientEntity {
 
   @Column({ name: 'porcao', type: 'numeric', precision: 5, scale: 2 })
   porcao: number;
+
+  @OneToMany(
+    () => RecipeIngredientEntity,
+    (ingredient: RecipeIngredientEntity) => ingredient.recipe
+  )
+  recipes?: RecipeIngredientEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

@@ -7,8 +7,10 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
+import { RecipeIngredientEntity } from './recipe-ingredient.entity';
 
 @Entity({ name: 'receita' })
 export class RecipeEntity {
@@ -39,6 +41,12 @@ export class RecipeEntity {
 
   @Column({ name: 'imagem', nullable: false })
   imagem: string;
+
+  @OneToMany(
+    () => RecipeIngredientEntity,
+    (recipeIngredient: RecipeIngredientEntity) => recipeIngredient.ingredient,
+  )
+  ingredients: RecipeIngredientEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
