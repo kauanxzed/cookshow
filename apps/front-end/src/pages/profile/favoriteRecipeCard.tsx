@@ -1,12 +1,9 @@
-import React from "react";
-
+import React from 'react';
 
 interface User {
   id: number;
   imageUrl: string;
-
 }
-
 
 interface Recipe {
   imageUrl: string;
@@ -21,10 +18,13 @@ interface Recipe {
 
 interface FavoriteRecipeCardProps {
   recipe: Recipe;
-  showPublicacoes: boolean; 
+  showPublicacoes: boolean;
 }
 
-function FavoriteRecipeCard({ recipe, showPublicacoes }: FavoriteRecipeCardProps) {
+function FavoriteRecipeCard({
+  recipe,
+  showPublicacoes,
+}: FavoriteRecipeCardProps) {
   // Limita a exibição de no máximo 3 miniaturas de usuários
   const maxMiniatures = 3;
   const favoritedByUsers = recipe.favoritedByUsers.slice(0, maxMiniatures);

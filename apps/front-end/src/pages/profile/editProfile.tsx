@@ -1,11 +1,10 @@
-import React from "react";
-import UserProfileSimplified from "./userProfileSimple";
-import { userProfile } from "../data";
+import React from 'react';
+import UserProfileSimplified from './userProfileSimple';
+import { userProfile } from '../data';
 
 interface UserProfileType {
   name: string;
   email: string;
-
 }
 
 function EditProfile() {
@@ -17,7 +16,6 @@ function EditProfile() {
         <UserProfileSimplified />
       </div>
       <div className="flex-1 p-4 bg-white ml-24">
-
         <div className="mb-4 mt-">
           <p className="block text-lg font-normal mb-2">
             <span className="text-orange-500">Nome:</span> {name}

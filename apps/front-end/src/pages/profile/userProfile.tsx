@@ -1,13 +1,11 @@
-import React, { useState } from "react";
-import { userProfile } from "../data";
-import EditProfile from "./editProfile";
-import { useNavigate } from "react-router-dom";
-
+import React, { useState } from 'react';
+import { userProfile } from '../data';
+import EditProfile from './editProfile';
+import { useNavigate } from 'react-router-dom';
 
 interface UserProfileType {
   profileImage: string;
   name: string;
-
 }
 
 function UserProfile() {
@@ -19,8 +17,8 @@ function UserProfile() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-[90vh] bg-gradient-to-r from-orange-500 to-white">
-      <div className="flex flex-col items-center space-y-4">
+    <div className="flex flex-col h-full bg-gradient-to-r from-orange-500 to-white">
+      <div className="flex flex-col items-center space-y-4 mt-32">
         <img
           src={(userProfile as UserProfileType).profileImage}
           alt={(userProfile as UserProfileType).name}
@@ -29,7 +27,7 @@ function UserProfile() {
         <h2 className="text-xl">{(userProfile as UserProfileType).name}</h2>
         <button
           className="bg-transparent border border-black text-black px-4 py-1 rounded"
-          onClick={() => navigate("/profile/edit")} // Navega para a página de edição
+          onClick={() => navigate('/perfil/editar')} // Navega para a página de edição
         >
           Editar
         </button>

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { recipes, favoritedRecipes } from "../data";
-import RecipeCard from "./recipeCard";
-import FavoriteRecipeCard from "./favoriteRecipeCard";
-import UserProfile from "./userProfile";
+import React, { useState } from 'react';
+import { recipes, favoritedRecipes } from '../data';
+import RecipeCard from './recipeCard';
+import FavoriteRecipeCard from './favoriteRecipeCard';
+import UserProfile from './userProfile';
 
 interface User {
   id: number;
@@ -32,7 +32,8 @@ interface FavoriteRecipeCardProps {
   showPublicacoes: boolean;
 }
 
-interface FavoritedRecipe extends Omit<Recipe, 'likesCount' | 'favoritedByUsers'> {
+interface FavoritedRecipe
+  extends Omit<Recipe, 'likesCount' | 'favoritedByUsers'> {
   favoritedBy: string;
   favoritedByUsers: User[];
 }
@@ -50,7 +51,9 @@ function ProfilePage() {
     setShowPublicacoes(false);
   };
 
-  const recipesToDisplay: AnyRecipe[] = showPublicacoes ? recipes : favoritedRecipes;
+  const recipesToDisplay: AnyRecipe[] = showPublicacoes
+    ? recipes
+    : favoritedRecipes;
 
   return (
     <div className="flex">
@@ -60,11 +63,11 @@ function ProfilePage() {
       <div className="flex-1 p-4 bg-white">
         <div
           className="flex justify-between mx-auto mb-4"
-          style={{ maxWidth: "600px" }}
+          style={{ maxWidth: '600px' }}
         >
           <div
             className={`flex items-center space-x-2 cursor-pointer ${
-              showPublicacoes ? "text-orange-500" : ""
+              showPublicacoes ? 'text-orange-500' : ''
             }`}
             onClick={handleShowPublicacoes}
           >
@@ -73,7 +76,7 @@ function ProfilePage() {
           </div>
           <div
             className={`flex items-center space-x-2 cursor-pointer ${
-              !showPublicacoes ? "text-orange-500" : ""
+              !showPublicacoes ? 'text-orange-500' : ''
             }`}
             onClick={handleShowFavoritos}
           >
@@ -86,7 +89,7 @@ function ProfilePage() {
           {showPublicacoes ? (
             recipesToDisplay.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {recipesToDisplay.map((recipe: any) => (
+                {recipesToDisplay.map((recipe: any) =>
                   'likesCount' in recipe ? (
                     <RecipeCard
                       key={recipe.id}
@@ -100,7 +103,7 @@ function ProfilePage() {
                       showPublicacoes={showPublicacoes}
                     />
                   )
-                ))}
+                )}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center">
@@ -113,9 +116,9 @@ function ProfilePage() {
               </div>
             )
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 -mt-36 ">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 -mt-6 ">
               {recipesToDisplay.length > 0 ? (
-                recipesToDisplay.map((recipe: any) => (
+                recipesToDisplay.map((recipe: any) =>
                   'likesCount' in recipe ? (
                     <RecipeCard
                       key={recipe.id}
@@ -129,7 +132,7 @@ function ProfilePage() {
                       showPublicacoes={showPublicacoes}
                     />
                   )
-                ))
+                )
               ) : (
                 <div className="flex flex-col items-center justify-center -mr-96">
                   <div className="bg-transparent border border-orange-600 rounded-full p-5 w-16 h-16 flex items-center justify-center mb-4">

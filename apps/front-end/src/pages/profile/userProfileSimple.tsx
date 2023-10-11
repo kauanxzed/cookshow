@@ -1,16 +1,14 @@
-import React from "react";
-import { userProfile } from "../data";
-
+import React from 'react';
+import { userProfile } from '../data';
 
 interface UserProfileType {
   profileImage: string;
   name: string;
-
 }
 
 function UserProfileSimplified() {
   return (
-    <div className="flex flex-col items-center justify-center h-[90vh] bg-gradient-to-r from-orange-500 to-white">
+    <div className="flex flex-col items-center justify-center h-96 bg-gradient-to-r from-orange-500 to-white">
       <img
         src={(userProfile as UserProfileType).profileImage}
         alt={(userProfile as UserProfileType).name}
