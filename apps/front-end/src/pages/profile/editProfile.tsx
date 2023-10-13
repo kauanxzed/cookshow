@@ -15,7 +15,7 @@ function EditProfile() {
       <div className="w-1/3">
         <UserProfileSimplified />
       </div>
-      <div className="flex-1 p-4 bg-white ml-24">
+      <div className="flex-1 p-4 bg-white ml-0 mt-32">
         <div className="mb-4 mt-">
           <p className="block text-lg font-normal mb-2">
             <span className="text-orange-500">Nome:</span> {name}
@@ -37,7 +37,7 @@ function EditProfile() {
           </a>
           <hr className="border-t-2 border-gray-300 my-6 " />
         </div>
-        <div className="flex justify-center space-x-4 mt-12">
+        <div className="flex justify-center space-x-4 mt-20 mr-96">
           <button className="bg-red-800 text-white px-4 py-2 rounded">
             Cancelar
           </button>

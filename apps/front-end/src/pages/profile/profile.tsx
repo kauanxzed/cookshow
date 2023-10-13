@@ -116,7 +116,7 @@ function ProfilePage() {
               </div>
             )
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 -mt-6 ">
+            <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 -mt-6 ">
               {recipesToDisplay.length > 0 ? (
                 recipesToDisplay.map((recipe: any) =>
                   'likesCount' in recipe ? (
