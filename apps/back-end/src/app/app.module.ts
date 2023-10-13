@@ -35,7 +35,7 @@ import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.ent
       ssl: {
         rejectUnauthorized: false,
         ca: readFileSync(
-          'apps/back-end/src/assets/ca-certificate.crt'
+          'apps/back-end/src/assets/ca-certificate.crt',
         ).toString(),
       },
     }),
