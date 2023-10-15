@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentsService } from './comments.service';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CommentEntity } from './entities/comment.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
@@ -12,8 +12,8 @@ describe('CommentsService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        CommentsService,
         { provide: getRepositoryToken(CommentEntity), useClass: Repository },
+        CommentsService,
       ],
     }).compile();
 
@@ -47,16 +47,15 @@ describe('CommentsService', () => {
 
     it('should create a new comment', async () => {
       //Arrange
-      const spy = jest
-        .spyOn(commentRepository, 'createQueryBuilder')
-        .mockReturnValue({
-          insert: jest.fn().mockReturnThis(),
-          execute: jest.fn().mockResolvedValue(commentEntity),
-        } as any);
+      jest.spyOn(commentRepository, 'createQueryBuilder').mockReturnValue({
+        insert: jest.fn().mockReturnThis(),
+        values: jest.fn().mockReturnThis(),
+        execute: jest.fn().mockResolvedValueOnce({ raw: [commentEntity] }),
+      } as unknown as SelectQueryBuilder<CommentEntity>);
       //Act
       await commentService.create(commentEntity);
       //Assert
-      expect(spy).toBeCalledTimes(1);
+      expect(commentRepository.createQueryBuilder).toBeCalledTimes(1);
     });
   });
 });

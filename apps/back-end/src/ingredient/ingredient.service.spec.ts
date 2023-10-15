@@ -23,7 +23,7 @@ describe('IngredientService', () => {
 
     ingredientService = module.get<IngredientService>(IngredientService);
     ingredientRepository = module.get<Repository<IngredientEntity>>(
-      getRepositoryToken(IngredientEntity),
+      getRepositoryToken(IngredientEntity)
     );
   });
 
@@ -82,7 +82,7 @@ describe('IngredientService', () => {
         .mockResolvedValueOnce(ingredientEntity);
       // Act
       await expect(
-        ingredientService.create(createIngredientDto),
+        ingredientService.create(createIngredientDto)
       ).rejects.toThrowError('Ingrediente já cadastrado');
       // Assert
       expect(ingredientRepository.save).toBeCalledTimes(0);
@@ -123,7 +123,7 @@ describe('IngredientService', () => {
         .mockReturnValue(queryBuilder);
       // Act
       const result = await ingredientService.findByName(
-        createIngredientDto.nome,
+        createIngredientDto.nome
       );
       // Assert
       expect(result).toEqual(ingredientEntity);
@@ -317,7 +317,7 @@ describe('IngredientService', () => {
         .mockResolvedValueOnce(ingredientEntity);
       // Act
       await expect(
-        ingredientService.update(1, updatedIngredient),
+        ingredientService.update(1, updatedIngredient)
       ).rejects.toThrowError('Ingrediente não encontrado');
       // Assert
       expect(ingredientRepository.save).toBeCalledTimes(0);
@@ -368,7 +368,7 @@ describe('IngredientService', () => {
       });
       // Act
       await expect(ingredientService.delete(1)).rejects.toThrowError(
-        'Ingrediente não encontrado',
+        'Ingrediente não encontrado'
       );
       // Assert
       expect(ingredientRepository.update).toHaveBeenCalledTimes(0);

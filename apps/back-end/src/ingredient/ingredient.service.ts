@@ -9,7 +9,7 @@ import { UpdateIngredientDto } from './dto/update-ingredient.dto';
 export class IngredientService {
   constructor(
     @InjectRepository(IngredientEntity)
-    private readonly ingredientRepository: Repository<IngredientEntity>,
+    private readonly ingredientRepository: Repository<IngredientEntity>
   ) {}
 
   async create(createIngredientDto: CreateIngredientDto): Promise<void> {
@@ -31,7 +31,7 @@ export class IngredientService {
 
   async update(
     id: number,
-    updateIngredientDto: UpdateIngredientDto,
+    updateIngredientDto: UpdateIngredientDto
   ): Promise<void> {
     const foundIngredient = await this.findById(id);
     if (!foundIngredient) {
