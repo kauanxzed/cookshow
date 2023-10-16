@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
+import { RecipeEntity } from '../../recipe/entities/recipe.entity';
 
 @Entity({ name: 'usuario' })
 export class UserEntity {
