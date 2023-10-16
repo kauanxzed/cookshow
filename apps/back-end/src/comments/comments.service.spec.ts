@@ -4,6 +4,7 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CommentEntity } from './entities/comment.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import { CommentsModule } from './comments.module';
 
 describe('CommentsService', () => {
   let commentService: CommentsService;
@@ -11,6 +12,7 @@ describe('CommentsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CommentsModule],
       providers: [
         { provide: getRepositoryToken(CommentEntity), useClass: Repository },
         CommentsService,
@@ -47,6 +49,8 @@ describe('CommentsService', () => {
 
     it('should create a new comment', async () => {
       //Arrange
+      jest.spyOn(commentService, 'findById').mockResolvedValueOnce(null);
+
       jest.spyOn(commentRepository, 'createQueryBuilder').mockReturnValue({
         insert: jest.fn().mockReturnThis(),
         values: jest.fn().mockReturnThis(),
