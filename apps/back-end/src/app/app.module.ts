@@ -11,6 +11,7 @@ import { RecipeModule } from '../recipe/recipe.module';
 import { RecipeEntity } from '../recipe/entities/recipe.entity';
 import { CommentEntity } from '../comments/entities/comment.entity';
 import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.entity';
+import { CommentsModule } from '../comments/comments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.ent
     AuthModule,
     IngredientModule,
     RecipeModule,
+    CommentsModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',

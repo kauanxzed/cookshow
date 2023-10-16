@@ -4,7 +4,6 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { CommentEntity } from './entities/comment.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentsModule } from './comments.module';
 
 describe('CommentsService', () => {
   let commentService: CommentsService;
@@ -12,10 +11,9 @@ describe('CommentsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [CommentsModule],
       providers: [
-        { provide: getRepositoryToken(CommentEntity), useClass: Repository },
         CommentsService,
+        { provide: getRepositoryToken(CommentEntity), useClass: Repository },
       ],
     }).compile();
 
@@ -36,8 +34,8 @@ describe('CommentsService', () => {
 
     beforeEach(async () => {
       createCommentDto = {
-        id_user: '1',
-        id_recipe: '1',
+        id_usuario: '1',
+        id_receita: '1',
         mensagem: 'This is a comment',
       } as CreateCommentDto;
 

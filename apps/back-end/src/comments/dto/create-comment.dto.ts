@@ -7,14 +7,14 @@ export class CreateCommentDto {
     example: ['1'],
   })
   @IsUUID()
-  id_user: string;
+  id_usuario: string;
 
   @ApiProperty({
     description: 'The id of the recipe',
     example: ['1'],
   })
   @IsUUID()
-  id_recipe: string;
+  id_receita: string;
 
   @ApiProperty({
     description: 'The message of the comment',
