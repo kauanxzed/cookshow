@@ -7,14 +7,16 @@ import {
   SharedUtilServer,
   SharedUtilServerImpl,
 } from '@cook-show/shared/util-server';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
     UserModule,
+    PassportModule,
     JwtModule.register({
       global: true,
       secret: process.env.JWT,
-      signOptions: { expiresIn: '60s' },
     }),
   ],
   controllers: [AuthController],
@@ -24,6 +26,7 @@ import {
       provide: SharedUtilServer,
       useClass: SharedUtilServerImpl,
     },
+    JwtStrategy,
   ],
   exports: [AuthModule],
 })

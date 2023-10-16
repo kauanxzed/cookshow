@@ -4,7 +4,6 @@ import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { SharedUtilServer } from '@cook-show/shared/util-server';
-import { Repository } from 'typeorm';
 
 describe('AuthController', () => {
   let controller: AuthController;

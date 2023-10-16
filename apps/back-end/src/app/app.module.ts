@@ -39,7 +39,7 @@ import { CommentsModule } from '../comments/comments.module';
       ssl: {
         rejectUnauthorized: false,
         ca: readFileSync(
-          'apps/back-end/src/assets/ca-certificate.crt'
+          'apps/back-end/src/assets/ca-certificate.crt',
         ).toString(),
       },
     }),
