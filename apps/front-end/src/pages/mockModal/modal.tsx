@@ -1,42 +1,49 @@
-import React, {useState, ChangeEvent, KeyboardEvent} from 'react';
+import React, {useState, ChangeEvent} from 'react';
 import { Button, Modal } from 'flowbite-react';
 import { alimentos } from './mockAlimentos';
 
 const ModalDefault = () => {
     const [openModal, setOpenModal] = useState<string | undefined>();
     const props = { openModal, setOpenModal };
-    const [inputValue, setInputValue] = useState<string>('');
     const [suggestions, setSuggestions] = useState<string[]>([]);
-    const [chips, setChips] = useState<string[]>([]);
     const [isInputFocused, setInputFocused] = useState(false);
+    const [inputList, setInputList] = useState([{ ingredient: "", quantity: 0 }]);
 
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setInputValue(value);
-  
+    interface inputIngrediente {
+      ingredient: string,
+      quantity: number,
+    }
+
+    const handleInputIngredientChange = (e: ChangeEvent<HTMLInputElement>, index: number) => {
+      const { name, value } = e.target;
+      const list: Array<inputIngrediente> = [...inputList];
+      list[index][name] = value;
+      setInputList(list);
       const filtered = alimentos.filter((item) =>
         item.toLowerCase().startsWith(value.toLowerCase())
       );
       setSuggestions(value ? filtered.slice(0, 5) : []);
     };
-    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === 'Enter' && inputValue) {
-        setChips([...chips, inputValue]);
-        setInputValue('');
-        setSuggestions([]);
-      }
-    };
-    const handleRemoveChip = (index: number) => {
-      const newChips = [...chips];
-      newChips.splice(index, 1);
-      setChips(newChips);
-    };
-    const addSuggestionToChips = (suggestion: string) => {
-      setChips([...chips, suggestion]);
-      setInputValue('');
-      setSuggestions([]);
+
+    const handleRemoveClick = (index:number) => {
+      const list: Array<inputIngrediente>  = [...inputList];
+      list.splice(index, 1);
+      setInputList(list);
     };
 
+    const handleAddClick = () => {
+      setInputList([...inputList, { ingredient: "", quantity: 0 }]);
+    };
+
+    const handleQuantityChange = (event: ChangeEvent<HTMLInputElement>, index: number) => {
+      const value = +event.target.value
+      if (!isNaN(value)) {
+        const list = [...inputList];
+        list[index].quantity = value;
+        setInputList(list);
+      }
+    };
+    
     return (
       <>
         <Button onClick={() => props.setOpenModal('default')}>Toggle modal</Button>
@@ -61,47 +68,56 @@ const ModalDefault = () => {
                 placeholder='Escreva o nome da sua receita' 
                 className="block w-full h-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400" required/>
               </div>
-              <div>
-                <div className='flex flex-wrap items-center border-2'>
-                  {chips.map((chip, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center bg-orange-500 text-white rounded-xl px-1 m-1 md:px-2 md:m-1.5"
-                    >
-                      <span>{chip}</span>
-                      <button
-                        onClick={() => handleRemoveChip(index)}
-                        className="ml-1 relative bottom-0.5 md:ml-2 text-white"
-                      >
-                        x
-                      </button>
-                    </div>
-                  ))}
-                  <input
-                  type="text"
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  onFocus={() => setInputFocused(true)}
-                  onBlur={() => setInputFocused(false)}
-                  placeholder="Digite os alimentos presentes na receita"
-                  className="p-1 flex-1 w-full focus:outline-none min-w-10"
-                  />
-                </div>
-                {suggestions.length > 0 && (
-                  <div className="mt-2 bg-gray-100 rounded-md shadow">
-                    {suggestions.map((suggestion, index) => (
-                      <div
-                        key={index}
-                        className="p-1.5 border-t border-gray-300 cursor-pointer text-orange-500 hover:bg-gray-200"
-                        onClick={() => addSuggestionToChips(suggestion)}
-                      >
-                        {suggestion}
+              {inputList.map((item, i) => {
+                return (
+                  <div className="box">
+                    <div className='flex justify-between'>
+                      <div className='flex flex-col'>
+                        <input
+                          type="text"
+                          name="ingredient"
+                          value={item.ingredient}
+                          onChange={e => handleInputIngredientChange(e, i)}
+                          onFocus={() => setInputFocused(true)}
+                          onBlur={() => setInputFocused(false)}
+                          placeholder="Ingrediente"
+                          className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400" 
+                          required
+                        />
+                        {inputList.length - 1 === i && suggestions.length > 0 && (
+                          <div className="mt-2 bg-gray-100 rounded-md shadow">
+                            {suggestions.map((suggestion, index) => (
+                              <div
+                                key={index}
+                                className="p-1.5 border-t border-gray-300 cursor-pointer text-orange-500 hover:bg-gray-200"
+                                onClick={() => { 
+                                  item.ingredient = suggestion
+                                  suggestions.length = 0
+                                  
+                                }}
+                              >
+                                {suggestion}
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    ))}
+                      <input
+                        className="block w-1/4 p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 text-center" 
+                        required
+                        name="quantity"
+                        placeholder="Quantidade"
+                        value={item.quantity}
+                        onChange={e => handleQuantityChange(e, i)}
+                      />
+                    </div>
+                    <div className="btn-box flex flex-col items-start">
+                      {inputList.length !== 1 && <button className="text-red-500" onClick={() => handleRemoveClick(i)}>Remover</button>}
+                      {inputList.length - 1 === i && <button className='mt-4' onClick={handleAddClick}>+ ingrediente</button>}
+                    </div>
                   </div>
-                )}
-              </div>
+                );
+              })}
               <div>
                 <input type="time" name="timeMinutes" id="timeMinutes" 
                 placeholder='Escreva o tempo de preparo da receita em minutos'
