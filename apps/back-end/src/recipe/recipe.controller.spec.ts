@@ -59,13 +59,13 @@ describe('RecipeController', () => {
     ingredientService = module.get<IngredientService>(IngredientService);
     userService = module.get<UserService>(UserService);
     recipeIngredientRepository = module.get<Repository<RecipeIngredientEntity>>(
-      getRepositoryToken(RecipeIngredientEntity),
+      getRepositoryToken(RecipeIngredientEntity)
     );
     recipeRepository = module.get<Repository<RecipeEntity>>(
-      getRepositoryToken(RecipeEntity),
+      getRepositoryToken(RecipeEntity)
     );
     userRepository = module.get<Repository<UserEntity>>(
-      getRepositoryToken(UserEntity),
+      getRepositoryToken(UserEntity)
     );
   });
 

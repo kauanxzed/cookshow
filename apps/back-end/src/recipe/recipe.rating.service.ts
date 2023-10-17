@@ -35,4 +35,22 @@ export class RecipeRatingService {
       throw new HttpException(error.message, 400);
     }
   }
+
+  async getRating(recipeId: string): Promise<number> {
+    const recipe = await this.recipeService.findById(recipeId);
+
+    if (!recipe) {
+      throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND);
+    } else if (recipe.publicado === false) {
+      throw new HttpException('Recipe not published', HttpStatus.NOT_FOUND);
+    }
+
+    const rating = await this.ratingRepository
+      .createQueryBuilder('rating')
+      .select('AVG(rating.nota)', 'average')
+      .where('rating.id_receita = :id', { id: recipeId })
+      .getRawOne();
+
+    return rating.average;
+  }
 }
