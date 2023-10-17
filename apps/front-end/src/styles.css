@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 /* You can add global styles to this file, and also import other style files */
+
+.background-register-recipe {
+    background: linear-gradient(106deg, #FF7A00 16.39%, rgba(255, 122, 0, 0.00) 72.98%);
+}
