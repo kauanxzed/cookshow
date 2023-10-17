@@ -44,7 +44,7 @@ export class RecipeEntity {
 
   @OneToMany(
     () => RecipeIngredientEntity,
-    (recipeIngredient: RecipeIngredientEntity) => recipeIngredient.ingredient,
+    (recipeIngredient: RecipeIngredientEntity) => recipeIngredient.ingredient
   )
   ingredients: RecipeIngredientEntity[];
 
@@ -56,4 +56,7 @@ export class RecipeEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deleted_at?: Date;
+
+  @Column({ name: 'publicado', nullable: false, default: false })
+  publicado: boolean;
 }
