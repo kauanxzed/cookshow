@@ -17,8 +17,8 @@ function UserProfile() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-r from-orange-500 to-white">
-      <div className="flex flex-col items-center space-y-4 mt-32">
+    <div className="flex flex-col h-full bg-gradient-to-r from-orange-500 to-white py-6">
+      <div className="flex flex-col items-center space-y-4 mt-32 ">
         <img
           src={(userProfile as UserProfileType).profileImage}
           alt={(userProfile as UserProfileType).name}
@@ -26,7 +26,7 @@ function UserProfile() {
         />
         <h2 className="text-xl">{(userProfile as UserProfileType).name}</h2>
         <button
-          className="bg-transparent border border-black text-black px-4 py-1 rounded"
+          className="bg-transparent border border-black text-black px-4 py-1 rounded "
           onClick={() => navigate('/perfil/editar')} // Navega para a página de edição
         >
           Editar

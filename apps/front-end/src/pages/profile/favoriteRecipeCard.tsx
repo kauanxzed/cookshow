@@ -34,11 +34,11 @@ function FavoriteRecipeCard({
   );
 
   return (
-    <div className="p-4 m-2 relative">
+    <div className="p-4 m-2 relative w-full sm:w-1/2 lg:w-2/3 xl:w-2/3">
       <img
         src={recipe.imageUrl}
         alt={recipe.title}
-        className="w-full h-48 object-cover"
+        className="w-full h-48 object-cover md:h-64 lg:h-56 xl:h-48 2xl:h-48"
       />
       <h2 className="text-xl font-bold mt-2 text-orange-600">{recipe.title}</h2>
       <p className="text-gray-400 uppercase">{recipe.type}</p>
