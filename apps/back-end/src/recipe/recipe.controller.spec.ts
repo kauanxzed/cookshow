@@ -10,6 +10,9 @@ import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
 import { SharedUtilServer } from '@cook-show/shared/util-server';
 import { UserEntity } from '../user/entities/user.entity';
+import { RecipeRatingService } from './recipe.rating.service';
+import { RatingEntity } from './entities/recipe-rating.entity';
+
 describe('RecipeController', () => {
   let recipeController: RecipeController;
   let recipeService: RecipeService;
@@ -31,6 +34,7 @@ describe('RecipeController', () => {
         },
         IngredientService,
         UserService,
+        RecipeRatingService,
         {
           provide: getRepositoryToken(RecipeIngredientEntity),
           useClass: Repository,
@@ -48,6 +52,10 @@ describe('RecipeController', () => {
         },
         {
           provide: getRepositoryToken(UserEntity),
+          useClass: Repository,
+        },
+        {
+          provide: getRepositoryToken(RatingEntity),
           useClass: Repository,
         },
       ],
