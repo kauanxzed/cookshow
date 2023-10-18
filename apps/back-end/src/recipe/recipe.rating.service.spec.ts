@@ -3,6 +3,17 @@ import { RatingEntity } from './entities/recipe-rating.entity';
 import { RecipeRatingService } from './recipe.rating.service';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { RecipeService } from './recipe.service';
+import { RecipeEntity } from './entities/recipe.entity';
+import { IngredientService } from '../ingredient/ingredient.service';
+import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
+import { UserService } from '../user/user.service';
+import { UserEntity } from '../user/entities/user.entity';
+import {
+  SharedUtilServer,
+  SharedUtilServerImpl,
+} from '@cook-show/shared/util-server';
+import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
 
 describe('RecipeRatingService', () => {
   let recipeRatingService: RecipeRatingService;
@@ -13,12 +24,23 @@ describe('RecipeRatingService', () => {
       providers: [
         RecipeRatingService,
         { provide: getRepositoryToken(RatingEntity), useClass: Repository },
+        { provide: getRepositoryToken(RecipeEntity), useClass: Repository },
+        { provide: getRepositoryToken(IngredientEntity), useClass: Repository },
+        { provide: getRepositoryToken(UserEntity), useClass: Repository },
+        {
+          provide: getRepositoryToken(RecipeIngredientEntity),
+          useClass: Repository,
+        },
+        { provide: SharedUtilServer, useClass: SharedUtilServerImpl },
+        UserService,
+        IngredientService,
+        RecipeService,
       ],
     }).compile();
 
     recipeRatingService = module.get<RecipeRatingService>(RecipeRatingService);
     recipeRatingRepository = module.get<Repository<RatingEntity>>(
-      getRepositoryToken(RatingEntity)
+      getRepositoryToken(RatingEntity),
     );
   });
 
