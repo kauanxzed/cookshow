@@ -14,13 +14,16 @@ import {
   SharedUtilServerImpl,
 } from '@cook-show/shared/util-server';
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
+import { RecipeController } from './recipe.controller';
 
 describe('RecipeRatingService', () => {
   let recipeRatingService: RecipeRatingService;
   let recipeRatingRepository: Repository<RatingEntity>;
+  let recipeService: RecipeService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      controllers: [RecipeController],
       providers: [
         RecipeRatingService,
         { provide: getRepositoryToken(RatingEntity), useClass: Repository },
@@ -40,8 +43,9 @@ describe('RecipeRatingService', () => {
 
     recipeRatingService = module.get<RecipeRatingService>(RecipeRatingService);
     recipeRatingRepository = module.get<Repository<RatingEntity>>(
-      getRepositoryToken(RatingEntity),
+      getRepositoryToken(RatingEntity)
     );
+    recipeService = module.get<RecipeService>(RecipeService);
   });
 
   it('should be defined', () => {
@@ -57,7 +61,7 @@ describe('RecipeRatingService', () => {
       createRatingDto = {
         id_usuario: '1',
         id_receita: '1',
-        nota: 5,
+        avaliacao: 5,
       } as RatingEntity;
 
       ratingEntity = {
@@ -68,13 +72,16 @@ describe('RecipeRatingService', () => {
 
     it('should create a new rating', async () => {
       //Arrange
-      jest.spyOn(recipeRatingService, 'create').mockResolvedValueOnce(null);
-
       jest.spyOn(recipeRatingRepository, 'createQueryBuilder').mockReturnValue({
         insert: jest.fn().mockReturnThis(),
         values: jest.fn().mockReturnThis(),
         execute: jest.fn().mockResolvedValueOnce({ raw: [ratingEntity] }),
       } as unknown as SelectQueryBuilder<RatingEntity>);
+
+      jest.spyOn(recipeService, 'findById').mockResolvedValueOnce({
+        id: '1',
+        publicado: true,
+      } as RecipeEntity);
       //Act
       await recipeRatingService.create(ratingEntity);
       //Assert

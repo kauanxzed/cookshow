@@ -32,7 +32,7 @@ export class RecipeRatingService {
         .values(createRecipeRatingDto)
         .execute();
     } catch (error) {
-      throw new HttpException(error.message, 400);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -45,12 +45,21 @@ export class RecipeRatingService {
       throw new HttpException('Recipe not published', HttpStatus.NOT_FOUND);
     }
 
-    const rating = await this.ratingRepository
-      .createQueryBuilder('rating')
-      .select('AVG(rating.nota)', 'average')
-      .where('rating.id_receita = :id', { id: recipeId })
-      .getRawOne();
+    try {
+      const ratings = await this.ratingRepository
+        .createQueryBuilder('rating')
+        .where('rating.id_receita = :id_receita', { id_receita: recipeId })
+        .getMany();
 
-    return rating.average;
+      const sum = ratings.reduce((acc, rating) => {
+        if (!rating.avaliacao) return acc;
+
+        return acc + rating.avaliacao;
+      }, 0);
+
+      return sum / ratings.length;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
