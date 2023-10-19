@@ -9,7 +9,9 @@ import { IngredientModule } from '../ingredient/ingredient.module';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
 import { RecipeModule } from '../recipe/recipe.module';
 import { RecipeEntity } from '../recipe/entities/recipe.entity';
+import { CommentEntity } from '../comments/entities/comment.entity';
 import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.entity';
+import { CommentsModule } from '../comments/comments.module';
 
 @Module({
   imports: [
@@ -17,15 +19,21 @@ import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.ent
     AuthModule,
     IngredientModule,
     RecipeModule,
+    CommentsModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: 'postgresql://doadmin:AVNS_u7JP2b6pyh878E8w61I@db-postgresql-nyc1-36951-do-user-14647314-0.b.db.ondigitalocean.com:25060/defaultdb?statusColor=686B6F&env=development&name=DigitalOcean&tLSMode=2&usePrivateKey=false&safeModeLevel=0&advancedSafeModeLevel=0&driverVersion=0',
+      host: 'db-postgresql-nyc1-36951-do-user-14647314-0.b.db.ondigitalocean.com',
+      port: 25060,
+      database: 'defaultdb',
+      username: 'doadmin',
+      password: 'AVNS_u7JP2b6pyh878E8w61I',
       entities: [
         UserEntity,
         RecipeEntity,
         IngredientEntity,
         RecipeIngredientEntity,
+        CommentEntity,
       ],
       logging: true,
       ssl: {

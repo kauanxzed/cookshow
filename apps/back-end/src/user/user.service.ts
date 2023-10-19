@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
@@ -10,13 +10,19 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly sharedUtilServer: SharedUtilServer,
+    private readonly sharedUtilServer: SharedUtilServer
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const emailExist = await this.findByEmail(createUserDto.email);
+
+    if (emailExist) {
+      throw new HttpException('Email already used', 400);
+    }
+
     try {
       createUserDto.senha = await this.sharedUtilServer.hash(
-        createUserDto.senha,
+        createUserDto.senha
       );
       const user = await this.userRepository
         .createQueryBuilder()

@@ -30,7 +30,7 @@ describe('UserService', () => {
 
     userService = module.get<UserService>(UserService);
     userRepository = module.get<Repository<UserEntity>>(
-      getRepositoryToken(UserEntity),
+      getRepositoryToken(UserEntity)
     );
     sharedUtilServer = module.get<SharedUtilServer>(SharedUtilServer);
   });
@@ -60,6 +60,7 @@ describe('UserService', () => {
         foto_perfil: 'https://google.com',
       };
 
+      jest.spyOn(userService, 'findByEmail').mockResolvedValueOnce(null);
       jest.spyOn(sharedUtilServer, 'hash').mockResolvedValueOnce('123');
       jest.spyOn(userRepository, 'createQueryBuilder').mockReturnValueOnce({
         insert: jest.fn().mockReturnThis(),
