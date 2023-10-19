@@ -70,17 +70,17 @@ function LoginForm() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
             />
           </div>
           <div className="mb-4 w-80 relative">
-            <label className="block text-orange-700 mb-2">Senha</label>
+            <label className="block text-orange-700 mb-2 ">Senha</label>
             <input
               type={showPassword ? 'text' : 'password'}
               placeholder="**********"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
             />
             <span
               onClick={() => setShowPassword((prev) => !prev)}

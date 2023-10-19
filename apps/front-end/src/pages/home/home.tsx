@@ -143,7 +143,7 @@ const SearchBar: React.FC = () => {
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
             placeholder="Digite os alimentos desejados..."
-            className="p-1 flex-1 min-w-0 focus:outline-none"
+            className="p-1 flex-1 min-w-0 focus:outline-none border-none focus:ring-0"
           />
         </div>
         {suggestions.length > 0 && (

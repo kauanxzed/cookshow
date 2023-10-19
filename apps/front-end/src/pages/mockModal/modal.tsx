@@ -136,8 +136,8 @@ const ModalDefault = () => {
                 type="text"
                 name="recipeName"
                 id="recipeName"
-                placeholder="Escreva o nome da sua receita"
-                className="block w-full h-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+                placeholder="Título da receita"
+                className="block w-full h-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
                 value={recipeName}
                 onChange={(e) => {
                   setRecipeName(e.target.value);
@@ -157,14 +157,14 @@ const ModalDefault = () => {
                             value={item.ingredient}
                             onChange={(e) => handleInputIngredientChange(e, i)}
                             placeholder="Ingrediente"
-                            className="block w-full h-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+                            className="block w-full h-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
                             required
                           />
                         </div>
                         {isFocused[i] && LoadSuggestions(item, i)}
                       </div>
                     <input
-                      className="block w-1/5 ml-2 p-3 h-full bg-gray-100 rounded-lg outline-none focus:outline-orange-400 text-center"
+                      className="block w-1/5 ml-2 p-3 h-full bg-gray-100 rounded-lg outline-none focus:outline-orange-400 text-center border-none focus:ring-0"
                       type="text"
                       required
                       name="quantity"
@@ -196,7 +196,7 @@ const ModalDefault = () => {
                 type="time"
                 name="timeMinutes"
                 id="timeMinutes"
-                className="block w-2/4 p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 before-content [&:not(:valid)]"
+                className="block w-2/4 p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 before-content [&:not(:valid)] border-none focus:ring-0"
                 value={recipeTime}
                 onChange={(e) => {
                   setRecipeTime(e.target.value);
@@ -209,8 +209,8 @@ const ModalDefault = () => {
                 type="text"
                 name="category"
                 id="category"
-                placeholder="Escreva a origem da receita"
-                className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+                placeholder="Origem da receita"
+                className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
                 value={recipeOrigin}
                 onChange={(e) => {
                   setRecipeOrigin(e.target.value);
@@ -223,8 +223,8 @@ const ModalDefault = () => {
                 type="text"
                 name="description"
                 id="description"
-                placeholder="Escreva uma descrição breve para a receita"
-                className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+                placeholder="Modo de preparo da receita"
+                className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
                 value={recipeDescription}
                 onChange={(e) => {
                   setRecipeDescription(e.target.value);
