@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Button, Modal } from 'flowbite-react';
 import { alimentos } from './mockAlimentos';
-import { resolveAny } from 'dns';
+
 
 const ModalDefault = () => {
   const [openModal, setOpenModal] = useState<string | undefined>();
@@ -21,16 +21,24 @@ const ModalDefault = () => {
     quantity: string;
   }
 
-  const LoadSuggestions = (item: inputIngrediente) => {
+  const LoadSuggestions = (item: inputIngrediente, inputIndex: number) => {
+    console.log(item)
     return (
-      <div className="mt-2 bg-gray-100 rounded-md shadow">
+      <div className="mt-2 w-full bg-gray-100 rounded-md shadow">
         {suggestions.map((suggestion, index) => (
           <div
             key={index}
             className="p-1.5 border-t border-gray-300 cursor-pointer text-orange-500 hover:bg-gray-200"
             onClick={() => {
-              item.ingredient = suggestion;
+              const list: Array<inputIngrediente> = [...inputList];
+              list.find((it, ind) => {
+                if(it=== item) {list[ind].ingredient = suggestion}
+              })
+              setInputList(list);
               suggestions.length = 0;
+              const focused: Array<boolean> = [...isFocused];
+              focused[inputIndex] = false;
+              setIsFocused(focused);
             }}
           >
             {suggestion}
@@ -90,10 +98,16 @@ const ModalDefault = () => {
       <Modal
         show={props.openModal === 'default'}
         onClose={() => props.setOpenModal(undefined)}
-        size={50}
+        size="5xl"
       >
         <Modal.Body className="flex justify-between p-0">
-          <div className="background-register-recipe p-5 flex flex-col items-center justify-center rounded-tl-lg">
+          <div className="p-5 flex flex-col items-center justify-center rounded-tl-lg">
+            <button
+                className="text-black text-xl self-start"
+                onClick={() => props.setOpenModal(undefined)}
+              >
+                X
+              </button>
             <div className="rounded-full w-72 h-72 bg-white border-solid border border-[#FF7A00] flex justify-center align-center"></div>
             <div className="flex flex-col items-center justify-center p-2">
               <p className="">Selecione uma foto do seu dispositivo</p>
@@ -116,13 +130,7 @@ const ModalDefault = () => {
               />
             </div>
           </div>
-          <div className="space-y-6 p-5 w-full flex flex-col">
-            <button
-              className="text-[#B6B6B6] text-xl self-end"
-              onClick={() => props.setOpenModal(undefined)}
-            >
-              X
-            </button>
+          <div className="space-y-6 p-5 w-full flex flex-col overflow-y-scroll">
             <div>
               <input
                 type="text"
@@ -139,25 +147,22 @@ const ModalDefault = () => {
             </div>
             {inputList.map((item, i) => {
               return (
-                <div className="box">
-                  <div className="flex justify-between">
-                    <div className="flex flex-col">
-                      <input
-                        type="text"
-                        name="ingredient"
-                        value={item.ingredient}
-                        onChange={(e) => handleInputIngredientChange(e, i)}
-                        onBlur={() => {
-                          const focused: Array<boolean> = [...isFocused];
-                          focused[i] = false;
-                          setIsFocused(focused);
-                        }}
-                        placeholder="Ingrediente"
-                        className="block w-full h-full bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
-                        required
-                      />
-                    </div>
-                    {isFocused[i] && <LoadSuggestions item={item} />}
+                  <div className="box">
+                    <div className="flex">
+                      <div className='flex flex-col w-full justify-center items-center'>
+                        <div className="flex flex-col w-full ">
+                          <input
+                            type="text"
+                            name="ingredient"
+                            value={item.ingredient}
+                            onChange={(e) => handleInputIngredientChange(e, i)}
+                            placeholder="Ingrediente"
+                            className="block w-full h-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+                            required
+                          />
+                        </div>
+                        {isFocused[i] && LoadSuggestions(item, i)}
+                      </div>
                     <input
                       className="block w-1/5 ml-2 p-3 h-full bg-gray-100 rounded-lg outline-none focus:outline-orange-400 text-center"
                       type="text"
@@ -191,7 +196,7 @@ const ModalDefault = () => {
                 type="time"
                 name="timeMinutes"
                 id="timeMinutes"
-                className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 before-content [&:not(:valid)]"
+                className="block w-2/4 p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 before-content [&:not(:valid)]"
                 value={recipeTime}
                 onChange={(e) => {
                   setRecipeTime(e.target.value);
