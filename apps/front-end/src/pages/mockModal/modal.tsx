@@ -1,7 +1,8 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import React, { useState, ChangeEvent, useEffect, FormEvent } from 'react';
 import { Button, Modal } from 'flowbite-react';
 import { alimentos } from './mockAlimentos';
-import EventEmitter from 'events';
+import TextareaAutosize from 'react-textarea-autosize';
+//import axios from 'axios';
 
 
 const ModalDefault = () => {
@@ -24,6 +25,7 @@ const ModalDefault = () => {
     recipeCategory: '',
     recipeMode: ''
   });
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   interface inputIngrediente {
     ingredient: string;
@@ -53,7 +55,6 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
 
   const LoadSuggestions = (item: inputIngrediente, inputIndex: number) => {
     if(isFocused[inputIndex] !== true) return
-    console.log(item)
     return (
       <div className="w-full absolute top-0 bg-gray-100 rounded-md shadow">
         {suggestions.map((suggestion, index) => (
@@ -62,6 +63,7 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
             className="p-1.5 border-t border-gray-300 cursor-pointer text-orange-500 hover:bg-gray-200"
             onClick={() => {
               const list: Array<inputIngrediente> = [...inputList];
+              // eslint-disable-next-line array-callback-return
               list.find((it, ind) => {
                 if(it === item) {list[ind].ingredient = suggestion}
               })
@@ -135,13 +137,37 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const hasErrors = Object.values(errors).some((error) => !!error);
     if (!hasErrors) {
-      // Continue com o envio do formulário
+      setOpenModal("")
+      setShowSuccessMessage(true); // Mostrar a mensagem de sucesso
+      setTimeout(() => {
+        setShowSuccessMessage(false); // Ocultar a mensagem de sucesso após alguns segundos
+      }, 3000);
     }
-    console.log("form")
+      /*const url = "/api/recipe"
+
+      axios.post(url, {
+        recipePhoto: preview,
+        recipeName: recipeName,
+        ingredients: inputList,
+        recipeTime: recipeTime,
+        recipeCategory: recipeCategory,
+        recipeMode: recipeMode
+      },{
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept' : 'application/json',
+        }
+      }) 
+      .then(Response => {
+        const data = Response.data
+        console.log(Response);
+      }).catch(err => console.log(err.response));
+      }
+    */
   }
 
   return (
@@ -149,13 +175,24 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
       <Button onClick={() => props.setOpenModal('default')}>
         Toggle modal
       </Button>
+      {showSuccessMessage && (
+              <div className="flex fixed top-0 right-0 items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
+                <svg className="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <span className="sr-only">Info</span>
+                <div>
+                  <span className="font-medium">Receita enviada</span> aguarde a análise.
+                </div>
+              </div>
+      )}
       <Modal
         show={props.openModal === 'default'}
         onClose={() => props.setOpenModal(undefined)}
         size="5xl"
       >
         <form onSubmit={handleSubmit}>
-          <Modal.Body className="flex justify-between p-0">
+          <Modal.Body className="flex flex-col md:flex-row justify-between p-0 bg-white">
             <div className="p-5 flex flex-col items-center justify-center rounded-tl-lg">
               <button
                   className="text-black text-xl self-start"
@@ -220,7 +257,7 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
                 return (
                     <div className="box">
                       <div className="flex">
-                        <div className='flex flex-col w-full justify-center items-center'>
+                        <div className='flex flex-col w-4/5 justify-center items-center'>
                           <div className="flex flex-col w-full">
                             <input
                               type="text"
@@ -228,7 +265,7 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
                               value={item.ingredient}
                               onChange={(e) => handleInputIngredientChange(e, i)}
                               placeholder="Ingrediente"
-                              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
+                              className="block h-full w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
                               required
                             />
                           </div>
@@ -237,9 +274,9 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
                           </div>
                           
                         </div>
-                      <div className='h-full w-1/5 ml-2 p-3 '>
+                      <div className='h-full w-1/5 ml-14'>
                         <input
-                          className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0 text-center"
+                          className="block h-full w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0 text-center"
                           type="text"
                           required
                           name="quantity"
@@ -275,7 +312,7 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
                   type="time"
                   name="recipeTime"
                   id="recipeTime"
-                  className="block w-2/4 p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 before-content [&:not(:valid)] border-none focus:ring-0"
+                  className="block w-2/4 min-w-max p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 before-content [&:not(:valid)] border-none focus:ring-0"
                   value={recipeTime}
                   onChange={(e) => {
                     setRecipeTime(e.target.value);
@@ -293,12 +330,13 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
                 {errors.recipeTime && <p className='text-red-500'>{errors.recipeTime}</p>}
               </div>
               <div className='h-full'>
-                <input
-                  type="text"
+                <TextareaAutosize
+                  minRows={1}
+                  maxRows={5}
                   name="recipeCategory"
                   id="recipeCategory"
                   placeholder="Origem da receita"
-                  className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
+                  className="block w-full p-3 break-words bg-gray-100 rounded-lg outline-none focus:outline-orange-400 border-none focus:ring-0"
                   value={recipeCategory}
                   onChange={(e) => {
                     setRecipeCategory(e.target.value);
@@ -320,8 +358,9 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
                 {errors.recipeCategory && <p className='text-red-500'>{errors.recipeCategory}</p>}
               </div>
               <div className='h-full'>
-                <input
-                  type="text"
+                <TextareaAutosize
+                  minRows={1}
+                  maxRows={5}
                   name="recipeMode"
                   id="recipeMode"
                   placeholder="Modo de preparo da receita"
@@ -348,7 +387,7 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
               </div>
             </div>
           </Modal.Body>
-          <Modal.Footer className="flex items-center justify-center">
+          <Modal.Footer className="flex items-center justify-center bg-white">
             <button
               className="w-72 h-12 bg-[#9C4B00] text-white hover:bg-[#6d3500] duration-300"
               type='submit'
