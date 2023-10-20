@@ -69,7 +69,7 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
               })
               setInputList(list);
               suggestions.length = 0;
-              const focused: Array<boolean> = [...isFocused];
+              const focused: Array<boolean> = [...isFocused]; 
               focused[inputIndex] = false;
               setIsFocused(focused);
             }}
