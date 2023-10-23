@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { RecipeIngredientEntity } from './recipe-ingredient.entity';
+import { RatingEntity } from './recipe-rating.entity';
 
 @Entity({ name: 'receita' })
 export class RecipeEntity {
@@ -47,6 +48,9 @@ export class RecipeEntity {
     (recipeIngredient: RecipeIngredientEntity) => recipeIngredient.ingredient
   )
   ingredients: RecipeIngredientEntity[];
+
+  @OneToMany(() => RatingEntity, (rating: RatingEntity) => rating.receita)
+  ratings?: RatingEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;

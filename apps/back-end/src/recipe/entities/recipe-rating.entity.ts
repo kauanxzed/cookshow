@@ -2,17 +2,25 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UserEntity } from '../../user/entities/user.entity';
+import { RecipeEntity } from './recipe.entity';
 
 @Entity({ name: 'receita_interacao' })
 export class RatingEntity {
-  @PrimaryColumn({ type: 'uuid', name: 'id_usuario' })
-  id_usuario: string;
+  @PrimaryColumn({ name: 'id_usuario', type: 'uuid' })
+  @ManyToOne(() => UserEntity, (user) => user.ratings)
+  @JoinColumn({ name: 'id_usuario' })
+  usuario: UserEntity;
 
-  @PrimaryColumn({ type: 'uuid', name: 'id_receita' })
-  id_receita: string;
+  @PrimaryColumn({ name: 'id_receita', type: 'uuid' })
+  @ManyToOne(() => RecipeEntity, (recipe) => recipe.ratings)
+  @JoinColumn({ name: 'id_receita' })
+  receita: RecipeEntity;
 
   @Column({ type: 'numeric', name: 'avaliacao', nullable: true })
   avaliacao?: number;

@@ -4,6 +4,7 @@ import { HttpException, Injectable, Inject, HttpStatus } from '@nestjs/common';
 import { CreateRecipeRatingDto } from './dto/create-recipe-rating.dto';
 import { Repository } from 'typeorm';
 import { RecipeService } from './recipe.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class RecipeRatingService {
@@ -11,12 +12,18 @@ export class RecipeRatingService {
     @InjectRepository(RatingEntity)
     private readonly ratingRepository: Repository<RatingEntity>,
     @Inject(RecipeService)
-    private readonly recipeService: RecipeService
+    private readonly recipeService: RecipeService,
+    @Inject(UserService)
+    private readonly userService: UserService
   ) {}
 
   async create(createRecipeRatingDto: CreateRecipeRatingDto): Promise<void> {
     const recipe = await this.recipeService.findById(
       createRecipeRatingDto.id_receita
+    );
+
+    const user = await this.userService.findById(
+      createRecipeRatingDto.id_usuario
     );
 
     if (!recipe) {
@@ -25,11 +32,20 @@ export class RecipeRatingService {
       throw new HttpException('Recipe not published', HttpStatus.NOT_FOUND);
     }
 
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
     try {
       await this.ratingRepository
         .createQueryBuilder()
         .insert()
-        .values(createRecipeRatingDto)
+        .values({
+          usuario: user,
+          receita: recipe,
+          avaliacao: createRecipeRatingDto.avaliacao,
+          favorito: createRecipeRatingDto.favorito,
+        })
         .execute();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
