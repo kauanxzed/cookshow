@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { GrFacebook } from 'react-icons/gr';
 import Logo from '../../assets/images/background.png';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -21,7 +22,19 @@ function LoginForm() {
       alert('Por favor, insira um email válido.');
       return;
     }
-  };
+    const url = "/api/auth"
+
+    axios.post(url, {
+      email: email,
+      senha: password
+    },{
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept' : 'application/json',
+      }
+    }) 
+    .then().catch(()=> alert('Erro na requisição!'));
+  }
 
   return (
     <div className="flex overflow-hidden lg:flex-row h-screen">
