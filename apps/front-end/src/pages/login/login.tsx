@@ -4,7 +4,6 @@ import { GrFacebook } from 'react-icons/gr';
 import Logo from '../../assets/images/background.png';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { error } from 'console';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -34,11 +33,7 @@ function LoginForm() {
         'Accept' : 'application/json',
       }
     }) 
-    .then(Response => {
-      const data = Response.data
-      console.log(Response);
-    }).catch(err => console.log(err.response));
-
+    .then().catch(()=> alert('Erro na requisição!'));
   }
 
   return (

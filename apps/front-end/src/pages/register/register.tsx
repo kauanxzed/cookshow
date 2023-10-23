@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Logo from '../../assets/images/background.png';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -49,6 +50,19 @@ function LoginForm() {
       setEmailError('Insira um email válido!');
       return;
     }
+    const url = "/api/user"
+
+    axios.post(url, {
+      usuario: name,
+      email: email,
+      senha: password
+    },{
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept' : 'application/json',
+      }
+    }) 
+    .then().catch(()=> alert('Erro na requisição!'));
 
     if (!validatePassword(password)) {
       setPasswordError(
