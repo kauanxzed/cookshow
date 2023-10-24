@@ -17,7 +17,7 @@ export class UserService {
     const emailExist = await this.findByEmail(createUserDto.email);
 
     if (emailExist) {
-      throw new HttpException('Email already used', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Email already used', HttpStatus.FORBIDDEN);
     }
 
     try {
