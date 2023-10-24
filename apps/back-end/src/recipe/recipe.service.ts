@@ -130,4 +130,16 @@ export class RecipeService {
       throw new BadRequestException(error.message);
     }
   }
+
+  async getUserRecipes(userId: string): Promise<RecipeEntity[]> {
+    try {
+      return await this.recipeRepository
+        .createQueryBuilder('recipe')
+        .where('recipe.id_usuario = :userId', { userId })
+        .andWhere('recipe.deleted_at IS NULL')
+        .getMany();
+    } catch (erro) {
+      throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
