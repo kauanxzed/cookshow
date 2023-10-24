@@ -33,7 +33,7 @@ export class IngredientController {
   @Put(':id')
   async update(
     @Param('id') id: number,
-    @Body() updateIngredientDto: UpdateIngredientDto,
+    @Body() updateIngredientDto: UpdateIngredientDto
   ) {
     return await this.ingredientService.update(id, updateIngredientDto);
   }
