@@ -133,11 +133,13 @@ export class RecipeService {
 
   async getUserRecipes(userId: string): Promise<RecipeEntity[]> {
     try {
-      return await this.recipeRepository
+      const allRecipes = await this.recipeRepository
         .createQueryBuilder('recipe')
         .where('recipe.id_usuario = :userId', { userId })
         .andWhere('recipe.deleted_at IS NULL')
         .getMany();
+
+      return allRecipes;
     } catch (erro) {
       throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
     }

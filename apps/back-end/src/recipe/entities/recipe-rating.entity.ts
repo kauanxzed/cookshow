@@ -22,7 +22,7 @@ export class RatingEntity {
   @JoinColumn({ name: 'id_receita' })
   receita: RecipeEntity;
 
-  @Column({ type: 'numeric', name: 'avaliacao', nullable: true })
+  @Column({ name: 'avaliacao', nullable: true })
   avaliacao?: number;
 
   @Column({ type: 'boolean', name: 'favorito', nullable: true })

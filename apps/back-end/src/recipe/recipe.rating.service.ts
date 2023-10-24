@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RatingEntity } from './entities/recipe-rating.entity';
 import { HttpException, Injectable, Inject, HttpStatus } from '@nestjs/common';
 import { CreateRecipeRatingDto } from './dto/create-recipe-rating.dto';
-import { Repository } from 'typeorm';
+import { Repository, createQueryBuilder } from 'typeorm';
 import { RecipeService } from './recipe.service';
 import { UserService } from '../user/user.service';
 
@@ -67,9 +67,9 @@ export class RecipeRatingService {
         .where('rating.id_receita = :id_receita', { id_receita: recipeId })
         .getMany();
 
+      if (!ratings) return 0;
       const sum = ratings.reduce((acc, rating) => {
-        if (!rating.avaliacao) return acc;
-
+        if (!rating.avaliacao) return acc + 0;
         return acc + rating.avaliacao;
       }, 0);
 
@@ -77,5 +77,15 @@ export class RecipeRatingService {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async getNumRecipeFavorite(recipeId: string): Promise<number> {
+    const favorited = await this.ratingRepository
+      .createQueryBuilder('favorites')
+      .where('favorites.id_receita = :id', { id: recipeId })
+      .andWhere('favorites.favorito')
+      .getMany();
+
+    return favorited.length;
   }
 }
