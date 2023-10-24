@@ -1,8 +1,7 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
+import React, { useState } from 'react';
 import timer from "../../assets/images/relogio.png"
-import like from "../../assets/images/like.png"
-import liked from "../../assets/images/likeInteragido.png"
-import tt from "../../assets/images/coração.png"
+import PersonLiked from './personLiked';
+import heart from "../../assets/images/coração.png"
 import { Link } from 'react-router-dom';
 
 
@@ -23,7 +22,10 @@ interface RecipeProps {
     rating: number;
 }
 
-const recipe: React.FC<RecipeProps> = props => {
+const Recipe: React.FC<RecipeProps> = props => {
+
+    const [stateLike, setStateLike] = useState(false)
+
     function transformCase(str: string): string {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
       }
@@ -44,6 +46,13 @@ const recipe: React.FC<RecipeProps> = props => {
 
     const recipeURL = `/receitas/${props.id}`
 
+    function changeStateLike() {
+        setStateLike(!stateLike)
+    }
+
+    const likes = stateLike ? <i className="fa-solid fa-heart fa-xl" style={{color: "#ff8c00"}}></i> 
+                            : <i className="fa-regular fa-heart fa-xl" style={{color: "#ff8c00"}}></i>
+
     return (
         <div className='lg:w-1/3 flex md:w-1/2 w-full md:flex-col md:p-8 w-full pr-5 md:pr-0 pb-2 md:pb-0' >
             <Link to={recipeURL} className='h-36 w-36 md:h-44 md:w-full'>
@@ -51,12 +60,12 @@ const recipe: React.FC<RecipeProps> = props => {
                     <img src = {props.image} alt = {props.imageAlt} className='w-full h-full'/>
                 </div>
             </Link>
-            <div className='flex flex-col w-full h-full'>
+            <div className='flex flex-col w-full h-full ml-1' >
                 <div className='flex justify-between'>
                     <Link to={recipeURL}>
-                        <h1 className='text-color-orange font-medium'>{transformCase(props.title)}</h1>
+                        <h1 className='text-[#ff8c00] font-medium'>{transformCase(props.title)}</h1>
                     </Link>
-                    <div className='w-6 h-6 rounded-full bg-color-orange md:hidden'>
+                    <div className='w-6 h-6 rounded-full bg-[#ff8c00] md:hidden'>
                         <span className='rating w-full h-full flex items-center justify-center '>{props.rating}</span>
                     </div>
                 </div>
@@ -70,22 +79,18 @@ const recipe: React.FC<RecipeProps> = props => {
                 </div>
                 <p className='text-color-gray text-xs md:text-sm'>{formatDescription(props.description)}</p>
                 <div className='flex justify-between mt-auto md:pt-8'>
-                    <img src= {liked} className='hidden md:block'/>
+                    <div onClick={changeStateLike} className='hidden md:block'> 
+                        {likes}
+                    </div>
                     <div className='flex'>
                         {props.person1 !== undefined && (
-                            <div className='w-6 h-6 rounded-full overflow-hidden flex items-center justify-center'>
-                                <img src= {props.person1} alt="" className='w-full h-full object-cover'/>
-                            </div>
+                            <PersonLiked personPhoto={props.person1}/>
                         )}
                         {props.person2 !== undefined && (
-                            <div className='w-6 h-6 rounded-full overflow-hidden flex items-center justify-center -ml-2'>
-                                <img src= {props.person2} alt="" className='w-full h-full object-cover'/>
-                            </div>
+                            <PersonLiked personPhoto={props.person2}/>
                         )}
                         {props.person3 !== undefined && (
-                            <div className='w-6 h-6 rounded-full overflow-hidden flex items-center justify-center -ml-2'>
-                                <img src= {props.person3} alt="" className='w-full h-full object-cover'/>
-                            </div>
+                            <PersonLiked personPhoto={props.person3}/>
                         )}
                         {props.moreLikes !== undefined && (
                             <div className='w-6 h-6 rounded-full -ml-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)] bg-white'>
@@ -94,7 +99,7 @@ const recipe: React.FC<RecipeProps> = props => {
                         )}
                         {props.person1 !== undefined && (
                             <div className='self-end mt-4 -ml-2 relative z-2'>
-                                <img src= {tt} alt="" />
+                                <img src= {heart} alt="" />
                             </div>
                         )}
                     </div>
@@ -104,4 +109,4 @@ const recipe: React.FC<RecipeProps> = props => {
     )
 }
 
-export default recipe;
+export default Recipe;

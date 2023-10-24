@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import alimentos from './alimentos';
-import bgRecipeList from "../../assets/images/bgRecipeList.png"
 import Recipe from './recipe';
 import prato1 from "../../assets/images/prato1.png"
 import prato2 from "../../assets/images/prato2.png"
@@ -12,7 +11,7 @@ import person1 from "../../assets/images/person1.png"
 import person2 from "../../assets/images/person2.png"
 import person3 from "../../assets/images/person3.png"
 
-const recipeList: React.FC = () => {
+const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('');
   const [chips, setChips] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -40,13 +39,19 @@ const recipeList: React.FC = () => {
     setSuggestions(value ? filtered.slice(0, 5) : []);
   };
 
+  const addSuggestionToChips = (suggestion: string) => {
+    setChips([...chips, suggestion]);
+    setInputValue('');
+    setSuggestions([]);
+  };
+
   return (
     <div className="flex flex-col w-full md:max-w-2xl lg:max-w-4xl mx-auto items-center space-y-2">
-      <div className="w-screen flex items-center justify-center p-8 bg-cover bg-center" style={{ backgroundImage: `url(${bgRecipeList})` }}>
+      <div className="w-screen flex flex-col items-center justify-center p-8 bg-cover bg-center">
         <div
-          className={`flex flex-wrap items-center border-2 ${
+          className={`flex items-center flex-wrap border-2 ${
             isInputFocused ? 'border-orange-500' : 'border-gray-300'
-          } rounded-lg p-1 md:p-2 w-1/2 bg-white`}
+          } rounded-lg p-1 md:p-2 bg-white w-full md:w-1/2`}
         >
           <span
             className="text-lg mr-1 md:mr-2"
@@ -83,31 +88,45 @@ const recipeList: React.FC = () => {
               </g>
             </svg>
           </span>
-          {chips.map((chip, index) => (
-            <div
-              key={index}
-              className="flex items-center bg-orange-500 text-white rounded-xl px-1 m-1 md:px-2 md:m-1.5"
-            >
-              <span>{chip}</span>
-              <button
-                onClick={() => handleRemoveChip(index)}
-                className="ml-1 relative bottom-0.5 md:ml-2 text-white"
+            {chips.map((chip, index) => (
+              <div
+                key={index}
+                className="flex items-center bg-orange-500 text-white rounded-xl px-1 m-1 md:px-2 md:m-1.5"
               >
-                x
-              </button>
-            </div>
-          ))}
-          <input
-            type="text"
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            onFocus={() => setInputFocused(true)}
-            onBlur={() => setInputFocused(false)}
-            placeholder="Pesquise aqui..."
-            className="p-1 flex-1 min-w-0 focus:outline-none"
-          />
+                <span>{chip}</span>
+                <button
+                  onClick={() => handleRemoveChip(index)}
+                  className="ml-1 relative bottom-0.5 md:ml-2 text-white"
+                >
+                  x
+                </button>
+              </div>
+            ))}
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setInputFocused(true)}
+              onBlur={() => setInputFocused(false)}
+              placeholder="Digite os alimentos desejados..."
+              className="p-1 flex-1 min-w-0 focus:outline-none"
+            />
+          
         </div>
+        {suggestions.length > 0 && (
+            <div className="mt-2 w-full md:w-1/2 bg-gray-100 rounded-md shadow">
+              {suggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  className="p-1.5 border-t border-gray-300 cursor-pointer text-orange-500 hover:bg-gray-200"
+                  onClick={() => addSuggestionToChips(suggestion)}
+                >
+                  {suggestion}
+                </div>
+              ))}
+            </div>
+          )}
       </div>
       <div className="w-full h-full flex flex-wrap">
         <Recipe image = {prato1} imageAlt='foto representando o prato Pizza margherita' title='pizza marGherIta' category='ITALIANO' owner='fabiana' hours={0} minutes={50} 
@@ -138,4 +157,4 @@ const recipeList: React.FC = () => {
   );
 };
 
-export default recipeList;
+export default RecipeList;
