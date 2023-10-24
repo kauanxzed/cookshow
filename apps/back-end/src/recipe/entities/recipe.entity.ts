@@ -52,6 +52,9 @@ export class RecipeEntity {
   @OneToMany(() => RatingEntity, (rating: RatingEntity) => rating.receita)
   ratings?: RatingEntity[];
 
+  @OneToMany(() => RatingEntity, (rating: RatingEntity) => rating.receita)
+  comentarios?: RatingEntity[];
+
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
 

@@ -4,9 +4,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { RecipeEntity } from '../../recipe/entities/recipe.entity';
 
 @Entity('receita_comentario')
 export class CommentEntity {
@@ -16,6 +19,8 @@ export class CommentEntity {
   @Column({ type: 'uuid' })
   id_usuario: string;
 
+  @ManyToOne(() => RecipeEntity)
+  @JoinColumn({ name: 'id_receita' })
   @Column({ type: 'uuid' })
   id_receita: string;
 
