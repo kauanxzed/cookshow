@@ -18,12 +18,12 @@ export class RecipeController {
   async addRecipeIngredient(
     @Param('recipeId') recipeId: string,
     @Param('ingredientId') ingredientId: number,
-    @Body('portion') portion: number,
+    @Body('portion') portion: number
   ) {
     return await this.recipeService.addRecipeIngredient(
       recipeId,
       ingredientId,
-      portion,
+      portion
     );
   }
 
