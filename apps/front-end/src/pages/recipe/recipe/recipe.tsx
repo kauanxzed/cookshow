@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Button, Modal } from 'flowbite-react';
+import RecipeInfo from './recipeInfo';
 
 
 const ingredients = [
@@ -9,6 +10,7 @@ const ingredients = [
   {nome: 'pera'},
   {nome: 'banana'}
 ]
+
 
 const ModalDefault = () => {
   const [openModal, setOpenModal] = useState<string | undefined>();
@@ -40,10 +42,10 @@ const ModalDefault = () => {
       <Modal
         show={props.openModal === 'default'}
         onClose={() => props.setOpenModal(undefined)}
-        size="5xl"
+        size="5x1"
       >
         <Modal.Body className="flex justify-between p-0">
-          <div className="p-5 flex flex-col items-center justify-center rounded-tl-lg">
+          <div className="bg-gradient-to-r from-[#FF7A00] mr-10 p-5 flex flex-col items-center justify-center rounded-tl-lg">
             <button
                 className="text-black text-xl self-start"
                 onClick={() => props.setOpenModal(undefined)}
@@ -51,8 +53,8 @@ const ModalDefault = () => {
                 X
               </button>
             <div className="rounded-full w-72 h-72 bg-white border-solid border border-[#FF7A00] flex justify-center align-center"></div>
-            <div className="flex flex-col items-center justify-center p-2">
-              <p className="">Descrição da receita</p>
+            <div className="text-base flex flex-col items-center justify-center p-2">
+              <p className="">“Sua origem é italiana, parente da carne lessa, receita à base de carne cozida e desfiada.”</p>
               <input
                 id="photoRecipe"
                 name="photoRecipe"
@@ -62,7 +64,7 @@ const ModalDefault = () => {
               />
             </div>
           </div>
-          <div className="p-5 w-full flex flex-col overflow-y-scroll overflow-auto">
+          <div className="p-5 w-full flex flex-col">
             <p className='text-xl text-[#9C4B00]'>
               Carne Louca
             </p>
@@ -72,21 +74,34 @@ const ModalDefault = () => {
             <p className='font-["Poppins"] mt-2 text-base text-[#666565]'> 
               Rafaela
             </p>
-            <p className='text-sm text-[#666565]'>
-              🕙 0h40min 🍽️ Média 🔥 678 Kcal
-            </p>
+            <div className='flex flex-row'>
+              <RecipeInfo info={'🕙 0h40min'}/>
+              <RecipeInfo info={'🍽️ Média'}/>
+              <RecipeInfo info={'🔥 678 Kcal'}/>
+            </div>
             <p className='mt-2'>
               ⭐⭐⭐⭐⭐ 4.8
             </p>
-            {ingredients.map((ingredient) => {
-              return (
-                <div className="w-fit flex-col flex items-center bg-orange-500 text-white rounded-xl px-1 m-1 md:px-2 md:m-1.5">
-                  <span>{ingredient.nome}</span>
-                </div>
-              )
-            })}
-            
-          </div>
+
+            <div className='flex flex-row'>
+              {ingredients.map((ingredient) => {
+                return (
+                    <div className="w-fit text-sm bg-orange-500 text-white rounded-xl px-1 m-1 md:px-2 md:m-0.5">
+                      <p>{ingredient.nome}</p>
+                    </div>
+                )
+              })}
+            </div>
+                <div className='flex flex-row'>
+                  <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                  <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                  <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                  <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+              </div>
+              <div className='mt-20 flex flex-row'>
+              🧡 Ver todos os comentários
+            </div>
+            </div>
         </Modal.Body>
       </Modal>
     </>
