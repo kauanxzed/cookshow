@@ -12,6 +12,7 @@ import { RecipeEntity } from '../recipe/entities/recipe.entity';
 import { CommentEntity } from '../comments/entities/comment.entity';
 import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.entity';
 import { CommentsModule } from '../comments/comments.module';
+import { RatingEntity } from '../recipe/entities/recipe-rating.entity';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { CommentsModule } from '../comments/comments.module';
         UserEntity,
         RecipeEntity,
         IngredientEntity,
+        RatingEntity,
         RecipeIngredientEntity,
         CommentEntity,
       ],
@@ -39,7 +41,7 @@ import { CommentsModule } from '../comments/comments.module';
       ssl: {
         rejectUnauthorized: false,
         ca: readFileSync(
-          'apps/back-end/src/assets/ca-certificate.crt',
+          'apps/back-end/src/assets/ca-certificate.crt'
         ).toString(),
       },
     }),

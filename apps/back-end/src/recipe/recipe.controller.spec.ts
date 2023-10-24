@@ -10,6 +10,9 @@ import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
 import { SharedUtilServer } from '@cook-show/shared/util-server';
 import { UserEntity } from '../user/entities/user.entity';
+import { RecipeRatingService } from './recipe.rating.service';
+import { RatingEntity } from './entities/recipe-rating.entity';
+
 describe('RecipeController', () => {
   let recipeController: RecipeController;
   let recipeService: RecipeService;
@@ -31,6 +34,7 @@ describe('RecipeController', () => {
         },
         IngredientService,
         UserService,
+        RecipeRatingService,
         {
           provide: getRepositoryToken(RecipeIngredientEntity),
           useClass: Repository,
@@ -50,6 +54,10 @@ describe('RecipeController', () => {
           provide: getRepositoryToken(UserEntity),
           useClass: Repository,
         },
+        {
+          provide: getRepositoryToken(RatingEntity),
+          useClass: Repository,
+        },
       ],
     }).compile();
 
@@ -59,13 +67,13 @@ describe('RecipeController', () => {
     ingredientService = module.get<IngredientService>(IngredientService);
     userService = module.get<UserService>(UserService);
     recipeIngredientRepository = module.get<Repository<RecipeIngredientEntity>>(
-      getRepositoryToken(RecipeIngredientEntity),
+      getRepositoryToken(RecipeIngredientEntity)
     );
     recipeRepository = module.get<Repository<RecipeEntity>>(
-      getRepositoryToken(RecipeEntity),
+      getRepositoryToken(RecipeEntity)
     );
     userRepository = module.get<Repository<UserEntity>>(
-      getRepositoryToken(UserEntity),
+      getRepositoryToken(UserEntity)
     );
   });
 

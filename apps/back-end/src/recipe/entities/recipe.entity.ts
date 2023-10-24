@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../user/entities/user.entity';
 import { RecipeIngredientEntity } from './recipe-ingredient.entity';
+import { RatingEntity } from './recipe-rating.entity';
 
 @Entity({ name: 'receita' })
 export class RecipeEntity {
@@ -44,9 +45,12 @@ export class RecipeEntity {
 
   @OneToMany(
     () => RecipeIngredientEntity,
-    (recipeIngredient: RecipeIngredientEntity) => recipeIngredient.ingredient,
+    (recipeIngredient: RecipeIngredientEntity) => recipeIngredient.ingredient
   )
   ingredients: RecipeIngredientEntity[];
+
+  @OneToMany(() => RatingEntity, (rating: RatingEntity) => rating.receita)
+  ratings?: RatingEntity[];
 
   @CreateDateColumn({ name: 'created_at' })
   created_at: Date;
@@ -56,4 +60,7 @@ export class RecipeEntity {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deleted_at?: Date;
+
+  @Column({ name: 'publicado', nullable: false, default: false })
+  publicado: boolean;
 }
