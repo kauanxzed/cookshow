@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
@@ -17,7 +17,7 @@ export class UserService {
     const emailExist = await this.findByEmail(createUserDto.email);
 
     if (emailExist) {
-      throw new HttpException('Email already used', 400);
+      throw new HttpException('Email already used', HttpStatus.BAD_REQUEST);
     }
 
     try {
@@ -31,7 +31,7 @@ export class UserService {
         .execute();
       return user.raw[0];
     } catch (error) {
-      throw new Error(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -53,5 +53,51 @@ export class UserService {
       .getOne();
 
     return foundUser;
+  }
+
+  async update(
+    id: string,
+    createUserDto: CreateUserDto
+  ): Promise<UserEntity | null> {
+    const user = await this.findById(id);
+
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    try {
+      createUserDto.senha = await this.sharedUtilServer.hash(
+        createUserDto.senha
+      );
+      await this.userRepository
+        .createQueryBuilder()
+        .update(UserEntity)
+        .set(createUserDto)
+        .where('id = :id', { id })
+        .execute();
+
+      return await this.findById(id);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    const user = await this.findById(id);
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    try {
+      await this.userRepository
+        .createQueryBuilder()
+        .update(UserEntity)
+        .set({ deleted_at: new Date() })
+        .where('id = :id', { id })
+        .execute();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
   }
 }
