@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { RecipeEntity } from './entities/recipe.entity';
 import { Repository } from 'typeorm';
@@ -31,7 +25,7 @@ export class RecipeService {
   async create(createRecipeDto: CreateRecipeDto): Promise<RecipeEntity> {
     const foundRecipe = await this.findByTitle(createRecipeDto.titulo);
     if (foundRecipe) {
-      throw new BadRequestException('Recipe already exists');
+      throw new HttpException('Recipe already exists', HttpStatus.FORBIDDEN);
     }
 
     const user = (await this.userService.findById(
@@ -52,7 +46,7 @@ export class RecipeService {
 
       return recipe.raw[0];
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -127,7 +121,7 @@ export class RecipeService {
         })
         .execute();
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
