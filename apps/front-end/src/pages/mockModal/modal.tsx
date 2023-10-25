@@ -225,8 +225,8 @@ const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
                 />
               </div>
             </div>
-            <div className="space-y-6 p-5 w-full flex flex-col overflow-y-scroll">
-              <div className='h-full '>
+            <div className="space-y-6 p-5 w-full max-h-[70vh] flex flex-col overflow-y-scroll">
+              <div className='h-full'>
                 <input
                   type="text"
                   name="recipeName"
