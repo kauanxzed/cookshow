@@ -1,7 +1,11 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Button, Modal } from 'flowbite-react';
 import RecipeInfo from './recipeInfo';
-
+import RecipePhotoMock from '../../../assets/images/carne.jpg'
+import RecipeRating from "./recipeRating"
+import Ingredient from './Ingredient';
+import Like from '../../../components/ui/like/like';
+import Comments from './comments';
 
 const ingredients = [
   {nome: 'carne'},
@@ -14,37 +18,74 @@ const ingredients = [
 
 const ModalDefault = () => {
   const [openModal, setOpenModal] = useState<string | undefined>();
+  const [commentsVisible, setCommentsVisible] = useState(false);
   const props = { openModal, setOpenModal };
-  const [inputList, setInputList] = useState([
-    { ingredient: '', quantity: '' },
-  ]);
-  const [recipeName, setRecipeName] = useState('');
-  const [recipeTime, setRecipeTime] = useState('');
-  const [recipeOrigin, setRecipeOrigin] = useState('');
-  const [recipeDescription, setRecipeDescription] = useState('');  
-  const handleQuantityChange = (
-    event: ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    const value = event.target.value;
-    if (!isNaN(+value)) {
-      const list = [...inputList];
-      list[index].quantity = value;
-      setInputList(list);
-    }
-  };
+  const recipeMock = {
+    recipePhoto: RecipePhotoMock,
+    recipeName: "Carne louca",
+    recipeAutor: "Rafael",
+    recipeOrigin: "ITALIANO",
+    recipeTime:"Oh40min",
+    recipeDifficulty: "Média",
+    recipeKcal: 678,
+    recipeRating: 4.8,
+    recipeIngredients: [
+      {
+        ingredientName: "carne",
+        ingredientPortion: 200
+      },
+      {
+        ingredientName: "miojo",
+        ingredientPortion: 500
+      },
+      {
+        ingredientName: "maça",
+        ingredientPortion: 100
+      },
+      {
+        ingredientName: "pera",
+        ingredientPortion: 100
+      },
+      {
+        ingredientName: "banana",
+        ingredientPortion: 150
+      }
+    ],
+    recipeComments: [
+      {
+        commentAuthor: "Carlos",
+        commentContent: "Bela receita!"
+      },
+      {
+        commentAuthor: "Igor rafael De Souza",
+        commentContent: "teste teste teste teste teste teste teste teste teste teste teste teste teste teste teste teste"
+      },
+      {
+        commentAuthor: "Matheus",
+        commentContent: "uau!"
+      },
+      {
+        commentAuthor: "Thiago",
+        commentContent: "incrivel."
+      },
+    ]
+  }
+
+  function showComments() {
+    setCommentsVisible(!commentsVisible);
+    console.log("teste")
+  }
 
   return (
     <>
-      <Button onClick={() => props.setOpenModal('default')}>
+      <Button onClick={() => props.setOpenModal('default')} className='text-color-blue-500'>
         Toggle modal
       </Button>
       <Modal
         show={props.openModal === 'default'}
         onClose={() => props.setOpenModal(undefined)}
-        size="5x1"
       >
-        <Modal.Body className="flex justify-between p-0">
+        <Modal.Body className="flex h-screen flex-col md:flex-row justify-between p-0 bg-white">
           <div className="bg-gradient-to-r from-[#FF7A00] mr-10 p-5 flex flex-col items-center justify-center rounded-tl-lg">
             <button
                 className="text-black text-xl self-start"
@@ -52,55 +93,53 @@ const ModalDefault = () => {
               >
                 X
               </button>
-            <div className="rounded-full w-72 h-72 bg-white border-solid border border-[#FF7A00] flex justify-center align-center"></div>
-            <div className="text-base flex flex-col items-center justify-center p-2">
-              <p className="">“Sua origem é italiana, parente da carne lessa, receita à base de carne cozida e desfiada.”</p>
-              <input
-                id="photoRecipe"
-                name="photoRecipe"
-                type="file"
-                accept=".jpg, .jpeg, .png"
-                className="hidden"
-              />
+            <div className="rounded-full w-72 h-72 bg-white border-solid border border-[#FF7A00] flex justify-center align-center overflow-hidden">
+              <img
+                  id="photoRecipe"
+                  alt='Foto da receita'
+                  src={recipeMock.recipePhoto}
+                /> 
             </div>
           </div>
           <div className="p-5 w-full flex flex-col">
             <p className='text-xl text-[#9C4B00]'>
-              Carne Louca
+              {recipeMock.recipeName}
             </p>
             <p className='text-xs text-[#999999]'> 
-              ITALIANO
+            {recipeMock.recipeOrigin}
             </p>
             <p className='font-["Poppins"] mt-2 text-base text-[#666565]'> 
-              Rafaela
+              {recipeMock.recipeAutor}
             </p>
             <div className='flex flex-row'>
-              <RecipeInfo info={'🕙 0h40min'}/>
-              <RecipeInfo info={'🍽️ Média'}/>
-              <RecipeInfo info={'🔥 678 Kcal'}/>
+              <RecipeInfo info={'🕙 ' + recipeMock.recipeTime}/>
+              <RecipeInfo info={'🍽️ ' + recipeMock.recipeDifficulty}/>
+              <RecipeInfo info={'🔥 ' + recipeMock.recipeKcal + ' Kcal'}/>
             </div>
-            <p className='mt-2'>
-              ⭐⭐⭐⭐⭐ 4.8
-            </p>
-
+            <div className='flex flex-row items-center'>
+              <RecipeRating rating={recipeMock.recipeRating}/>
+              <p className='ml-1'>{recipeMock.recipeRating}</p>
+            </div>
             <div className='flex flex-row'>
-              {ingredients.map((ingredient) => {
+              {recipeMock.recipeIngredients.map((ingredient) => {
                 return (
-                    <div className="w-fit text-sm bg-orange-500 text-white rounded-xl px-1 m-1 md:px-2 md:m-0.5">
-                      <p>{ingredient.nome}</p>
-                    </div>
+                  <Ingredient name={ingredient.ingredientName}/>
                 )
               })}
             </div>
-                <div className='flex flex-row'>
-                  <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                  <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                  <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                  <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+              <div className='flex flex-row'>
+                <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                <div className="mt-20 rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
               </div>
               <div className='mt-20 flex flex-row'>
-              🧡 Ver todos os comentários
-            </div>
+                <Like/>
+                <p className='cursor-pointer ml-2' onClick={showComments}>Ver todos os comentários</p>
+              </div>
+              {commentsVisible && (
+                <Comments comments={recipeMock.recipeComments}/>
+              )}
             </div>
         </Modal.Body>
       </Modal>

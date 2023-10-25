@@ -81,7 +81,6 @@ const SearchBar: React.FC = () => {
         alt="Logo CookShow"
         className="h-[120px] md:h-[130px] lg:h-[170px] w-auto mb-2.5 lg: mt-16"
       />
-      <ModalDefault />
 
       <div className="w-full">
         <div
