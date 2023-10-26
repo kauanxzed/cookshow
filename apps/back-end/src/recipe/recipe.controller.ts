@@ -57,4 +57,9 @@ export class RecipeController {
   async getUserRecipes(@Param('userId') userId: string) {
     return await this.recipeService.getUserRecipes(userId);
   }
+
+  @Get('/user/:userId/favorites')
+  async getFavoritedRecipes(@Param('userId') userId: string) {
+    return await this.recipeService.getFavoritedRecipes(userId);
+  }
 }

@@ -8,6 +8,7 @@ import { UserEntity } from '../user/entities/user.entity';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
+import { RatingEntity } from './entities/recipe-rating.entity';
 
 @Injectable()
 export class RecipeService {
@@ -134,6 +135,21 @@ export class RecipeService {
         .getMany();
 
       return allRecipes;
+    } catch (erro) {
+      throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getFavoritedRecipes(userId: string): Promise<RecipeEntity[]> {
+    try {
+      const recipes = await this.recipeRepository
+        .createQueryBuilder('recipe')
+        .innerJoin('recipe.ratings', 'interacao')
+        .where('interacao.id_usuario = :userId', { userId })
+        .andWhere('recipe.deleted_at IS NULL')
+        .getMany();
+
+      return recipes;
     } catch (erro) {
       throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
     }
