@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RatingEntity } from './entities/recipe-rating.entity';
 import { HttpException, Injectable, Inject, HttpStatus } from '@nestjs/common';
 import { CreateRecipeRatingDto } from './dto/create-recipe-rating.dto';
-import { Repository, createQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { RecipeService } from './recipe.service';
 import { UserService } from '../user/user.service';
 

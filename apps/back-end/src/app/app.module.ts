@@ -9,9 +9,8 @@ import { IngredientModule } from '../ingredient/ingredient.module';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
 import { RecipeModule } from '../recipe/recipe.module';
 import { RecipeEntity } from '../recipe/entities/recipe.entity';
-import { CommentEntity } from '../comments/entities/comment.entity';
+import { CommentEntity } from '../recipe/entities/recipe-comment.entity';
 import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.entity';
-import { CommentsModule } from '../comments/comments.module';
 import { RatingEntity } from '../recipe/entities/recipe-rating.entity';
 
 @Module({
@@ -20,7 +19,6 @@ import { RatingEntity } from '../recipe/entities/recipe-rating.entity';
     AuthModule,
     IngredientModule,
     RecipeModule,
-    CommentsModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',

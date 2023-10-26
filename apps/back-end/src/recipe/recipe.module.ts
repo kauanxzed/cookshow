@@ -8,6 +8,8 @@ import { IngredientModule } from '../ingredient/ingredient.module';
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
 import { RecipeRatingService } from './recipe.rating.service';
 import { RatingEntity } from './entities/recipe-rating.entity';
+import { CommentEntity } from './entities/recipe-comment.entity';
+import { RecipeCommentService } from './recipe.comment.service';
 
 @Module({
   imports: [
@@ -15,11 +17,12 @@ import { RatingEntity } from './entities/recipe-rating.entity';
       RecipeEntity,
       RecipeIngredientEntity,
       RatingEntity,
+      CommentEntity,
     ]),
     UserModule,
     IngredientModule,
   ],
   controllers: [RecipeController],
-  providers: [RecipeService, RecipeRatingService],
+  providers: [RecipeService, RecipeRatingService, RecipeCommentService],
 })
 export class RecipeModule {}
