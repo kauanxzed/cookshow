@@ -66,10 +66,10 @@ const Recipe: React.FC<RecipeProps> = props => {
                         <h1 className='text-[#ff8c00] font-medium'>{transformCase(props.title)}</h1>
                     </Link>
                     <div className='w-6 h-6 rounded-full bg-[#ff8c00] md:hidden'>
-                        <span className='rating w-full h-full flex items-center justify-center '>{props.rating}</span>
+                        <span className='font-sm text-white w-full h-full flex items-center justify-center '>{props.rating}</span>
                     </div>
                 </div>
-                <p className='text-color-gray text-xs md:text-sm'>{props.category.toUpperCase()}</p>
+                <p className='text-[#999999] text-xs md:text-sm'>{props.category.toUpperCase()}</p>
                 <div className='flex justify-between w-full'>
                     <h2 className='text-black'>{transformCase(props.owner)}</h2>
                     <div className='flex'>
@@ -77,7 +77,7 @@ const Recipe: React.FC<RecipeProps> = props => {
                         <h2 className='m-0'>{props.hours}h{formattedMinutes(props.minutes)}min</h2>
                     </div>
                 </div>
-                <p className='text-color-gray text-xs md:text-sm'>{formatDescription(props.description)}</p>
+                <p className='text-[#999999] text-xs md:text-sm'>{formatDescription(props.description)}</p>
                 <div className='flex justify-between mt-auto md:pt-8'>
                     <div onClick={changeStateLike} className='hidden md:block'> 
                         {likes}
@@ -94,7 +94,7 @@ const Recipe: React.FC<RecipeProps> = props => {
                         )}
                         {props.moreLikes !== undefined && (
                             <div className='w-6 h-6 rounded-full -ml-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)] bg-white'>
-                                <span className='moreLikes w-full h-full flex items-center justify-start'>+{props.moreLikes}</span>
+                                <span className='font-sm text-[#A8A8A8] w-full h-full flex items-center justify-start'>+{props.moreLikes}</span>
                             </div>
                         )}
                         {props.person1 !== undefined && (
