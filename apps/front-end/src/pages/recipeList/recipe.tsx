@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import timer from "../../assets/images/relogio.png"
-import PersonLiked from './personLiked';
+import PersonLiked from '../../components/ui/personLiked';
 import heart from "../../assets/images/coração.png"
 import { Link } from 'react-router-dom';
 
