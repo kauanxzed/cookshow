@@ -6,6 +6,10 @@ import RecipeRating from "./recipeRating"
 import Ingredient from './Ingredient';
 import Like from '../../../components/ui/like/like';
 import Comments from './comments';
+import PersonLiked from '../../../components/ui/personLiked';
+import person1 from "../../../assets/images/person1.png"
+import person2 from "../../../assets/images/person2.png"
+import person3 from "../../../assets/images/person3.png"
 
 const ingredients = [
   {nome: 'carne'},
@@ -81,6 +85,17 @@ const ModalDefault = () => {
         commentContent: "incrivel."
       },
     ],
+    personsLiked: [
+      {
+        personPhoto: person1
+      },
+      {
+        personPhoto: person2
+      },
+      {
+        personPhoto: person3
+      },
+    ],
     recipeMode: "modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /"
   }
 
@@ -146,10 +161,11 @@ const ModalDefault = () => {
                   </div>
                 </div>
                 <div className='flex flex-row'>
-                    <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                    <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                    <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                    <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                    {recipeMock.personsLiked.map((person) => {
+                      return (
+                        <PersonLiked personPhoto={person.personPhoto}/>
+                      )
+                    })}
                 </div>
                 <div className='flex flex-row'>
                   <Like/>
