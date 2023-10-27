@@ -82,4 +82,23 @@ export class RecipeCommentService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async getRecipesComments(recipeId: string) {
+    try {
+      const comments = this.commentRepository
+        .createQueryBuilder('comments')
+        .where('comments.id_receita = :recipeId', { recipeId })
+        .getMany();
+
+      return comments;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getQuantCommentsRecipe(recipeId: string) {
+    const comments = await this.getRecipesComments(recipeId);
+
+    return comments.length;
+  }
 }

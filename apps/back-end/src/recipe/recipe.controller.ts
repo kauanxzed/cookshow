@@ -86,7 +86,7 @@ export class RecipeController {
     return await this.commentService.findById(id);
   }
 
-  @Get()
+  @Get('/comments')
   async findAll() {
     return await this.commentService.findAll();
   }
@@ -102,5 +102,10 @@ export class RecipeController {
   @Delete('/:recipeId/comment/:id')
   async delete(@Param('id') id: string) {
     return await this.commentService.delete(id);
+  }
+
+  @Get('/:recipeId/commentsQuantity')
+  async getQuantCommentsRecipe(@Param('recipeId') recipeId: string) {
+    return await this.commentService.getQuantCommentsRecipe(recipeId);
   }
 }

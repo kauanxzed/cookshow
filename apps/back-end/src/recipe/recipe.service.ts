@@ -8,7 +8,6 @@ import { UserEntity } from '../user/entities/user.entity';
 import { IngredientService } from '../ingredient/ingredient.service';
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
-import { RatingEntity } from './entities/recipe-rating.entity';
 
 @Injectable()
 export class RecipeService {
