@@ -1,12 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { CreateCommentDto } from '../recipe/dto/create-recipe-comment.dto';
+import { UpdateCommentDto } from '../recipe/dto/update-recipe-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CommentEntity } from './entities/comment.entity';
+import { CommentEntity } from '../recipe/entities/recipe-comment.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class CommentsService {
+export class RecipeCommentService {
   constructor(
     @InjectRepository(CommentEntity)
     private readonly commentRepository: Repository<CommentEntity>
