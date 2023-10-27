@@ -1,5 +1,6 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import Logo from '../../assets/images/Logo.png';
+import ModalDefault from '../recipe/recipe/recipe';
 
 const SearchBar: React.FC = () => {
   const alimentos: string[] = [

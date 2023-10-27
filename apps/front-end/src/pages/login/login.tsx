@@ -33,11 +33,7 @@ function LoginForm() {
         'Accept' : 'application/json',
       }
     }) 
-    .then(Response => {
-      const data = Response.data
-      console.log(Response);
-    }).catch(err => console.log(err.response));
-
+    .then().catch(()=> alert('Erro na requisição!'));
   }
 
   return (

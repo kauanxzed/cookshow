@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateIngredientDto } from './dto/create-ingredient.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -15,7 +15,10 @@ export class IngredientService {
   async create(createIngredientDto: CreateIngredientDto): Promise<void> {
     const foundIngredient = await this.findByName(createIngredientDto.nome);
     if (foundIngredient) {
-      throw new BadRequestException('Ingrediente já cadastrado');
+      throw new HttpException(
+        'Ingrediente já cadastrado',
+        HttpStatus.FORBIDDEN
+      );
     }
 
     try {
@@ -25,7 +28,7 @@ export class IngredientService {
         .values(createIngredientDto)
         .execute();
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -35,7 +38,10 @@ export class IngredientService {
   ): Promise<void> {
     const foundIngredient = await this.findById(id);
     if (!foundIngredient) {
-      throw new BadRequestException('Ingrediente não encontrado');
+      throw new HttpException(
+        'Ingrediente não encontrado',
+        HttpStatus.NOT_FOUND
+      );
     }
 
     try {
@@ -46,7 +52,7 @@ export class IngredientService {
         .where('id = :id', { id })
         .execute();
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -54,7 +60,10 @@ export class IngredientService {
     const foundIngredient = await this.findById(id);
 
     if (!foundIngredient) {
-      throw new BadRequestException('Ingrediente não encontrado');
+      throw new HttpException(
+        'Ingrediente não encontrado',
+        HttpStatus.NOT_FOUND
+      );
     }
 
     try {
@@ -65,7 +74,7 @@ export class IngredientService {
         .where('id = :id', { id })
         .execute();
     } catch (error) {
-      throw new BadRequestException(error.message);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 

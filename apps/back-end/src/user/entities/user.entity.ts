@@ -8,6 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { RecipeEntity } from '../../recipe/entities/recipe.entity';
+import { RatingEntity } from '../../recipe/entities/recipe-rating.entity';
 
 @Entity({ name: 'usuario' })
 export class UserEntity {
@@ -37,4 +38,7 @@ export class UserEntity {
 
   @OneToMany(() => RecipeEntity, (recipe: RecipeEntity) => recipe.user)
   receitas?: RecipeEntity[];
+
+  @OneToMany(() => RatingEntity, (rating: RatingEntity) => rating.usuario)
+  ratings?: RatingEntity[];
 }
