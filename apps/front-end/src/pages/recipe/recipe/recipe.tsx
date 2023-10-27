@@ -49,7 +49,19 @@ const ModalDefault = () => {
       {
         ingredientName: "banana",
         ingredientPortion: 150
-      }
+      },
+      {
+        ingredientName: "banana",
+        ingredientPortion: 150
+      },
+      {
+        ingredientName: "banana",
+        ingredientPortion: 150
+      },
+      {
+        ingredientName: "banana",
+        ingredientPortion: 150
+      },
     ],
     recipeComments: [
       {
@@ -68,7 +80,8 @@ const ModalDefault = () => {
         commentAuthor: "Thiago",
         commentContent: "incrivel."
       },
-    ]
+    ],
+    recipeMode: "modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /"
   }
 
   function showComments() {
@@ -103,44 +116,54 @@ const ModalDefault = () => {
               </div>
             </div>
           <div className="rounded-tr-lg p-3 w-full h-[90vh] flex flex-col justify-between">
-            <div>
-              <p className='text-xl text-[#9C4B00]'>
-                {recipeMock.recipeName}
-              </p>
-              <p className='text-xs text-[#999999]'> 
-              {recipeMock.recipeOrigin}
-              </p>
-              <p className='font-["Poppins"] mt-2 text-base text-[#666565]'> 
-                {recipeMock.recipeAutor}
-              </p>
-              <div className='flex flex-row'>
-                <RecipeInfo info={'🕙 ' + recipeMock.recipeTime}/>
-                <RecipeInfo info={'🍽️ ' + recipeMock.recipeDifficulty}/>
-                <RecipeInfo info={'🔥 ' + recipeMock.recipeKcal + ' Kcal'}/>
+            <div className='h-3/5 flex flex-row'>
+              <div className='flex flex-col justify-between w-1/2'>
+                <div>
+                  <h1 className='text-xl text-[#9C4B00]'>
+                    {recipeMock.recipeName}
+                  </h1>
+                  <p className='text-xs text-[#999999]'> 
+                  {recipeMock.recipeOrigin}
+                  </p>
+                  <p className='font-["Poppins"] mt-2 text-base text-[#666565]'> 
+                    {recipeMock.recipeAutor}
+                  </p>
+                  <div className='flex flex-row mt-2'>
+                    <RecipeInfo info={'🕙 ' + recipeMock.recipeTime}/>
+                    <RecipeInfo info={'🍽️ ' + recipeMock.recipeDifficulty}/>
+                    <RecipeInfo info={'🔥 ' + recipeMock.recipeKcal + ' Kcal'}/>
+                  </div>
+                  <div className='flex flex-row items-center mt-2'>
+                    <RecipeRating rating={recipeMock.recipeRating}/>
+                    <p className='ml-1'>{recipeMock.recipeRating}</p>
+                  </div>
+                  <div className='flex flex-row flex-wrap mt-2'>
+                    {recipeMock.recipeIngredients.map((ingredient) => {
+                      return (
+                        <Ingredient name={ingredient.ingredientName}/>
+                      )
+                    })}
+                  </div>
+                </div>
+                <div className='flex flex-row'>
+                    <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                    <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                    <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                    <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
+                </div>
+                <div className='flex flex-row'>
+                  <Like/>
+                  <p className='cursor-pointer ml-2' onClick={showComments}>{commentsVisible ? "Ocultar todos os comentários" : "Ver todos os comentários"}</p>
+                </div>
               </div>
-              <div className='flex flex-row items-center'>
-                <RecipeRating rating={recipeMock.recipeRating}/>
-                <p className='ml-1'>{recipeMock.recipeRating}</p>
-              </div>
-              <div className='flex flex-row'>
-                {recipeMock.recipeIngredients.map((ingredient) => {
-                  return (
-                    <Ingredient name={ingredient.ingredientName}/>
-                  )
-                })}
+              <div className='w-1/2 border-l border-solid border-[#f2f2f2] p-2 flex items-center flex-col rounded-md'>
+                <h2 className='font-medium'>Modo de preparo</h2>
+                <div className='overflow-y-auto scrollbar-hidden text-[#666565]'>
+                  <p>{recipeMock.recipeMode}{recipeMock.recipeMode}{recipeMock.recipeMode}{recipeMock.recipeMode}{recipeMock.recipeMode}</p>
+                </div>
               </div>
             </div>
-            <div className='flex flex-row'>
-                <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-                <div className="rounded-full w-6 h-6 bg-white border-solid border border-[#FF7A00]"></div>
-            </div>
-            <div className='flex flex-row'>
-              <Like/>
-              <p className='cursor-pointer ml-2' onClick={showComments}>{commentsVisible ? "Ocultar todos os comentários" : "Ver todos os comentários"}</p>
-            </div>
-            <div className='h-36 overflow-y-scroll'>
+            <div className='h-60 overflow-y-auto mt-4'>
                 {commentsVisible && (
                   <Comments comments={recipeMock.recipeComments}/>
                 )}

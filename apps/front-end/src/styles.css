@@ -2,3 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 /* You can add global styles to this file, and also import other style files */
+
+.scrollbar-hidden::-webkit-scrollbar {
+    width: 0; /* Largura da barra de rolagem */
+    height: 0; /* Altura da barra de rolagem */
+    display: none; /* Oculta a barra de rolagem */
+  }
+  
+  /* Internet Explorer */
+  .scrollbar-hidden *::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
