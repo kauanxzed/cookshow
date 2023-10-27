@@ -7,6 +7,9 @@ import ReactDOM from 'react-dom/client';
 import FaleConosco from './pages/faleconosco/faleconosco';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Register from '../src/pages/register/register';
+import ModalDefaultRegister from './pages/mockModal/modal';
+import RecipeList from './pages/recipeList/recipeList';
+import ModalDefault from './pages/recipe/recipe/recipe';
 import PerfilEditar from '../src/pages/profile/editProfile';
 
 const root = ReactDOM.createRoot(
@@ -45,6 +48,17 @@ root.render(
       />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/modalReceita" element={<ModalDefault />} />
+      <Route
+        path="/receitas"
+        element={
+          <>
+            <Header />
+            <RecipeList />
+            <Footer />
+          </>
+        }
+      />
       <Route
         path="/"
         element={
@@ -55,6 +69,7 @@ root.render(
           </>
         }
       />
+      <Route path="/modal" element={<ModalDefaultRegister />} />
     </Routes>
   </BrowserRouter>
 );
