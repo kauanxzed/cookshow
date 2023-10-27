@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dev:front": "npx nx serve front-end"
   },
   "private": true,
   "devDependencies": {
