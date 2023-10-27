@@ -138,4 +138,27 @@ export class RecipeService {
       throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async searchRecipeByIngredient(ingredientId: number): Promise<any> {
+    // const foundIngredient = await this.ingredientRepository
+    //   .createQueryBuilder('ingredientes')
+    //   .where('ingredientes.id = :id', { id: ingredientId })
+    //   .andWhere('ingredientes.deleted_at IS NULL')
+    //   .getOne();
+
+    // if (!foundIngredient) {
+    //   throw new HttpException(
+    //     'Ingrediente não encontrado',
+    //     HttpStatus.NOT_FOUND
+    //   );
+    // }
+
+    const foundRecipes = await this.recipeIngredientRepository
+      .createQueryBuilder('ingredientes')
+      .leftJoinAndSelect('ingredientes.id_ingrediente', 'receita_ingredientes')
+      .where('receita_ingredientes.id_ingrediente = :id', { id: ingredientId })
+      .getOne();
+
+    return foundRecipes;
+  }
 }

@@ -98,4 +98,9 @@ export class RecipeController {
   async delete(@Param('id') id: string) {
     return await this.commentService.delete(id);
   }
+
+  @Get('/ingredient')
+  async fyndRecipeByIngredient(@Body() idIngredient: { id: number }) {
+    return await this.recipeService.searchRecipeByIngredient(idIngredient.id);
+  }
 }
