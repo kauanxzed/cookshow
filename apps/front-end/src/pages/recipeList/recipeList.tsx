@@ -1,6 +1,12 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import alimentos from './alimentos';
 import Recipe from './recipe';
+import prato1 from "../../assets/images/prato1.png"
+import prato2 from "../../assets/images/prato2.png"
+import prato3 from "../../assets/images/prato3.png"
+import prato4 from "../../assets/images/prato4.png"
+import prato5 from "../../assets/images/prato5.png"
+import prato6 from "../../assets/images/prato6.png"
 
 const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('')
