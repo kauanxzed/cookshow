@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import timer from "../../assets/images/relogio.png"
-import PersonLiked from '../../components/ui/personLiked';
-import heart from "../../assets/images/coração.png"
+import PersonsLiked from '../../components/ui/personsLiked';
 import { Link } from 'react-router-dom';
 
 
@@ -16,9 +15,7 @@ interface RecipeProps {
     minutes: number;
     description: string;
     moreLikes?: number;
-    person1?: string;
-    person2?: string;
-    person3?: string;
+    personsLiked: number;
     rating: number;
 }
 
@@ -83,25 +80,7 @@ const Recipe: React.FC<RecipeProps> = props => {
                         {likes}
                     </div>
                     <div className='flex'>
-                        {props.person1 !== undefined && (
-                            <PersonLiked personPhoto={props.person1}/>
-                        )}
-                        {props.person2 !== undefined && (
-                            <PersonLiked personPhoto={props.person2}/>
-                        )}
-                        {props.person3 !== undefined && (
-                            <PersonLiked personPhoto={props.person3}/>
-                        )}
-                        {props.moreLikes !== undefined && (
-                            <div className='w-6 h-6 rounded-full -ml-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)] bg-white'>
-                                <span className='font-sm text-[#A8A8A8] w-full h-full flex items-center justify-start'>+{props.moreLikes}</span>
-                            </div>
-                        )}
-                        {props.person1 !== undefined && (
-                            <div className='self-end mt-4 -ml-2 relative z-2'>
-                                <img src= {heart} alt="" />
-                            </div>
-                        )}
+                        <PersonsLiked personsLiked={props.personsLiked}/>
                     </div>
                 </div>
             </div>
