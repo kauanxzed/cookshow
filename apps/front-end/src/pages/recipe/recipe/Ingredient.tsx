@@ -1,15 +1,16 @@
-import React from "react";
+import React from 'react'
 
-interface IngredientProps{
-    name: string,
+interface IngredientProps {
+  name: string
 }
 
-const Ingredient: React.FC<IngredientProps> = props =>{
-    return (
-        <div className="w-fit text-sm bg-orange-500 text-white rounded-xl px-1 m-1 md:px-2 md:m-0.5">
-            <p>{props.name}</p>
-        </div>
-    )
+const Ingredient: React.FC<IngredientProps> = (props) => {
+  return (
+    <div className="m-1 w-fit rounded-xl bg-orange-500 px-1 text-sm text-white md:m-0.5 md:px-2">
+      <p>{props.name}</p>
+    </div>
+  )
 }
 
 export default Ingredient
+

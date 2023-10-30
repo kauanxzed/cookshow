@@ -1,15 +1,20 @@
-import React from "react"
+import React from 'react'
 
 interface personLikedProps {
-    personPhoto: string
+  personPhoto: string
 }
 
-const PersonLiked: React.FC<personLikedProps> = props => {
-    return (
-        <div className='w-6 h-6 rounded-full overflow-hidden flex items-center justify-center -ml-2'>
-            <img src= {props.personPhoto} alt="" className='w-full h-full object-cover'/>
-        </div>
-    )
+const PersonLiked: React.FC<personLikedProps> = (props) => {
+  return (
+    <div className="-ml-2 flex h-6 w-6 items-center justify-center overflow-hidden rounded-full">
+      <img
+        src={props.personPhoto}
+        alt=""
+        className="h-full w-full object-cover"
+      />
+    </div>
+  )
 }
 
 export default PersonLiked
+
