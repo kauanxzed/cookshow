@@ -1,34 +1,32 @@
-import React, { FormEvent, useState } from "react";
-import TextareaAutosize from 'react-textarea-autosize';
+import React, { FormEvent, useState } from 'react'
+import TextareaAutosize from 'react-textarea-autosize'
 
 interface comment {
-    commentAuthor: string,
-    commentContent: string,
+  commentAuthor: string
+  commentContent: string
 }
 
 interface CommentsProps {
-    comments: Array<comment>,
+  comments: Array<comment>
 }
 
 const Comments: React.FC<CommentsProps> = (props) => {
-
-  const [comment, setComment] = useState("")
+  const [comment, setComment] = useState('')
   const [errors, setErrors] = useState({
     comment: '',
-  });
+  })
 
-  
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const inputValue = comment;
+    const inputValue = comment
     if (!inputValue.trim()) {
-      setComment("")
-      handleFieldChange('comment', "O campo deve conter ao menos um caracter")
-      return;
+      setComment('')
+      handleFieldChange('comment', 'O campo deve conter ao menos um caracter')
+      return
     }
-    const hasErrors = Object.values(errors).some((error) => !!error);
+    const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
-      window.alert("passou")
+      window.alert('passou')
     }
   }
 
@@ -37,46 +35,58 @@ const Comments: React.FC<CommentsProps> = (props) => {
       setErrors((prevErrors) => ({
         ...prevErrors,
         [fieldName]: msg,
-      }));
+      }))
     } else {
       setErrors((prevErrors) => ({
         ...prevErrors,
         [fieldName]: '',
-      }));
+      }))
     }
-  };
+  }
 
-
-    return (
-        <div>
-          <form onSubmit={handleSubmit} className="mb-2">
-            <div className="relative flex justify-center items-center">
-              <TextareaAutosize
-                  minRows={1}
-                  maxRows={2}
-                  name="comment"
-                  id="comment"
-                  placeholder="Adiciona um comentario"
-                  className="block w-full break-words bg-gray-100 rounded-lg outline-none focus:ring-0 ring-orange-400 focus:ring-offset-0 border-2 border-transparent focus:border-orange-400"
-                  value={comment}
-                  onChange={(e) => {
-                      setComment(e.target.value)
-                      handleFieldChange('comment', "")
-                  }}
-                  required
-                />
-                <button type="submit" className="flex justify-center items-center w-1/12"><i className="fa-solid fa-paper-plane" style={{color: "#9C4B00",}}></i></button>
-              </div>
-              {errors.comment && <p className='text-red-500'>{errors.comment}</p>}
-          </form>
-          {props.comments.map((comment, index) => (
-            <div key={index} className="mb-2 border-b border-solid border-[#e6e6e6]">
-              <p className="text-[#2D3748] font-medium text-sm">{comment.commentAuthor}</p>
-              <p className="flex-wrap break-words">{comment.commentContent}</p>
-            </div>
-          ))}
+  return (
+    <div>
+      <form onSubmit={handleSubmit} className="mb-2">
+        <div className="relative flex items-center justify-center">
+          <TextareaAutosize
+            minRows={1}
+            maxRows={2}
+            name="comment"
+            id="comment"
+            placeholder="Adiciona um comentario"
+            className="block w-full break-words rounded-lg border-2 border-transparent bg-gray-100 outline-none ring-orange-400 focus:border-orange-400 focus:ring-0 focus:ring-offset-0"
+            value={comment}
+            onChange={(e) => {
+              setComment(e.target.value)
+              handleFieldChange('comment', '')
+            }}
+            required
+          />
+          <button
+            type="submit"
+            className="flex w-1/12 items-center justify-center"
+          >
+            <i
+              className="fa-solid fa-paper-plane"
+              style={{ color: '#9C4B00' }}
+            ></i>
+          </button>
         </div>
-      );
+        {errors.comment && <p className="text-red-500">{errors.comment}</p>}
+      </form>
+      {props.comments.map((comment, index) => (
+        <div
+          key={index}
+          className="mb-2 border-b border-solid border-[#e6e6e6]"
+        >
+          <p className="text-sm font-medium text-[#2D3748]">
+            {comment.commentAuthor}
+          </p>
+          <p className="flex-wrap break-words">{comment.commentContent}</p>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default Comments
