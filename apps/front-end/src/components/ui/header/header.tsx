@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { UserIcon, StarIcon, LogoutIcon } from '@heroicons/react/solid';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react'
+import { UserIcon, StarIcon, LogoutIcon } from '@heroicons/react/solid'
+import { Link } from 'react-router-dom'
 
 function Header() {
   // Estado para controlar a visibilidade do menu no modo mobile
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="bg-white text-black p-5 shadow-md">
+    <div className="bg-white p-5 text-black shadow-md">
       <div className="container mx-auto ">
-        <div className="flex justify-between items-center ">
+        <div className="flex items-center justify-between ">
           <Link to="/">
-            <h1 className="text-3xl md:text-4xl font-bold font-orelega">
+            <h1 className="font-orelega text-3xl font-bold md:text-4xl">
               <span className="text-orange-500 ">COOK</span>
               <span className="text-black  ">SHOW</span>
             </h1>
@@ -24,7 +24,7 @@ function Header() {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 md:h-8 md:w-8 text-orange-500"
+                className="h-8 w-8 text-orange-500 md:h-8 md:w-8"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -38,25 +38,25 @@ function Header() {
               </svg>
             </button>
             <div
-              className={`absolute right-0 mt-2 z-10 bg-white rounded-md shadow-lg ${
+              className={`absolute right-0 z-10 mt-2 rounded-md bg-white shadow-lg ${
                 isOpen ? 'block' : 'hidden'
               }`}
             >
               <Link to="/perfil">
                 <a href="!#" className="block px-4 py-2 text-center">
-                  <UserIcon className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-orange-500" />
+                  <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
                   Perfil
                 </a>
               </Link>
               <Link to="/favoritos">
                 <a href="!#" className="block px-4 py-2 text-center">
-                  <StarIcon className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-orange-500" />
+                  <StarIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
                   Favoritos
                 </a>
               </Link>
               <Link to="/sair">
                 <a href="!#" className="block px-4 py-2 text-center">
-                  <LogoutIcon className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 text-orange-500" />
+                  <LogoutIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
                   Sair
                 </a>
               </Link>
@@ -86,7 +86,7 @@ function Header() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Header;
+export default Header

@@ -1,5 +1,5 @@
-import React from 'react';
-import EditProfile from './editProfile';
+import React from 'react'
+import EditProfile from './editProfile'
 
 function EditProfilePage(): JSX.Element {
   return (
@@ -8,7 +8,7 @@ function EditProfilePage(): JSX.Element {
         <EditProfile />
       </div>
     </div>
-  );
+  )
 }
 
-export default EditProfilePage;
+export default EditProfilePage
