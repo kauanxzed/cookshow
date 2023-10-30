@@ -1,24 +1,22 @@
-import React, { useState } from 'react'
-import timer from '../../assets/images/relogio.png'
-import PersonLiked from '../../components/ui/personLiked'
-import heart from '../../assets/images/coração.png'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import timer from "../../assets/images/relogio.png"
+import PersonsLiked from '../../components/ui/personsLiked';
+import { Link } from 'react-router-dom';
+
 
 interface RecipeProps {
-  id: string // id da receita
-  image: string
-  imageAlt: string
-  title: string
-  category: string
-  owner: string
-  hours: number
-  minutes: number
-  description: string
-  moreLikes?: number
-  person1?: string
-  person2?: string
-  person3?: string
-  rating: number
+    id: string; // id da receita
+    image: string;
+    imageAlt: string;
+    title: string;
+    category: string;
+    owner: string;
+    hours: number;
+    minutes: number;
+    description: string;
+    moreLikes?: number;
+    personsLiked: number;
+    rating: number;
 }
 
 const Recipe: React.FC<RecipeProps> = (props) => {
@@ -35,7 +33,7 @@ const Recipe: React.FC<RecipeProps> = (props) => {
     if (!description.endsWith('"')) {
       description = description + '"'
     }
-    return (
+    return (      
       description[0] +
       description.charAt(1).toUpperCase() +
       description.slice(2).toLowerCase()
@@ -105,28 +103,8 @@ const Recipe: React.FC<RecipeProps> = (props) => {
           <div onClick={changeStateLike} className="hidden md:block">
             {likes}
           </div>
-          <div className="flex">
-            {props.person1 !== undefined && (
-              <PersonLiked personPhoto={props.person1} />
-            )}
-            {props.person2 !== undefined && (
-              <PersonLiked personPhoto={props.person2} />
-            )}
-            {props.person3 !== undefined && (
-              <PersonLiked personPhoto={props.person3} />
-            )}
-            {props.moreLikes !== undefined && (
-              <div className="-ml-2 h-6 w-6 rounded-full bg-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]">
-                <span className="font-sm flex h-full w-full items-center justify-start text-[#A8A8A8]">
-                  +{props.moreLikes}
-                </span>
-              </div>
-            )}
-            {props.person1 !== undefined && (
-              <div className="z-2 relative mt-4 -ml-2 self-end">
-                <img src={heart} alt="" />
-              </div>
-            )}
+          <div className='flex'>
+            <PersonsLiked personsLiked={props.personsLiked}/>
           </div>
         </div>
       </div>
