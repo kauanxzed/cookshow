@@ -1,5 +1,5 @@
-import React from "react";
-import EditProfile from "./editProfile";
+import React from 'react';
+import EditProfile from './editProfile';
 
 function EditProfilePage(): JSX.Element {
   return (

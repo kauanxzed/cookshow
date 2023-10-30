@@ -10,7 +10,6 @@ interface Props {
 }
 
 async function getRecipesCreatedByUser(userId: string) {
-  userId = '3739c554-34b0-4e1e-915c-ebf93dfd0559';
   try {
     return await axios.get('/api/recipe/user/' + userId);
   } catch (error) {
@@ -19,7 +18,6 @@ async function getRecipesCreatedByUser(userId: string) {
 }
 
 async function getFavoritesRecipesUser(userId: string) {
-  userId = '3739c554-34b0-4e1e-915c-ebf93dfd0559';
   try {
     return await axios.get('/api/recipe/user/' + userId + '/favorites');
   } catch (error) {
@@ -57,8 +55,8 @@ function ProfilePage(props: Props) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row">
-      <div className="w-full md:w-1/4 lg:w-1/3 xl:w-1/4">
+    <div className="flex flex-col md:flex-row h-[90vh]">
+      <div className="w-full max-h-[40vh] md:max-h-full md:w-1/4 lg:w-1/3 xl:w-1/4  ">
         <UserProfile />
       </div>
       <div className="w-full md:w-3/4 lg:w-2/3 xl:w-3/4 p-4 bg-white relative">
@@ -83,8 +81,8 @@ function ProfilePage(props: Props) {
           </div>
         </div>
 
-        <div className="h-full flex justify-center items-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+        <div className="h-full flex flex-col overflow-y-auto overflow-x-hidden max-h-[50vh] md:overflow-y-hidden md:max-h-full">
+          <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
             {receitas && receitas.length > 0 ? (
               receitas.map((recipe: RecipeType) => (
                 <RecipeCard key={recipe.id} recipe={recipe} />

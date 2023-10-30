@@ -18,11 +18,11 @@ function UserProfile() {
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-r from-orange-500 to-white py-6">
-      <div className="flex flex-col items-center space-y-4 mt-32 ">
+      <div className="flex flex-col items-center space-y-4 mt-0 p-0 md:p-10 md:mt-32">
         <img
           src={(userProfile as UserProfileType).profileImage}
           alt={(userProfile as UserProfileType).name}
-          className="w-72 h-72 rounded-full object-cover"
+          className="w-24 h-24 md:w-72 md:h-72 rounded-full object-cover relative"
         />
         <h2 className="text-xl">{(userProfile as UserProfileType).name}</h2>
         <button
