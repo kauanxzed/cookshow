@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
 import { alimentos } from './mockAlimentos'
 import TextareaAutosize from 'react-textarea-autosize'
-//import axios from 'axios';
+import axios from 'axios';
 
 const ModalDefault = () => {
   const [openModal, setOpenModal] = useState<string | undefined>()
@@ -15,6 +15,7 @@ const ModalDefault = () => {
   const [recipeMode, setRecipeMode] = useState('')
   const [isFocused, setIsFocused] = useState<boolean[]>([])
   const [selectedFile, setSelectedFile] = useState<File>()
+  const [recipeDifficulty, setRecipeDifficulty] = useState("")
   const [preview, setPreview] = useState('')
   const [errors, setErrors] = useState({
     recipeName: '',
@@ -138,23 +139,18 @@ const ModalDefault = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    console.log(recipeDifficulty)
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       setOpenModal('')
-      setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
-      setTimeout(() => {
-        setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
-      }, 3000)
-    }
-    /*const url = "/api/recipe"
-
-      axios.post(url, {
-        recipePhoto: preview,
-        recipeName: recipeName,
-        ingredients: inputList,
-        recipeTime: recipeTime,
+      axios.post("/api/recipe", {
+        titulo: recipeName,
+        modo_preparo: recipeMode,
+        tempo_preparo: recipeTime,
+        dificuldade: recipeDifficulty,
+        imagem: preview,
         recipeCategory: recipeCategory,
-        recipeMode: recipeMode
+        userId: "3739c554-34b0-4e1e-915c-ebf93dfd0559",
       },{
         headers: {
           'Content-Type': 'application/json',
@@ -163,10 +159,15 @@ const ModalDefault = () => {
       })
       .then(Response => {
         const data = Response.data
-        console.log(Response);
-      }).catch(err => console.log(err.response));
-      }
-    */
+        console.log(data);
+      }).catch(err => {
+        console.log(err.response)
+      });
+    }
+    setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
+    setTimeout(() => {
+      setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
+    }, 3000)
   }
 
   return (
@@ -351,6 +352,20 @@ const ModalDefault = () => {
                 {errors.recipeTime && (
                   <p className="text-red-500">{errors.recipeTime}</p>
                 )}
+              </div>
+              <div className='h-full w-full'>
+                <label htmlFor="recipeDifficulty">Dificuldade da receita: </label>
+                <select 
+                  name="recipeDifficulty"
+                  id="recipeDifficulty"
+                  className='rounded-lg border border-transparent bg-gray-100 outline-none focus:border focus:border-orange-400 focus:outline-none focus:ring-0'
+                  value={recipeDifficulty}
+                  onChange={(e) => { setRecipeDifficulty(e.target.value) }}
+                  > 
+                  <option value="Facil">Facil</option>
+                  <option value="Medio">Medio</option>
+                  <option value="Dificil">Dificil</option>
+                </select>
               </div>
               <div className="h-full">
                 <TextareaAutosize
