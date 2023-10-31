@@ -1,37 +1,38 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserEntity } from './entities/user.entity';
-import { Repository } from 'typeorm';
-import { SharedUtilServer } from '@cook-show/shared/util-server';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { CreateUserDto } from './dto/create-user.dto'
+import { InjectRepository } from '@nestjs/typeorm'
+import { UserEntity } from './entities/user.entity'
+import { Repository } from 'typeorm'
+import { SharedUtilServer } from '@cook-show/shared/util-server'
+import { UpdateUserDto } from './dto/update-user.dto'
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly sharedUtilServer: SharedUtilServer
+    private readonly sharedUtilServer: SharedUtilServer,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const emailExist = await this.findByEmail(createUserDto.email);
+    const emailExist = await this.findByEmail(createUserDto.email)
 
     if (emailExist) {
-      throw new HttpException('Email already used', HttpStatus.FORBIDDEN);
+      throw new HttpException('Email already used', HttpStatus.FORBIDDEN)
     }
 
     try {
       createUserDto.senha = await this.sharedUtilServer.hash(
-        createUserDto.senha
-      );
+        createUserDto.senha,
+      )
       const user = await this.userRepository
         .createQueryBuilder()
         .insert()
         .values(createUserDto)
-        .execute();
-      return user.raw[0];
+        .execute()
+      return user.raw[0]
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -40,9 +41,9 @@ export class UserService {
       .createQueryBuilder('usuario')
       .where('usuario.email = :email', { email })
       .andWhere('usuario.deleted_at IS NULL')
-      .getOne();
+      .getOne()
 
-    return foundedUser;
+    return foundedUser
   }
 
   async findById(id: string): Promise<UserEntity | null> {
@@ -50,43 +51,46 @@ export class UserService {
       .createQueryBuilder('usuario')
       .where('usuario.id = :id', { id })
       .andWhere('usuario.deleted_at IS NULL')
-      .getOne();
+      .getOne()
 
-    return foundUser;
+    return foundUser
   }
 
   async update(
     id: string,
-    createUserDto: CreateUserDto
+    updateUserDto: UpdateUserDto,
   ): Promise<UserEntity | null> {
-    const user = await this.findById(id);
+    const user = await this.findById(id)
 
     if (!user) {
-      throw new HttpException('User not found', 404);
+      throw new HttpException('User not found', 404)
     }
 
     try {
-      createUserDto.senha = await this.sharedUtilServer.hash(
-        createUserDto.senha
-      );
+      if (updateUserDto.senha) {
+        updateUserDto.senha = await this.sharedUtilServer.hash(
+          updateUserDto.senha,
+        )
+      }
+
       await this.userRepository
         .createQueryBuilder()
         .update(UserEntity)
-        .set(createUserDto)
+        .set(updateUserDto)
         .where('id = :id', { id })
-        .execute();
+        .execute()
 
-      return await this.findById(id);
+      return await this.findById(id)
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
   async delete(id: string): Promise<void> {
-    const user = await this.findById(id);
+    const user = await this.findById(id)
 
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
     }
 
     try {
@@ -95,9 +99,9 @@ export class UserService {
         .update(UserEntity)
         .set({ deleted_at: new Date() })
         .where('id = :id', { id })
-        .execute();
+        .execute()
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 }

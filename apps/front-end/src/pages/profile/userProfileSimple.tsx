@@ -13,7 +13,7 @@ function UserProfileSimplified() {
         <img
           src={(userProfile as UserProfileType).profileImage}
           alt={(userProfile as UserProfileType).name}
-          className="-mt-20 h-72 w-72 rounded-full object-cover md:-mt-10 md:h-96 md:w-96"
+          className="relative h-24 w-24 rounded-full object-cover md:h-72 md:w-72"
         />
       </div>
       <div className="mt-8 flex flex-col items-center">
