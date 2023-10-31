@@ -123,7 +123,7 @@ const RecipeList: React.FC = () => {
           </div>
         )}
       </div>
-      <div className="w-full h-full flex flex-wrap">
+      <div className="w-full h-full flex flex-wrap overflow-y-auto">
         <Recipe image = {prato1} imageAlt='foto representando o prato Pizza margherita' title='pizza marGherIta' category='ITALIANO' owner='fabiana' hours={0} minutes={50} 
         description='"Receita de PIZZA Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"' 
         personsLiked={80} moreLikes = {50} id='teste1' rating={4.8} />

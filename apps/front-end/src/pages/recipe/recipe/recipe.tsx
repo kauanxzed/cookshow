@@ -7,6 +7,7 @@ import Ingredient from './Ingredient';
 import Like from '../../../components/ui/like/like';
 import Comments from './comments';
 import PersonsLiked from '../../../components/ui/personsLiked';
+import axios from 'axios'
 
 const ingredients = [
   { nome: 'carne' },
@@ -19,7 +20,9 @@ const ingredients = [
 const ModalDefault = () => {
   const [openModal, setOpenModal] = useState<string | undefined>()
   const [commentsVisible, setCommentsVisible] = useState(true)
-  const props = { openModal, setOpenModal }
+  const [showModal, setShowModal] = useState(false)
+
+
   const recipeMock = {
     recipePhoto: RecipePhotoMock,
     recipeName: 'Carne louca',
@@ -88,27 +91,20 @@ const ModalDefault = () => {
 
   function showComments() {
     setCommentsVisible(!commentsVisible)
-    console.log('teste')
   }
 
   return (
     <>
-      <Button
-        onClick={() => props.setOpenModal('default')}
-        className="text-color-blue-500"
-      >
-        Toggle modal
-      </Button>
       <Modal
-        show={props.openModal === 'default'}
-        onClose={() => props.setOpenModal(undefined)}
+        show={showModal}
+        onClose={() => setShowModal(false)}
         size="5xl"
       >
         <Modal.Body className="flex h-[90vh] flex-col justify-between rounded-t-lg bg-white p-0 md:flex-row">
           <div className="h-[90vh] rounded-tl-lg bg-gradient-to-r from-[#FF7A00] p-5">
             <button
               className="self-start text-xl text-black"
-              onClick={() => props.setOpenModal(undefined)}
+              onClick={() =>  setShowModal(false)}
             >
               X
             </button>
