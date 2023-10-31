@@ -2,7 +2,11 @@ import React, { useState } from 'react'
 import { UserIcon, StarIcon, LogoutIcon } from '@heroicons/react/solid'
 import { Link } from 'react-router-dom'
 
-function Header() {
+interface Props {
+  loggedIn: boolean
+}
+
+function Header(props: Props) {
   // Estado para controlar a visibilidade do menu no modo mobile
   const [isOpen, setIsOpen] = useState(false)
 
@@ -42,28 +46,37 @@ function Header() {
                 isOpen ? 'block' : 'hidden'
               }`}
             >
-              <Link to="/perfil">
-                <a href="!#" className="block px-4 py-2 text-center">
-                  <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
-                  Perfil
-                </a>
-              </Link>
-              <Link to="/favoritos">
-                <a href="!#" className="block px-4 py-2 text-center">
-                  <StarIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
-                  Favoritos
-                </a>
-              </Link>
+              {props.loggedIn ? (
+                <Link to="/perfil">
+                  <a href="!#" className="block px-4 py-2 text-center">
+                    <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
+                    Perfil
+                  </a>
+                </Link>
+              ) : (
+                <Link to="/login">
+                  <a href="!#" className="block px-4 py-2 text-center">
+                    <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
+                    LogIn
+                  </a>
+                </Link>
+              )}
+              {if(props.loggedIn){
+
+              } (
+
               <Link to="/sair">
                 <a href="!#" className="block px-4 py-2 text-center">
                   <LogoutIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
                   Sair
                 </a>
               </Link>
+              )}
             </div>
           </div>
           {/* Menu para desktop (visível apenas em telas maiores) */}
           <div className="hidden md:flex">
+            {}
             <a
               href="/perfil"
               className="mx-14 text-center text-xl hover:text-orange-600 "
