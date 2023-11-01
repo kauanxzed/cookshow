@@ -36,16 +36,18 @@ function RecipeCard({ recipe }: Recipe) {
   const [comments, setComments] = useState<number>(0)
 
   useEffect(() => {
-    getLikes(recipe.id).then((data) => {
-      if (data) setLikes(data.data)
-    })
-    getRating(recipe.id).then((data) => {
-      if (data) setRating(data.data)
-    })
-    getComments(recipe.id).then((data) => {
-      if (data) setComments(data.data)
-    })
-  }, [recipe.id])
+    if (recipe.publicado) {
+      getLikes(recipe.id).then((data) => {
+        if (data) setLikes(data.data)
+      })
+      getRating(recipe.id).then((data) => {
+        if (data) setRating(data.data)
+      })
+      getComments(recipe.id).then((data) => {
+        if (data) setComments(data.data)
+      })
+    }
+  }, [recipe.id, recipe.publicado])
 
   return (
     <div className="m-2 w-full p-4 md:w-2/3 lg:w-2/3">

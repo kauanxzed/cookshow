@@ -2,11 +2,15 @@ import React, { useState } from 'react'
 import { UserIcon, StarIcon, LogoutIcon } from '@heroicons/react/solid'
 import { Link } from 'react-router-dom'
 
-interface Props {
-  loggedIn: boolean
+const logOut = () => {
+  if (localStorage.getItem('jwtToken')) localStorage.removeItem('jwtToken')
+  if (sessionStorage.getItem('jwtToken')) sessionStorage.removeItem('jwtToken')
 }
 
-function Header(props: Props) {
+const loggedIn =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+function Header() {
   // Estado para controlar a visibilidade do menu no modo mobile
   const [isOpen, setIsOpen] = useState(false)
 
@@ -46,13 +50,23 @@ function Header(props: Props) {
                 isOpen ? 'block' : 'hidden'
               }`}
             >
-              {props.loggedIn ? (
-                <Link to="/perfil">
-                  <a href="!#" className="block px-4 py-2 text-center">
-                    <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
-                    Perfil
+              {loggedIn ? (
+                <>
+                  <Link to="/perfil">
+                    <a href="!#" className="block px-4 py-2 text-center">
+                      <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
+                      Perfil
+                    </a>
+                  </Link>
+                  <a
+                    href="/"
+                    className="block px-4 py-2 text-center"
+                    onClick={() => logOut()}
+                  >
+                    <LogoutIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
+                    Sair
                   </a>
-                </Link>
+                </>
               ) : (
                 <Link to="/login">
                   <a href="!#" className="block px-4 py-2 text-center">
@@ -61,40 +75,35 @@ function Header(props: Props) {
                   </a>
                 </Link>
               )}
-              {if(props.loggedIn){
-
-              } (
-
-              <Link to="/sair">
-                <a href="!#" className="block px-4 py-2 text-center">
-                  <LogoutIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
-                  Sair
-                </a>
-              </Link>
-              )}
             </div>
           </div>
           {/* Menu para desktop (visível apenas em telas maiores) */}
           <div className="hidden md:flex">
-            {}
-            <a
-              href="/perfil"
-              className="mx-14 text-center text-xl hover:text-orange-600 "
-            >
-              PERFIL
-            </a>
-            <a
-              href="/favoritos"
-              className="mx-14 text-center text-xl hover:text-orange-600 "
-            >
-              FAVORITOS
-            </a>
-            <a
-              href="/sair"
-              className="mx-14 text-center text-xl hover:text-orange-600 "
-            >
-              SAIR
-            </a>
+            {loggedIn ? (
+              <>
+                <a
+                  href="/perfil"
+                  className="mx-14 text-center text-xl hover:text-orange-600 "
+                >
+                  PERFIL
+                </a>
+                <a
+                  href="/"
+                  className="mx-14 text-center text-xl hover:text-orange-600 "
+                  onClick={() => logOut()}
+                >
+                  SAIR
+                </a>
+              </>
+            ) : (
+              <a
+                href="/login"
+                className="mx-14 text-center text-xl hover:text-orange-600 "
+                onClick={() => logOut()}
+              >
+                LOGIN
+              </a>
+            )}
           </div>
         </div>
       </div>

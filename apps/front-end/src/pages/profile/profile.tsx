@@ -5,10 +5,6 @@ import axios from 'axios'
 import { RecipeType } from './types/recipe.type'
 import { Backdrop, CircularProgress } from '@mui/material'
 
-interface Props {
-  userId: string
-}
-
 async function getRecipesCreatedByUser(userId: string) {
   try {
     return await axios.get('/api/recipe/user/' + userId)
@@ -25,7 +21,7 @@ async function getFavoritesRecipesUser(userId: string) {
   }
 }
 
-function ProfilePage(props: Props) {
+function ProfilePage() {
   const [showPublicacoes, setShowPublicacoes] = useState<boolean>(true)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [receitas, setReceitas] = useState<RecipeType[]>([])
@@ -81,7 +77,7 @@ function ProfilePage(props: Props) {
           </div>
         </div>
 
-        <div className="flex h-full max-h-[50vh] flex-col overflow-y-auto overflow-x-hidden md:max-h-full md:overflow-y-hidden">
+        <div className="flex h-full max-h-[50vh] flex-col overflow-y-auto overflow-x-hidden md:max-h-[80vh]">
           <div className="grid w-full  grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {receitas && receitas.length > 0 ? (
               receitas.map((recipe: RecipeType) => (
