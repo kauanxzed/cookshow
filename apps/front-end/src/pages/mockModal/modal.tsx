@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
-import { alimentos } from './mockAlimentos'
 import TextareaAutosize from 'react-textarea-autosize'
 import axios from 'axios';
 
@@ -8,13 +7,18 @@ const ModalDefault = () => {
   interface inputIngrediente {
     id: number,
     ingredient: string
-    quantity: string
+    quantity: number
+  }
+
+  interface typeIngredient {
+    id: number,
+    name: string
   }
 
   const [openModal, setOpenModal] = useState<string | undefined>()
   const props = { openModal, setOpenModal }
   const [suggestions, setSuggestions] = useState<string[]>([])
-  const [inputList, setInputList] = useState([{id: 0, ingredient: "", quantity: ""}])
+  const [inputList, setInputList] = useState([{id: 0, ingredient: "", quantity: 0}])
   const [recipeName, setRecipeName] = useState('')
   const [recipeTime, setRecipeTime] = useState('')
   const [recipeCategory, setRecipeCategory] = useState('')
@@ -30,6 +34,7 @@ const ModalDefault = () => {
     recipeMode: '',
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const [ingredient, setIngredients] = useState<typeIngredient[]>([{name: "teste", id: 12}])
 
   useEffect(() => {
     if (!selectedFile) {
@@ -42,6 +47,10 @@ const ModalDefault = () => {
 
     return () => URL.revokeObjectURL(objectUrl)
   }, [selectedFile])
+
+  useEffect(() => {
+    loadIngredients()
+  }, [])
 
   const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -91,7 +100,10 @@ const ModalDefault = () => {
     const list: Array<inputIngrediente> = [...inputList]
     list[index][name] = value
     setInputList(list)
-    const filtered = alimentos.filter((item) =>
+    const ingredientName = ingredient.map((el) => {
+      return el.name
+    })
+    const filtered = ingredientName?.filter((item) =>
       item.toLowerCase().startsWith(value.toLowerCase()),
     )
     setSuggestions(value ? filtered.slice(0, 5) : [])
@@ -108,8 +120,8 @@ const ModalDefault = () => {
 
   const handleAddClick = () => {
     const lastIndex = inputList[inputList.length - 1]
-    if (lastIndex.ingredient !== '' && lastIndex.quantity !== '') {
-      setInputList([...inputList, {id: 0, ingredient: '', quantity: '' }])
+    if (lastIndex.ingredient !== '' && lastIndex.quantity !== 0) {
+      setInputList([...inputList, {id: 0, ingredient: '', quantity: 0 }])
     }
   }
 
@@ -120,7 +132,7 @@ const ModalDefault = () => {
     const value = event.target.value
     if (!isNaN(+value)) {
       const list = [...inputList]
-      list[index].quantity = value
+      list[index].quantity = +value
       setInputList(list)
     }
   }
@@ -147,57 +159,68 @@ const ModalDefault = () => {
     const [idRecipe, setIdRecipe] = useState("")
     if (!hasErrors) {
       setOpenModal('')
-      /* 
-      axios.post("/api/photo/recipe", {
-        photo: preview
-      }),{
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept' : 'application/json',
-        }
-      }).then(Response => {
-        setLinkPhoto(Response.data)
-        console.log(linkPhoto);
-      })
-      */
-      axios.post("/api/recipe", {
-        titulo: recipeName,
-        //modo_preparo: recipeMode,
-        descricao: recipeMode,
-        tempo_preparo: recipeTime,
-        dificuldade: recipeDifficulty,
-        imagem: linkPhoto,
-        calorias: 0, //remover
-        //recipeCategory: recipeCategory,
-        userId: "3739c554-34b0-4e1e-915c-ebf93dfd0559",
-      },{
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept' : 'application/json',
-        }
-      })
-      .then(Response => {
-        setIdRecipe(Response.data.id)
-        console.log(idRecipe);
-      }).catch(err => {
-        console.log(err.response)
-      });
-      
-      inputList.map(Ingredient => {
-        const urlIngredient = "api/"+idRecipe+"/ingredient/"+Ingredient.id
-        console.log(Ingredient)
-         
-        axios.post(urlIngredient, {
-          portion: Ingredient.quantity  
+      try{
+        /* 
+        axios.post("/api/photo/recipe", {
+          photo: preview
+        }),{
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept' : 'application/json',
+          }
+        }).then(Response => {
+          setLinkPhoto(Response.data)
+          console.log(linkPhoto);
+        })
+        */
+        axios.post("/api/recipe", {
+          titulo: recipeName,
+          //modo_preparo: recipeMode,
+          descricao: recipeMode,
+          tempo_preparo: recipeTime,
+          dificuldade: recipeDifficulty,
+          imagem: linkPhoto,
+          calorias: 0, //remover
+          //recipeCategory: recipeCategory,
+          userId: "3739c554-34b0-4e1e-915c-ebf93dfd0559",
+        },{
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept' : 'application/json',
+          }
+        })
+        .then(Response => {
+          setIdRecipe(Response.data.id)
+          console.log(idRecipe);
+        }).catch(err => {
+          console.error(err.response)
+        });
+        
+        inputList.map(Ingredient => {
+          const urlIngredient = "/api/"+idRecipe+"/ingredient/"+Ingredient.id   
+          axios.post(urlIngredient, {
+            portion: Ingredient.quantity  
+          })
+          return 0;
         })
 
-        return 0;
-      })
+        setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
+        setTimeout(() => {
+          setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
+        }, 3000)
+      } catch(err) {
+        console.error(err)
+      }
+    }
+  }
 
-      setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
-      setTimeout(() => {
-        setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
-      }, 3000)
+  const loadIngredients = async() => {
+    try {
+      await axios.get('/api/ingredient').then((Response) => {
+        setIngredients(Response.data)
+      })
+    } catch (error) {
+      console.error(error)
     }
   }
 
