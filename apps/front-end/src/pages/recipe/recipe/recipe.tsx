@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react'
+import React, { useEffect, useState, ChangeEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
 import RecipeInfo from './recipeInfo'
 import RecipePhotoMock from '../../../assets/images/carne.jpg'
@@ -17,11 +17,28 @@ const ingredients = [
   { nome: 'banana' },
 ]
 
-const ModalDefault = () => {
-  const [openModal, setOpenModal] = useState<string | undefined>()
-  const [commentsVisible, setCommentsVisible] = useState(true)
-  const [showModal, setShowModal] = useState(false)
+interface ModalDefaultProps {
+  show: boolean | undefined;
+  setOpenModal: (value: boolean | undefined) => void;
+  id: string;
+}
 
+const ModalDefault: React.FC<ModalDefaultProps> = ({show, setOpenModal, id }) => {
+  const [commentsVisible, setCommentsVisible] = useState(true)
+  const [showModal, setShowModal] = useState(show)
+
+useEffect(() => {
+  const urlRecipe = ("api/recipe/"+{id})
+
+  axios.get(urlRecipe)
+  .then(response => {
+  })
+  .catch(error => {
+    console.error('Erro ao buscar os detalhes da receita:', error);
+  });
+}
+
+}
 
   const recipeMock = {
     recipePhoto: RecipePhotoMock,
@@ -93,18 +110,23 @@ const ModalDefault = () => {
     setCommentsVisible(!commentsVisible)
   }
 
+  const handleCloseModal = () => {
+    console.log("fecha")
+    setShowModal(undefined)
+    setOpenModal(undefined); // Define o valor como undefined no pai
+  };
+
   return (
-    <>
       <Modal
         show={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={() => handleCloseModal()}
         size="5xl"
       >
         <Modal.Body className="flex h-[90vh] flex-col justify-between rounded-t-lg bg-white p-0 md:flex-row">
           <div className="h-[90vh] rounded-tl-lg bg-gradient-to-r from-[#FF7A00] p-5">
             <button
               className="self-start text-xl text-black"
-              onClick={() =>  setShowModal(false)}
+              onClick={() =>  handleCloseModal()}
             >
               X
             </button>
@@ -179,7 +201,6 @@ const ModalDefault = () => {
           </div>
         </Modal.Body>
       </Modal>
-    </>
   )
 }
 

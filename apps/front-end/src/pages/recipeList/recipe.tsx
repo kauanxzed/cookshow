@@ -21,7 +21,7 @@ interface RecipeProps {
 
 const Recipe: React.FC<RecipeProps> = (props) => {
   const [stateLike, setStateLike] = useState(false)
-  const [openModal, setOpenModal] = useState(false)
+  const [openModal, setOpenModal] = useState<undefined | boolean>(undefined)
 
   function transformCase(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
@@ -57,22 +57,26 @@ const Recipe: React.FC<RecipeProps> = (props) => {
     <i className="fa-regular fa-heart fa-xl" style={{ color: '#ff8c00' }}></i>
   )
 
+  const handleSetOpenModal = (value: boolean | undefined) => {
+    setOpenModal(value);
+  };
+
   return (
     <>
-      <div className="flex w-full w-full pr-5 pb-2 md:w-1/2 md:flex-col md:p-8 md:pr-0 md:pb-0 lg:w-1/3">
-          <div className="h-36 w-36 overflow-hidden rounded-md md:h-44 md:w-full">
+      <div className="flex w-full pr-5 pb-2 md:w-1/2 md:flex-col md:p-8 md:pr-0 md:pb-0 lg:w-1/3">
+          <div className="h-36 w-36 overflow-hidden rounded-md md:h-44 md:w-full cursor-pointer">
             <img
               src={props.image}
               alt={props.imageAlt}
               className="h-full w-full"
               onClick={() => {
-                setOpenModal(true)
+                handleSetOpenModal(true)
               }}
             />
           </div>
         <div className="ml-1 flex h-full w-full flex-col">
           <div className="flex justify-between">
-            <h1 className="font-medium text-[#ff8c00]" onClick={() => setOpenModal(true)}>
+            <h1 className="font-medium text-[#ff8c00] cursor-pointer" onClick={() => handleSetOpenModal(true)}>
               {transformCase(props.title)}
             </h1>
             <div className="h-6 w-6 rounded-full bg-[#ff8c00] md:hidden">
@@ -110,7 +114,10 @@ const Recipe: React.FC<RecipeProps> = (props) => {
           </div>
         </div>
       </div>
-      <RecipeModal />
+      {openModal === true && (
+        <RecipeModal show={openModal} setOpenModal={handleSetOpenModal} id={props.id}/>
+      )
+      }
     </>
     
   )

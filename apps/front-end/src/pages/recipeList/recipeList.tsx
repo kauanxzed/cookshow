@@ -106,7 +106,7 @@ const RecipeList: React.FC = () => {
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
             placeholder="Digite os alimentos desejados..."
-            className="min-w-0 flex-1 p-1 focus:outline-none"
+            className="min-w-0 flex-1 p-1 border-none focus:outline-none focus:ring-0"
           />
         </div>
         {suggestions.length > 0 && (
@@ -123,7 +123,7 @@ const RecipeList: React.FC = () => {
           </div>
         )}
       </div>
-      <div className="w-full h-full flex flex-wrap overflow-y-auto">
+      <div className="w-full h-screen flex flex-wrap overflow-y-auto overflow-x-hidden scrollbar-hidden pb-60">
         <Recipe image = {prato1} imageAlt='foto representando o prato Pizza margherita' title='pizza marGherIta' category='ITALIANO' owner='fabiana' hours={0} minutes={50} 
         description='"Receita de PIZZA Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"' 
         personsLiked={80} moreLikes = {50} id='teste1' rating={4.8} />
