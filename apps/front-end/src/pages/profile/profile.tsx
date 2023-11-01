@@ -21,26 +21,48 @@ async function getFavoritesRecipesUser(userId: string) {
   }
 }
 
+async function getPayloadUser(token: string) {
+  try {
+    console.log(token)
+    return await axios.get('/api/auth/' + token)
+  } catch (error) {
+    alert(error)
+  }
+}
+
+const token =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
 function ProfilePage() {
   const [showPublicacoes, setShowPublicacoes] = useState<boolean>(true)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [receitas, setReceitas] = useState<RecipeType[]>([])
+  const [userId, setUserId] = useState<string>('')
+
+  useEffect(() => {
+    if (token)
+      getPayloadUser(token).then((payload) => {
+        console.log(payload)
+        if (payload) setUserId(payload.data.sub)
+      })
+    else alert('Usuário não logado')
+  }, [])
 
   useEffect(() => {
     if (showPublicacoes) {
       setIsLoading(true)
-      getRecipesCreatedByUser(props.userId).then((data) => {
+      getRecipesCreatedByUser(userId).then((data) => {
         if (data) setReceitas(data.data)
         setIsLoading(false)
       })
     } else {
       setIsLoading(true)
-      getFavoritesRecipesUser(props.userId).then((data) => {
+      getFavoritesRecipesUser(userId).then((data) => {
         if (data) setReceitas(data.data)
         setIsLoading(false)
       })
     }
-  }, [props.userId, showPublicacoes])
+  }, [, showPublicacoes])
 
   const handleShowPublicacoes = async () => {
     setShowPublicacoes(true)

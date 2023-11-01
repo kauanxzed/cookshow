@@ -12,7 +12,7 @@ export class AuthController {
   }
 
   @Get('/:token')
-  getPayload(@Param(':token') token: string) {
+  getPayload(@Param('token') token: string) {
     return this.authService.getUserPayload(token)
   }
 }

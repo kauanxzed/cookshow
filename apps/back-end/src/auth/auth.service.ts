@@ -39,6 +39,7 @@ export class AuthService {
   async getUserPayload(token: string): Promise<PayloadType> {
     try {
       const payload = this.jwtService.decode(token)
+      console.log(payload)
       return payload as PayloadType
     } catch (error) {
       throw new HttpException(
