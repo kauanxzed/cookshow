@@ -5,10 +5,16 @@ import TextareaAutosize from 'react-textarea-autosize'
 import axios from 'axios';
 
 const ModalDefault = () => {
+  interface inputIngrediente {
+    id: number,
+    ingredient: string
+    quantity: string
+  }
+
   const [openModal, setOpenModal] = useState<string | undefined>()
   const props = { openModal, setOpenModal }
   const [suggestions, setSuggestions] = useState<string[]>([])
-  const [inputList, setInputList] = useState([{ ingredient: '', quantity: '' }])
+  const [inputList, setInputList] = useState([{id: 0, ingredient: "", quantity: ""}])
   const [recipeName, setRecipeName] = useState('')
   const [recipeTime, setRecipeTime] = useState('')
   const [recipeCategory, setRecipeCategory] = useState('')
@@ -25,10 +31,7 @@ const ModalDefault = () => {
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
 
-  interface inputIngrediente {
-    ingredient: string
-    quantity: string
-  }
+  
 
   useEffect(() => {
     if (!selectedFile) {
@@ -65,6 +68,7 @@ const ModalDefault = () => {
               list.find((it, ind) => {
                 if (it === item) {
                   list[ind].ingredient = suggestion
+                  list[ind].id = ind
                 }
               })
               setInputList(list)
@@ -107,7 +111,7 @@ const ModalDefault = () => {
   const handleAddClick = () => {
     const lastIndex = inputList[inputList.length - 1]
     if (lastIndex.ingredient !== '' && lastIndex.quantity !== '') {
-      setInputList([...inputList, { ingredient: '', quantity: '' }])
+      setInputList([...inputList, {id: 0, ingredient: '', quantity: '' }])
     }
   }
 
@@ -137,19 +141,36 @@ const ModalDefault = () => {
     }
   }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const HandleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log(recipeDifficulty)
     const hasErrors = Object.values(errors).some((error) => !!error)
+    const [linkPhoto, setLinkPhoto] = useState("google.com")
+    const [idRecipe, setIdRecipe] = useState("")
     if (!hasErrors) {
       setOpenModal('')
+      /* 
+      axios.post("/api/photo/recipe", {
+        photo: preview
+      }),{
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept' : 'application/json',
+        }
+      }).then(Response => {
+        setLinkPhoto(Response.data)
+        console.log(linkPhoto);
+      })
+      */
       axios.post("/api/recipe", {
         titulo: recipeName,
-        modo_preparo: recipeMode,
+        //modo_preparo: recipeMode,
+        descricao: recipeMode,
         tempo_preparo: recipeTime,
         dificuldade: recipeDifficulty,
-        imagem: preview,
-        recipeCategory: recipeCategory,
+        imagem: linkPhoto,
+        calorias: 0, //remover
+        //recipeCategory: recipeCategory,
         userId: "3739c554-34b0-4e1e-915c-ebf93dfd0559",
       },{
         headers: {
@@ -158,16 +179,28 @@ const ModalDefault = () => {
         }
       })
       .then(Response => {
-        const data = Response.data
-        console.log(data);
+        setIdRecipe(Response.data.id)
+        console.log(idRecipe);
       }).catch(err => {
         console.log(err.response)
       });
+      
+      inputList.map(Ingredient => {
+        const urlIngredient = "api/"+idRecipe+"/ingredient/"+Ingredient.id
+        console.log(Ingredient)
+         
+        axios.post(urlIngredient, {
+          portion: Ingredient.quantity  
+        })
+
+        return 0;
+      })
+
+      setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
+      setTimeout(() => {
+        setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
+      }, 3000)
     }
-    setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
-    setTimeout(() => {
-      setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
-    }, 3000)
   }
 
   return (
@@ -201,7 +234,7 @@ const ModalDefault = () => {
         onClose={() => props.setOpenModal(undefined)}
         size="5xl"
       >
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={HandleSubmit}>
           <Modal.Body className="flex flex-col justify-between bg-white p-0 md:flex-row">
             <div className="flex flex-col items-center justify-center rounded-tl-lg p-5">
               <button
