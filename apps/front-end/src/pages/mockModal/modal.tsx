@@ -31,8 +31,6 @@ const ModalDefault = () => {
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
 
-  
-
   useEffect(() => {
     if (!selectedFile) {
       setPreview('')
