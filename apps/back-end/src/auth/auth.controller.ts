@@ -1,6 +1,8 @@
-import { Controller, Post, Body, Get, Param } from '@nestjs/common'
+import { Controller, Post, Body, Get, Request, UseGuards } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { SignInDto } from './dto/signIn.dto'
+import { Request as ExpressRequest } from 'express'
+import { JwtAuthGuard } from './jwt-auth.guard'
 
 @Controller('auth')
 export class AuthController {
@@ -11,8 +13,9 @@ export class AuthController {
     return this.authService.signIn(signInDto)
   }
 
-  @Get('/:token')
-  getPayload(@Param('token') token: string) {
-    return this.authService.getUserPayload(token)
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  getPayload(@Request() req: ExpressRequest) {
+    return req.user
   }
 }

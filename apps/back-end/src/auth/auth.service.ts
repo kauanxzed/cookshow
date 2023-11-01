@@ -35,17 +35,4 @@ export class AuthService {
       throw new HttpException(e.message, HttpStatus.BAD_REQUEST)
     }
   }
-
-  async getUserPayload(token: string): Promise<PayloadType> {
-    try {
-      const payload = this.jwtService.decode(token)
-      console.log(payload)
-      return payload as PayloadType
-    } catch (error) {
-      throw new HttpException(
-        'Usuário Não autentiticado',
-        HttpStatus.UNAUTHORIZED,
-      )
-    }
-  }
 }

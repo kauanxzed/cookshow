@@ -84,6 +84,7 @@
     "class-validator": "^0.14.0",
     "flowbite": "^1.8.1",
     "flowbite-react": "^0.6.4",
+    "jsonwebtoken": "^9.0.2",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",

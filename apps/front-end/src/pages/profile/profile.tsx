@@ -5,9 +5,20 @@ import axios from 'axios'
 import { RecipeType } from './types/recipe.type'
 import { Backdrop, CircularProgress } from '@mui/material'
 
+const token =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+const axiosInstace = axios.create({
+  timeout: 5000,
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+})
+
 async function getRecipesCreatedByUser(userId: string) {
   try {
-    return await axios.get('/api/recipe/user/' + userId)
+    return await axiosInstace.get('/api/recipe/user/' + userId)
   } catch (error) {
     alert(error)
   }
@@ -15,7 +26,7 @@ async function getRecipesCreatedByUser(userId: string) {
 
 async function getFavoritesRecipesUser(userId: string) {
   try {
-    return await axios.get('/api/recipe/user/' + userId + '/favorites')
+    return await axiosInstace.get('/api/recipe/user/' + userId + '/favorites')
   } catch (error) {
     alert(error)
   }
@@ -23,15 +34,11 @@ async function getFavoritesRecipesUser(userId: string) {
 
 async function getPayloadUser(token: string) {
   try {
-    console.log(token)
-    return await axios.get('/api/auth/' + token)
+    return await axiosInstace.get('/api/auth/' + token)
   } catch (error) {
     alert(error)
   }
 }
-
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
 function ProfilePage() {
   const [showPublicacoes, setShowPublicacoes] = useState<boolean>(true)
