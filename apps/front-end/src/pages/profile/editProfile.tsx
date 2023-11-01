@@ -58,14 +58,13 @@ function EditProfile() {
         email: email,
       }
       const response = await axios.put(`/api/user/${userId}`, updatedData)
-      console.log(response.data)
       const { usuario, email: userEmail } = response.data
       setName(usuario)
       setEmail(userEmail)
       setPlaceholderName(usuario)
       setPlaceholderEmail(userEmail)
     } catch (error) {
-      console.error('Error updating profile: ', error)
+      alert('Erro ao atualizar perfil. Tente novamente.')
     }
   }
 

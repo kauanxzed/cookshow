@@ -66,6 +66,13 @@ export class UserService {
       throw new HttpException('User not found', 404)
     }
 
+    if (updateUserDto.email) {
+      const emailExist = await this.findByEmail(updateUserDto.email)
+      if (emailExist) {
+        throw new HttpException('Email already used', HttpStatus.FORBIDDEN)
+      }
+    }
+
     try {
       if (updateUserDto.senha) {
         updateUserDto.senha = await this.sharedUtilServer.hash(
