@@ -54,6 +54,10 @@ function ProfilePage(props: Props) {
     setShowPublicacoes(false)
   }
 
+  const handleAddRecipe = () => {
+    console.log('Abrir página modal de adicionar receita')
+  }
+
   return (
     <div className="flex h-[90vh] flex-col md:flex-row">
       <div className="max-h-[40vh] w-full md:max-h-full md:w-1/4 lg:w-1/3 xl:w-1/4  ">
@@ -79,6 +83,14 @@ function ProfilePage(props: Props) {
             <i className="far fa-heart text-2xl"></i>
             <span>Favoritos</span>
           </div>
+        </div>
+        <div className="mt-4 flex w-full justify-center style={{ marginTop: 'auto' }}">
+          <button
+            className="rounded-lg bg-orange-500 p-3 text-white shadow-md transition-all duration-200 hover:bg-orange-600"
+            onClick={handleAddRecipe}
+          >
+            Adicionar Receita
+          </button>
         </div>
 
         <div className="flex h-full max-h-[50vh] flex-col overflow-y-auto overflow-x-hidden md:max-h-full md:overflow-y-hidden">
