@@ -32,7 +32,7 @@ export class RecipeController {
   }
 
   @Post('/:recipeId/ingredient/:ingredientId')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async addRecipeIngredient(
     @Param('recipeId') recipeId: string,
     @Param('ingredientId') ingredientId: number,
@@ -99,8 +99,9 @@ export class RecipeController {
     return await this.commentService.delete(id);
   }
 
-  @Get('/ingredient')
-  async fyndRecipeByIngredient(@Body() idIngredient: { id: number }) {
-    return await this.recipeService.searchRecipeByIngredient(idIngredient.id);
+  @Get('/search/ingredient')
+  async fyndRecipeByIngredients(@Body() idIngredient: { id: number }[]) {
+    const ingredientesId = idIngredient.map((ingrediente) => ingrediente.id);
+    return await this.recipeService.searchRecipeByIngredient(ingredientesId);
   }
 }

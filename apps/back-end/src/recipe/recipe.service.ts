@@ -104,12 +104,13 @@ export class RecipeService {
         throw new HttpException('Ingredient not found', HttpStatus.NOT_FOUND);
       }
 
-      if (await this.isIngredientInRecipe(recipe, ingredient)) {
-        throw new HttpException(
-          'Ingredint already in recipe',
-          HttpStatus.BAD_REQUEST
-        );
-      }
+      // if (await this.isIngredientInRecipe(recipe, ingredient)) {
+      //   console.log(recipe, ingredient);
+      //   throw new HttpException(
+      //     'Ingredint already in recipe',
+      //     HttpStatus.BAD_REQUEST
+      //   );
+      // }
 
       await this.recipeIngredientRepository
         .createQueryBuilder()
@@ -139,7 +140,7 @@ export class RecipeService {
     }
   }
 
-  async searchRecipeByIngredient(ingredientId: number): Promise<any> {
+  async searchRecipeByIngredient(ingredientId: number[]): Promise<any> {
     // const foundIngredient = await this.ingredientRepository
     //   .createQueryBuilder('ingredientes')
     //   .where('ingredientes.id = :id', { id: ingredientId })
@@ -152,11 +153,9 @@ export class RecipeService {
     //     HttpStatus.NOT_FOUND
     //   );
     // }
-
     const foundRecipes = await this.recipeIngredientRepository
       .createQueryBuilder('ingredientes')
-      .leftJoinAndSelect('ingredientes.id_ingrediente', 'receita_ingredientes')
-      .where('receita_ingredientes.id_ingrediente = :id', { id: ingredientId })
+      .leftJoin('ingredientes.ingredient', 'receita')
       .getOne();
 
     return foundRecipes;
