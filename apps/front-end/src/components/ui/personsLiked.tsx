@@ -1,10 +1,13 @@
 import React from "react"
 
 interface personLikedProps {
-    personsLiked: number
+    personsLiked: number | undefined
 }
 
 const PersonsLiked: React.FC<personLikedProps> = props => {
+
+    if(props.personsLiked === undefined) props.personsLiked = 0
+
     return (
         <div className="relative flex">
             <div className="-ml-2 h-8 w-8 rounded-full bg-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]">

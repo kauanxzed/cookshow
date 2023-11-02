@@ -26,86 +26,74 @@ interface ModalDefaultProps {
 const ModalDefault: React.FC<ModalDefaultProps> = ({show, setOpenModal, id }) => {
   const [commentsVisible, setCommentsVisible] = useState(true)
   const [showModal, setShowModal] = useState(show)
+  const [recipe, setRecipe] = useState<typeRecipe>()
+  const [recipeIngredients, setRecipeIngredients] = useState<typeRecipeIngredients[]>()
+  const [recipeComments, setRecipeComments] = useState<typeRecipeComments[]>()
 
-useEffect(() => {
-  const urlRecipe = ("api/recipe/"+{id})
-
-  axios.get(urlRecipe)
-  .then(response => {
-  })
-  .catch(error => {
-    console.error('Erro ao buscar os detalhes da receita:', error);
-  });
-}
-
-}
-
-  const recipeMock = {
-    recipePhoto: RecipePhotoMock,
-    recipeName: 'Carne louca',
-    recipeAutor: 'Rafael',
-    recipeOrigin: 'ITALIANO',
-    recipeTime: 'Oh40min',
-    recipeDifficulty: 'Média',
-    recipeKcal: 678,
-    recipeRating: 4.8,
-    recipeIngredients: [
-      {
-        ingredientName: 'carne',
-        ingredientPortion: 200,
-      },
-      {
-        ingredientName: 'miojo',
-        ingredientPortion: 500,
-      },
-      {
-        ingredientName: 'maça',
-        ingredientPortion: 100,
-      },
-      {
-        ingredientName: 'pera',
-        ingredientPortion: 100,
-      },
-      {
-        ingredientName: 'banana',
-        ingredientPortion: 150,
-      },
-      {
-        ingredientName: 'banana',
-        ingredientPortion: 150,
-      },
-      {
-        ingredientName: 'banana',
-        ingredientPortion: 150,
-      },
-      {
-        ingredientName: 'banana',
-        ingredientPortion: 150,
-      },
-    ],
-    recipeComments: [
-      {
-        commentAuthor: 'Carlos',
-        commentContent: 'Bela receita!',
-      },
-      {
-        commentAuthor: 'Igor rafael De Souza',
-        commentContent:
-          'teste teste teste teste teste teste teste teste teste teste teste teste teste teste teste teste',
-      },
-      {
-        commentAuthor: 'Matheus',
-        commentContent: 'uau!',
-      },
-      {
-        commentAuthor: 'Thiago',
-        commentContent: 'incrivel.',
-      },
-    ],
-    personsLiked: 80,
-    recipeMode: "modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /"
+  interface typeRecipe {
+    id: number,
+    titulo: string,
+    descricao: string,
+    tempo_preparo:string,
+    dificuldade:string,
+    imagem:string,
+    calorias:number,
+    curtidas:number,
+    userId:number
   }
 
+  interface typeRecipeIngredients {
+    id: number,
+    nome: string,
+    portion: number
+  }
+
+  interface typeRecipeComments {
+    id:number,
+    comentarios: string
+  }
+
+
+  useEffect(() => {
+    const urlRecipe = "/api/recipe/"+{id}
+    try {
+      axios.get(urlRecipe)
+      .then(response => {setRecipe(response.data)})
+
+      const urlRecipeIngredients = '/api/recipe/'+recipe?.id+'/ingredient'
+      axios.get(urlRecipeIngredients)
+      .then(response => {setRecipeIngredients(response.data)})
+
+      const urlGetRecipeComments = '/api/recipe/'+recipe?.id+'/comments'
+      axios.get(urlGetRecipeComments)
+      .then(response => {setRecipeComments(response.data)})
+
+    }
+    catch (err) {
+      console.error(err);
+    }
+
+  }, [])
+
+  useEffect(() => {
+    try {
+    const urlPostRecipeComments ='/api/recipe/'+recipe?.id+'/comments'
+      axios.post(urlPostRecipeComments, {Comments: recipeComments},
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Accept: 'application/json',
+                },
+              },
+            )
+            .then()
+    }
+    catch (err) {
+    console.error(err);
+    }
+      
+  }, []) 
+  
   function showComments() {
     setCommentsVisible(!commentsVisible)
   }
@@ -134,7 +122,7 @@ useEffect(() => {
               <img
                 id="photoRecipe"
                 alt="Foto da receita"
-                src={recipeMock.recipePhoto}
+                src={recipe?.imagem}
               />
             </div>
           </div>
@@ -143,33 +131,33 @@ useEffect(() => {
               <div className="flex w-1/2 flex-col justify-between">
                 <div>
                   <h1 className="text-xl text-[#9C4B00]">
-                    {recipeMock.recipeName}
+                    {recipe?.titulo}
                   </h1>
                   <p className="text-xs text-[#999999]">
-                    {recipeMock.recipeOrigin}
+                    origem
                   </p>
                   <p className='mt-2 font-["Poppins"] text-base text-[#666565]'>
-                    {recipeMock.recipeAutor}
+                    {recipe?.userId}
                   </p>
                   <div className="mt-2 flex flex-row">
-                    <RecipeInfo info={'🕙 ' + recipeMock.recipeTime} />
-                    <RecipeInfo info={'🍽️ ' + recipeMock.recipeDifficulty} />
+                    <RecipeInfo info={'🕙 ' + recipe?.tempo_preparo} />
+                    <RecipeInfo info={'🍽️ ' + recipe?.dificuldade} />
                     <RecipeInfo
-                      info={'🔥 ' + recipeMock.recipeKcal + ' Kcal'}
+                      info={'🔥 ' + recipe?.calorias + ' Kcal'}
                     />
                   </div>
                   <div className="mt-2 flex flex-row items-center">
-                    <RecipeRating rating={recipeMock.recipeRating} />
-                    <p className="ml-1">{recipeMock.recipeRating}</p>
+                    <RecipeRating rating={4.8} />
+                    <p className="ml-1">{4.8}</p>
                   </div>
                   <div className="mt-2 flex flex-row flex-wrap">
-                    {recipeMock.recipeIngredients.map((ingredient) => {
-                      return <Ingredient name={ingredient.ingredientName} />
+                    {recipeIngredients?.map((ingredient) => {
+                      return <Ingredient name={ingredient.nome} />
                     })}
                   </div>
                 </div>
                 <div className='flex flex-row'>
-                  <PersonsLiked personsLiked={recipeMock.personsLiked}/>
+                  <PersonsLiked personsLiked={recipe?.curtidas}/>
                 </div>
                 <div className="flex flex-row">
                   <Like />
@@ -184,18 +172,14 @@ useEffect(() => {
                 <h2 className="font-medium">Modo de preparo</h2>
                 <div className="scrollbar-hidden overflow-y-auto text-[#666565]">
                   <p>
-                    {recipeMock.recipeMode}
-                    {recipeMock.recipeMode}
-                    {recipeMock.recipeMode}
-                    {recipeMock.recipeMode}
-                    {recipeMock.recipeMode}
+                    {recipe?.descricao}
                   </p>
                 </div>
               </div>
             </div>
             <div className="mt-4 h-60 overflow-y-auto">
               {commentsVisible && (
-                <Comments comments={recipeMock.recipeComments} />
+                <Comments comments={recipeComments?.comentarios} />
               )}
             </div>
           </div>
