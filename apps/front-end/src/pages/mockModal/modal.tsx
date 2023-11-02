@@ -1,20 +1,33 @@
 import React, { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
-import { alimentos } from './mockAlimentos'
 import TextareaAutosize from 'react-textarea-autosize'
-//import axios from 'axios';
+import axios from 'axios'
 
 const ModalDefault = () => {
+  interface inputIngrediente {
+    id: number
+    ingredient: string
+    quantity: number
+  }
+
+  interface typeIngredient {
+    id: number
+    nome: string
+  }
+
   const [openModal, setOpenModal] = useState<string | undefined>()
   const props = { openModal, setOpenModal }
   const [suggestions, setSuggestions] = useState<string[]>([])
-  const [inputList, setInputList] = useState([{ ingredient: '', quantity: '' }])
+  const [inputList, setInputList] = useState([
+    { id: 0, ingredient: '', quantity: 0 },
+  ])
   const [recipeName, setRecipeName] = useState('')
   const [recipeTime, setRecipeTime] = useState('')
   const [recipeCategory, setRecipeCategory] = useState('')
   const [recipeMode, setRecipeMode] = useState('')
   const [isFocused, setIsFocused] = useState<boolean[]>([])
   const [selectedFile, setSelectedFile] = useState<File>()
+  const [recipeDifficulty, setRecipeDifficulty] = useState('')
   const [preview, setPreview] = useState('')
   const [errors, setErrors] = useState({
     recipeName: '',
@@ -23,11 +36,7 @@ const ModalDefault = () => {
     recipeMode: '',
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-
-  interface inputIngrediente {
-    ingredient: string
-    quantity: string
-  }
+  const [ingredient, setIngredients] = useState<typeIngredient[]>([{ nome: '', id: 0 },])
 
   useEffect(() => {
     if (!selectedFile) {
@@ -40,6 +49,10 @@ const ModalDefault = () => {
 
     return () => URL.revokeObjectURL(objectUrl)
   }, [selectedFile])
+
+  useEffect(() => {
+    loadIngredients()
+  }, [])
 
   const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) {
@@ -60,12 +73,20 @@ const ModalDefault = () => {
             className="cursor-pointer border-t border-gray-300 p-1.5 text-orange-500 hover:bg-gray-200"
             onClick={() => {
               const list: Array<inputIngrediente> = [...inputList]
-              // eslint-disable-next-line array-callback-return
-              list.find((it, ind) => {
-                if (it === item) {
-                  list[ind].ingredient = suggestion
+
+              const foundItem = list.find((it) => it === item)
+
+              if (foundItem) {
+                foundItem.ingredient = suggestion
+                const matchingIngredient = ingredient.find(
+                  (i) => i.nome === foundItem.ingredient,
+                )
+
+                if (matchingIngredient) {
+                  foundItem.id = matchingIngredient.id
                 }
-              })
+              }
+
               setInputList(list)
               suggestions.length = 0
               const focused: Array<boolean> = [...isFocused]
@@ -88,9 +109,13 @@ const ModalDefault = () => {
     const list: Array<inputIngrediente> = [...inputList]
     list[index][name] = value
     setInputList(list)
-    const filtered = alimentos.filter((item) =>
-      item.toLowerCase().startsWith(value.toLowerCase()),
-    )
+    const ingredientName = ingredient.map((el) => {
+      return el.nome
+    })
+
+    const filtered = ingredientName?.filter((item) => {
+      if (item) return item.toLowerCase().startsWith(value.toLowerCase())
+    })
     setSuggestions(value ? filtered.slice(0, 5) : [])
     const focused: Array<boolean> = [...isFocused]
     focused[index] = true
@@ -105,8 +130,8 @@ const ModalDefault = () => {
 
   const handleAddClick = () => {
     const lastIndex = inputList[inputList.length - 1]
-    if (lastIndex.ingredient !== '' && lastIndex.quantity !== '') {
-      setInputList([...inputList, { ingredient: '', quantity: '' }])
+    if (lastIndex.ingredient !== '' && lastIndex.quantity !== 0) {
+      setInputList([...inputList, { id: 0, ingredient: '', quantity: 0 }])
     }
   }
 
@@ -117,7 +142,7 @@ const ModalDefault = () => {
     const value = event.target.value
     if (!isNaN(+value)) {
       const list = [...inputList]
-      list[index].quantity = value
+      list[index].quantity = +value
       setInputList(list)
     }
   }
@@ -136,37 +161,78 @@ const ModalDefault = () => {
     }
   }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [linkPhoto, setLinkPhoto] = useState('google.com')
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       setOpenModal('')
-      setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
-      setTimeout(() => {
-        setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
-      }, 3000)
-    }
-    /*const url = "/api/recipe"
+      try {
+        /*
+        axios.post("/api/photo/recipe", {
+          photo: preview
+        }),{
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept' : 'application/json',
+          }
+        }).then(Response => {
+          setLinkPhoto(Response.data)
+          console.log(linkPhoto);
+        })
+        */
+        const Response = await axios.post(
+          '/api/recipe',
+          {
+            titulo: recipeName,
+            //modo_preparo: recipeMode,
+            descricao: recipeMode,
+            tempo_preparo: recipeTime,
+            dificuldade: recipeDifficulty,
+            imagem: linkPhoto,
+            calorias: 0, //remover
+            //recipeCategory: recipeCategory,
+            userId: '3739c554-34b0-4e1e-915c-ebf93dfd0559',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          },
+        )
 
-      axios.post(url, {
-        recipePhoto: preview,
-        recipeName: recipeName,
-        ingredients: inputList,
-        recipeTime: recipeTime,
-        recipeCategory: recipeCategory,
-        recipeMode: recipeMode
-      },{
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept' : 'application/json',
-        }
-      })
-      .then(Response => {
-        const data = Response.data
-        console.log(Response);
-      }).catch(err => console.log(err.response));
+        inputList.map(async (Ingredient) => {
+          const urlIngredient =
+            '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
+
+          console.log('criando ingrediente')
+          await axios.post(urlIngredient, {
+            portion: Ingredient.quantity,
+          })
+
+          return 0
+        })
+
+        setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
+        setTimeout(() => {
+          setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
+        }, 3000)
+      } catch (err) {
+        alert(err)
       }
-    */
+    }
+  }
+
+  const loadIngredients = async () => {
+    try {
+      await axios.get('/api/ingredient').then((Response) => {
+        setIngredients(Response.data)
+      })
+    } catch (error) {
+      alert(error)
+    }
   }
 
   return (
@@ -262,7 +328,7 @@ const ModalDefault = () => {
                         'O campo deve conter letras',
                       )
                     }
-                    if (!inputValue.match(/^[A-Za-z\s]+$/)) {
+                    if (!inputValue.match(/^[^\d]+$/)) {
                       setRecipeName('')
                       handleFieldChange(
                         'recipeName',
@@ -289,6 +355,7 @@ const ModalDefault = () => {
                             onChange={(e) => handleInputIngredientChange(e, i)}
                             placeholder="Ingrediente"
                             className="block h-full w-full rounded-lg border-none bg-gray-100 p-3 outline-none focus:outline-orange-400 focus:ring-0"
+                            autoComplete="off"
                             required
                           />
                         </div>
@@ -352,6 +419,24 @@ const ModalDefault = () => {
                   <p className="text-red-500">{errors.recipeTime}</p>
                 )}
               </div>
+              <div className="h-full w-full">
+                <label htmlFor="recipeDifficulty">
+                  Dificuldade da receita:{' '}
+                </label>
+                <select
+                  name="recipeDifficulty"
+                  id="recipeDifficulty"
+                  className="rounded-lg border border-transparent bg-gray-100 outline-none focus:border focus:border-orange-400 focus:outline-none focus:ring-0"
+                  value={recipeDifficulty}
+                  onChange={(e) => {
+                    setRecipeDifficulty(e.target.value)
+                  }}
+                >
+                  <option value="Facil">Facil</option>
+                  <option value="Medio">Medio</option>
+                  <option value="Dificil">Dificil</option>
+                </select>
+              </div>
               <div className="h-full">
                 <TextareaAutosize
                   minRows={1}
@@ -374,7 +459,7 @@ const ModalDefault = () => {
                         'O campo deve conter letras',
                       )
                     }
-                    if (!inputValue.match(/^[A-Za-z\s]+$/)) {
+                    if (!inputValue.match(/^[^\d]+$/)) {
                       setRecipeCategory('')
                       handleFieldChange(
                         'recipeCategory',
@@ -410,7 +495,7 @@ const ModalDefault = () => {
                         'O campo deve conter letras',
                       )
                     }
-                    if (!inputValue.match(/^[A-Za-z\s]+$/)) {
+                    if (!inputValue.match(/^[^\d]+$/)) {
                       setRecipeMode('')
                       handleFieldChange(
                         'recipeMode',
