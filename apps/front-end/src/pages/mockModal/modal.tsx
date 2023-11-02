@@ -36,9 +36,7 @@ const ModalDefault = () => {
     recipeMode: '',
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-  const [ingredient, setIngredients] = useState<typeIngredient[]>([
-    { nome: 'teste', id: 12 },
-  ])
+  const [ingredient, setIngredients] = useState<typeIngredient[]>([{ nome: '', id: 0 },])
 
   useEffect(() => {
     if (!selectedFile) {
@@ -163,11 +161,11 @@ const ModalDefault = () => {
     }
   }
 
-  const hasErrors = Object.values(errors).some((error) => !!error)
   const [linkPhoto, setLinkPhoto] = useState('google.com')
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       setOpenModal('')
       try {
@@ -330,7 +328,7 @@ const ModalDefault = () => {
                         'O campo deve conter letras',
                       )
                     }
-                    if (!inputValue.match(/^[A-Za-z\s]+$/)) {
+                    if (!inputValue.match(/^[^\d]+$/)) {
                       setRecipeName('')
                       handleFieldChange(
                         'recipeName',
@@ -357,6 +355,7 @@ const ModalDefault = () => {
                             onChange={(e) => handleInputIngredientChange(e, i)}
                             placeholder="Ingrediente"
                             className="block h-full w-full rounded-lg border-none bg-gray-100 p-3 outline-none focus:outline-orange-400 focus:ring-0"
+                            autoComplete="off"
                             required
                           />
                         </div>
@@ -460,7 +459,7 @@ const ModalDefault = () => {
                         'O campo deve conter letras',
                       )
                     }
-                    if (!inputValue.match(/^[A-Za-z\s]+$/)) {
+                    if (!inputValue.match(/^[^\d]+$/)) {
                       setRecipeCategory('')
                       handleFieldChange(
                         'recipeCategory',
@@ -496,7 +495,7 @@ const ModalDefault = () => {
                         'O campo deve conter letras',
                       )
                     }
-                    if (!inputValue.match(/^[A-Za-z\s]+$/)) {
+                    if (!inputValue.match(/^[^\d]+$/)) {
                       setRecipeMode('')
                       handleFieldChange(
                         'recipeMode',
