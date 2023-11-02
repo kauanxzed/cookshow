@@ -1,31 +1,33 @@
 import React, { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
-import axios from 'axios';
+import axios from 'axios'
 
 const ModalDefault = () => {
   interface inputIngrediente {
-    id: number,
+    id: number
     ingredient: string
     quantity: number
   }
 
   interface typeIngredient {
-    id: number,
-    name: string
+    id: number
+    nome: string
   }
 
   const [openModal, setOpenModal] = useState<string | undefined>()
   const props = { openModal, setOpenModal }
   const [suggestions, setSuggestions] = useState<string[]>([])
-  const [inputList, setInputList] = useState([{id: 0, ingredient: "", quantity: 0}])
+  const [inputList, setInputList] = useState([
+    { id: 0, ingredient: '', quantity: 0 },
+  ])
   const [recipeName, setRecipeName] = useState('')
   const [recipeTime, setRecipeTime] = useState('')
   const [recipeCategory, setRecipeCategory] = useState('')
   const [recipeMode, setRecipeMode] = useState('')
   const [isFocused, setIsFocused] = useState<boolean[]>([])
   const [selectedFile, setSelectedFile] = useState<File>()
-  const [recipeDifficulty, setRecipeDifficulty] = useState("")
+  const [recipeDifficulty, setRecipeDifficulty] = useState('')
   const [preview, setPreview] = useState('')
   const [errors, setErrors] = useState({
     recipeName: '',
@@ -34,7 +36,9 @@ const ModalDefault = () => {
     recipeMode: '',
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-  const [ingredient, setIngredients] = useState<typeIngredient[]>([{name: "teste", id: 12}])
+  const [ingredient, setIngredients] = useState<typeIngredient[]>([
+    { nome: 'teste', id: 12 },
+  ])
 
   useEffect(() => {
     if (!selectedFile) {
@@ -71,13 +75,20 @@ const ModalDefault = () => {
             className="cursor-pointer border-t border-gray-300 p-1.5 text-orange-500 hover:bg-gray-200"
             onClick={() => {
               const list: Array<inputIngrediente> = [...inputList]
-              // eslint-disable-next-line array-callback-return
-              list.find((it, ind) => {
-                if (it === item) {
-                  list[ind].ingredient = suggestion
-                  list[ind].id = ind
+
+              const foundItem = list.find((it) => it === item)
+
+              if (foundItem) {
+                foundItem.ingredient = suggestion
+                const matchingIngredient = ingredient.find(
+                  (i) => i.nome === foundItem.ingredient,
+                )
+
+                if (matchingIngredient) {
+                  foundItem.id = matchingIngredient.id
                 }
-              })
+              }
+
               setInputList(list)
               suggestions.length = 0
               const focused: Array<boolean> = [...isFocused]
@@ -101,11 +112,12 @@ const ModalDefault = () => {
     list[index][name] = value
     setInputList(list)
     const ingredientName = ingredient.map((el) => {
-      return el.name
+      return el.nome
     })
-    const filtered = ingredientName?.filter((item) =>
-      item.toLowerCase().startsWith(value.toLowerCase()),
-    )
+
+    const filtered = ingredientName?.filter((item) => {
+      if (item) return item.toLowerCase().startsWith(value.toLowerCase())
+    })
     setSuggestions(value ? filtered.slice(0, 5) : [])
     const focused: Array<boolean> = [...isFocused]
     focused[index] = true
@@ -121,7 +133,7 @@ const ModalDefault = () => {
   const handleAddClick = () => {
     const lastIndex = inputList[inputList.length - 1]
     if (lastIndex.ingredient !== '' && lastIndex.quantity !== 0) {
-      setInputList([...inputList, {id: 0, ingredient: '', quantity: 0 }])
+      setInputList([...inputList, { id: 0, ingredient: '', quantity: 0 }])
     }
   }
 
@@ -151,16 +163,15 @@ const ModalDefault = () => {
     }
   }
 
-  const HandleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const hasErrors = Object.values(errors).some((error) => !!error)
+  const [linkPhoto, setLinkPhoto] = useState('google.com')
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(recipeDifficulty)
-    const hasErrors = Object.values(errors).some((error) => !!error)
-    const [linkPhoto, setLinkPhoto] = useState("google.com")
-    const [idRecipe, setIdRecipe] = useState("")
     if (!hasErrors) {
       setOpenModal('')
-      try{
-        /* 
+      try {
+        /*
         axios.post("/api/photo/recipe", {
           photo: preview
         }),{
@@ -173,54 +184,56 @@ const ModalDefault = () => {
           console.log(linkPhoto);
         })
         */
-        axios.post("/api/recipe", {
-          titulo: recipeName,
-          //modo_preparo: recipeMode,
-          descricao: recipeMode,
-          tempo_preparo: recipeTime,
-          dificuldade: recipeDifficulty,
-          imagem: linkPhoto,
-          calorias: 0, //remover
-          //recipeCategory: recipeCategory,
-          userId: "3739c554-34b0-4e1e-915c-ebf93dfd0559",
-        },{
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept' : 'application/json',
-          }
-        })
-        .then(Response => {
-          setIdRecipe(Response.data.id)
-          console.log(idRecipe);
-        }).catch(err => {
-          console.error(err.response)
-        });
-        
-        inputList.map(Ingredient => {
-          const urlIngredient = "/api/"+idRecipe+"/ingredient/"+Ingredient.id   
-          axios.post(urlIngredient, {
-            portion: Ingredient.quantity  
+        const Response = await axios.post(
+          '/api/recipe',
+          {
+            titulo: recipeName,
+            //modo_preparo: recipeMode,
+            descricao: recipeMode,
+            tempo_preparo: recipeTime,
+            dificuldade: recipeDifficulty,
+            imagem: linkPhoto,
+            calorias: 0, //remover
+            //recipeCategory: recipeCategory,
+            userId: '3739c554-34b0-4e1e-915c-ebf93dfd0559',
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
+            },
+          },
+        )
+
+        inputList.map(async (Ingredient) => {
+          const urlIngredient =
+            '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
+
+          console.log('criando ingrediente')
+          await axios.post(urlIngredient, {
+            portion: Ingredient.quantity,
           })
-          return 0;
+
+          return 0
         })
 
         setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
         setTimeout(() => {
           setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
         }, 3000)
-      } catch(err) {
-        console.error(err)
+      } catch (err) {
+        alert(err)
       }
     }
   }
 
-  const loadIngredients = async() => {
+  const loadIngredients = async () => {
     try {
       await axios.get('/api/ingredient').then((Response) => {
         setIngredients(Response.data)
       })
     } catch (error) {
-      console.error(error)
+      alert(error)
     }
   }
 
@@ -255,7 +268,7 @@ const ModalDefault = () => {
         onClose={() => props.setOpenModal(undefined)}
         size="5xl"
       >
-        <form onSubmit={HandleSubmit}>
+        <form onSubmit={handleSubmit}>
           <Modal.Body className="flex flex-col justify-between bg-white p-0 md:flex-row">
             <div className="flex flex-col items-center justify-center rounded-tl-lg p-5">
               <button
@@ -407,15 +420,19 @@ const ModalDefault = () => {
                   <p className="text-red-500">{errors.recipeTime}</p>
                 )}
               </div>
-              <div className='h-full w-full'>
-                <label htmlFor="recipeDifficulty">Dificuldade da receita: </label>
-                <select 
+              <div className="h-full w-full">
+                <label htmlFor="recipeDifficulty">
+                  Dificuldade da receita:{' '}
+                </label>
+                <select
                   name="recipeDifficulty"
                   id="recipeDifficulty"
-                  className='rounded-lg border border-transparent bg-gray-100 outline-none focus:border focus:border-orange-400 focus:outline-none focus:ring-0'
+                  className="rounded-lg border border-transparent bg-gray-100 outline-none focus:border focus:border-orange-400 focus:outline-none focus:ring-0"
                   value={recipeDifficulty}
-                  onChange={(e) => { setRecipeDifficulty(e.target.value) }}
-                  > 
+                  onChange={(e) => {
+                    setRecipeDifficulty(e.target.value)
+                  }}
+                >
                   <option value="Facil">Facil</option>
                   <option value="Medio">Medio</option>
                   <option value="Dificil">Dificil</option>
