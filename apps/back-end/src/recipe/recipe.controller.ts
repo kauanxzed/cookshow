@@ -51,7 +51,7 @@ export class RecipeController {
   }
 
   @Post('/:recipeId/rating')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async createRating(@Body() createRecipeRatingDto: CreateRecipeRatingDto) {
     return await this.recipeRatingService.create(createRecipeRatingDto)
   }
