@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { UserIcon, StarIcon, LogoutIcon } from '@heroicons/react/solid'
+import { useEffect, useState } from 'react'
+import { UserIcon, LogoutIcon } from '@heroicons/react/solid'
 import { Link } from 'react-router-dom'
 
 const logOut = () => {
@@ -7,21 +7,25 @@ const logOut = () => {
   if (sessionStorage.getItem('jwtToken')) sessionStorage.removeItem('jwtToken')
 }
 
-const loggedIn =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
 function Header() {
   // Estado para controlar a visibilidade do menu no modo mobile
   const [isOpen, setIsOpen] = useState(false)
+  const [loggedIn, setLoggedIn] = useState<string | null>()
+
+  useEffect(() => {
+    const loggedIn =
+      localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+    setLoggedIn(loggedIn)
+  }, [])
 
   return (
     <div className="bg-white p-5 text-black shadow-md">
-      <div className="container mx-auto ">
-        <div className="flex items-center justify-between ">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-between">
           <Link to="/">
             <h1 className="font-orelega text-3xl font-bold md:text-4xl">
-              <span className="text-orange-500 ">COOK</span>
-              <span className="text-black  ">SHOW</span>
+              <span className="text-orange-500">COOK</span>
+              <span className="text-black">SHOW</span>
             </h1>
           </Link>
           {/* Menu mobile (visível apenas em telas pequenas) */}

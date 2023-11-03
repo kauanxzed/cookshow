@@ -13,9 +13,6 @@ import RecipeList from './pages/recipeList/recipeList'
 import ModalDefault from './pages/recipe/recipe/recipe'
 import PerfilEditar from '../src/pages/profile/editProfile'
 
-const loggedIn =
-  sessionStorage.getItem('jwtToken') || localStorage.getItem('jwtToken')
-
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>

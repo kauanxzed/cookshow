@@ -34,8 +34,8 @@ function LoginForm() {
       .then((data) => {
         if (rememberMe) localStorage.setItem('jwtToken', data.data)
         else sessionStorage.setItem('jwtToken', data.data)
-        navigate('/')
       })
+      .then(() => navigate('/'))
       .catch(() => alert('Erro na requisição!'))
   }
 

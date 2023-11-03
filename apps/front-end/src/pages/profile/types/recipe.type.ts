@@ -9,3 +9,8 @@ export type RecipeType = {
   imagem: string
   publicado: boolean
 }
+
+export type UserPayloadType = {
+  userId: string
+  username: string
+}
