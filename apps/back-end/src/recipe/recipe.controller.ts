@@ -26,13 +26,13 @@ export class RecipeController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   create(@Body() createRecipeDto: CreateRecipeDto) {
     return this.recipeService.create(createRecipeDto)
   }
 
   @Post('/:recipeId/ingredient/:ingredientId')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async addRecipeIngredient(
     @Param('recipeId') recipeId: string,
     @Param('ingredientId') ingredientId: number,
