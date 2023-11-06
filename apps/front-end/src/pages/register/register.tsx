@@ -71,7 +71,7 @@ function LoginForm() {
 
     if (!validatePassword(password)) {
       setPasswordError(
-        'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número.',
+        'A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
       )
       return
     }
@@ -160,7 +160,7 @@ function LoginForm() {
                 setPasswordError('')
                 if (!validatePassword(e.target.value)) {
                   setPasswordError(
-                    'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número.',
+                    'A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
                   )
                 }
               }}
@@ -177,8 +177,7 @@ function LoginForm() {
                   zIndex: 1000,
                 }}
               >
-                A senha deve ter no mínimo 8 caracteres, uma letra maiúscula e
-                um número.
+                A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.
               </p>
             )}
             {passwordError && (
