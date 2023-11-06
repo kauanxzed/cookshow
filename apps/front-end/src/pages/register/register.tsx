@@ -17,6 +17,7 @@ function LoginForm() {
   const [passwordConfirmationError, setPasswordConfirmationError] = useState('')
   const [showPasswordTip, setShowPasswordTip] = useState(false)
 
+  //Commit para corrigir o autor, visto que no computador da cesumar estava o git config de outro usuário.
   // Hook para navegar entre páginas
   const navigate = useNavigate()
 
