@@ -81,7 +81,7 @@ export class RecipeController {
     return await this.commentService.findById(id);
   }
 
-  @Get()
+  @Get('/:recipeId/comment')
   async findAll() {
     return await this.commentService.findAll();
   }
