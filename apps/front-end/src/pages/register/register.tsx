@@ -1,145 +1,150 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [name, setName] = useState('');
-  const [nameError, setNameError] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const [name, setName] = useState('')
+  const [nameError, setNameError] = useState('')
+  const [password, setPassword] = useState('')
+  const [passwordConfirmation, setPasswordConfirmation] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirmation, setShowPasswordConfirmation] =
-    useState(false);
-  const [passwordError, setPasswordError] = useState('');
-  const [passwordConfirmationError, setPasswordConfirmationError] =
-    useState('');
-  const [showPasswordTip, setShowPasswordTip] = useState(false);
+    useState(false)
+  const [passwordError, setPasswordError] = useState('')
+  const [passwordConfirmationError, setPasswordConfirmationError] = useState('')
+  const [showPasswordTip, setShowPasswordTip] = useState(false)
 
   // Hook para navegar entre páginas
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   // Função para validar o formato do email
   const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(String(email).toLowerCase());
-  };
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return regex.test(String(email).toLowerCase())
+  }
 
   // Função para validar o nome
   const validateName = (name: string) => {
-    const regex = /[a-zA-Z\u00C0-\u00FF ]+/i;
-    return regex.test(name);
-  };
+    const regex = /[a-zA-Z\u00C0-\u00FF ]+/i
+    return regex.test(name)
+  }
 
   // Função para validar a força da senha
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-    return regex.test(password);
-  };
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+    return regex.test(password)
+  }
 
   // Função chamada quando o usuário clica no botão de registro
   const handleRegister = () => {
     if (!name) {
-      setNameError('O nome não pode ser vazio!');
-      return;
+      setNameError('O nome não pode ser vazio!')
+      return
     }
 
     if (!validateEmail(email)) {
-      setEmailError('Insira um email válido!');
-      return;
+      setEmailError('Insira um email válido!')
+      return
     }
-    const url = "/api/user"
+    const url = '/api/user'
 
-    axios.post(url, {
-      usuario: name,
-      email: email,
-      senha: password
-    },{
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept' : 'application/json',
-      }
-    }) 
-    .then().catch(()=> alert('Erro na requisição!'));
+    axios
+      .post(
+        url,
+        {
+          usuario: name,
+          email: email,
+          senha: password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+        },
+      )
+      .then()
+      .catch(() => alert('Erro na requisição!'))
 
     if (!validatePassword(password)) {
       setPasswordError(
-        'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número.'
-      );
-      return;
+        'A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
+      )
+      return
     }
 
     if (password !== passwordConfirmation) {
-      setPasswordConfirmationError('As senhas devem ser iguais.');
-      return;
+      setPasswordConfirmationError('As senhas devem ser iguais.')
+      return
     }
 
-    alert('Registro bem-sucedido!');
-    navigate('/confirmation-register');
-  };
+    alert('Registro bem-sucedido!')
+    navigate('/confirmation-register')
+  }
   return (
-    <div className="flex overflow-hidden lg:flex-row h-screen">
+    <div className="flex h-screen overflow-hidden lg:flex-row">
       <div className="hidden lg:flex lg:w-2/3">
-        <img  alt="Logo" className="object-cover w-full h-full" />
+        <img alt="Logo" className="h-full w-full object-cover" />
       </div>
-      <div className="lg:w-1/3 flex flex-col items-start mt-14 ml-9 lg:items-start lg:justify-center lg:mt-0 lg:px-6 h-full scale-[0.85] md:w-1/2 sm:w-full sm:mt-6 sm:ml-6">
-        <div className="flex flex-col items-start lg:items-start w-full lg:h-full justify-center space-y-4 py-6 lg:py-0 lg:pt-0 lg:mb-20">
-          <h1 className="text-3xl mb-9 font-bold text-orange-400 font-orelega lg:mt-0 lg:mb-6 lg:self-center">
-            <span className="text-3xl mb-9 ml-20 font-bold text-orange-400 lg:ml-0 lg:hidden">
+      <div className="mt-14 ml-9 flex h-full scale-[0.85] flex-col items-start sm:mt-6 sm:ml-6 sm:w-full md:w-1/2 lg:mt-0 lg:w-1/3 lg:items-start lg:justify-center lg:px-6">
+        <div className="flex w-full flex-col items-start justify-center space-y-4 py-6 lg:mb-20 lg:h-full lg:items-start lg:py-0 lg:pt-0">
+          <h1 className="font-orelega mb-9 text-3xl font-bold text-orange-400 lg:mt-0 lg:mb-6 lg:self-center">
+            <span className="mb-9 ml-20 text-3xl font-bold text-orange-400 lg:ml-0 lg:hidden">
               COOK
             </span>
-            <span className="text-3xl mb-9 font-bold text-black lg:hidden">
+            <span className="mb-9 text-3xl font-bold text-black lg:hidden">
               SHOW
             </span>
           </h1>
-          <p className="text-3xl py-3 font-bold text-orange-400">
+          <p className="py-3 text-3xl font-bold text-orange-400">
             Cadastre-se!
           </p>
           <div className="mb-0 w-80">
-            <label className="block text-orange-700 mb-2">Nome</label>
+            <label className="mb-2 block text-orange-700">Nome</label>
             <input
               type="text"
               placeholder="Nome"
               value={name}
               onChange={(e) => {
-                setName(e.target.value);
-                setNameError('');
+                setName(e.target.value)
+                setNameError('')
                 if (!validateName(e.target.value)) {
-                  setNameError('O nome deve ser válido!');
+                  setNameError('O nome deve ser válido!')
                 }
               }}
               required
-              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+              className="block w-full rounded-lg bg-gray-100 p-3 outline-none focus:outline-orange-400"
             />
-            {nameError && <p className="text-red-600 text-sm">{nameError}</p>}
+            {nameError && <p className="text-sm text-red-600">{nameError}</p>}
           </div>
           <div className="mb-0 w-80">
-            <label className="block text-orange-700 mb-2">Email</label>
+            <label className="mb-2 block text-orange-700">Email</label>
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => {
-                setEmail(e.target.value);
-                setEmailError('');
+                setEmail(e.target.value)
+                setEmailError('')
                 if (!validateEmail(e.target.value)) {
-                  setEmailError('Insira um email válido!');
+                  setEmailError('Insira um email válido!')
                 }
               }}
               required
-              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+              className="block w-full rounded-lg bg-gray-100 p-3 outline-none focus:outline-orange-400"
             />
-            {emailError && <p className="text-red-600 text-sm">{emailError}</p>}
+            {emailError && <p className="text-sm text-red-600">{emailError}</p>}
           </div>
-          <div className="mb-0 w-80 relative">
-            <label className="block text-orange-700 mb-2">
+          <div className="relative mb-0 w-80">
+            <label className="mb-2 block text-orange-700">
               Senha
               <span
                 role="img"
                 aria-label="Ponto de interrogação"
-                className="ml-2 text-blue-600 cursor-pointer"
+                className="ml-2 cursor-pointer text-blue-600"
                 onMouseOver={() => setShowPasswordTip(true)}
                 onMouseOut={() => setShowPasswordTip(false)}
               >
@@ -151,20 +156,20 @@ function LoginForm() {
               placeholder="**********"
               value={password}
               onChange={(e) => {
-                setPassword(e.target.value);
-                setPasswordError('');
+                setPassword(e.target.value)
+                setPasswordError('')
                 if (!validatePassword(e.target.value)) {
                   setPasswordError(
-                    'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número.'
-                  );
+                    'A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
+                  )
                 }
               }}
               required
-              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+              className="block w-full rounded-lg bg-gray-100 p-3 outline-none focus:outline-orange-400"
             />
             {showPasswordTip && (
               <p
-                className="text-black text-sm absolute bg-white p-1 border rounded"
+                className="absolute rounded border bg-white p-1 text-sm text-black"
                 style={{
                   bottom: '100%',
                   left: '50%',
@@ -172,12 +177,11 @@ function LoginForm() {
                   zIndex: 1000,
                 }}
               >
-                A senha deve ter no mínimo 8 caracteres, uma letra maiúscula e
-                um número.
+                A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.
               </p>
             )}
             {passwordError && (
-              <p className="text-red-600 text-sm">{passwordError}</p>
+              <p className="text-sm text-red-600">{passwordError}</p>
             )}
 
             <span
@@ -187,8 +191,8 @@ function LoginForm() {
               {showPassword ? '🙈' : '👁️'}
             </span>
           </div>
-          <div className="mb-0 w-80 relative">
-            <label className="block text-orange-700 mb-2">
+          <div className="relative mb-0 w-80">
+            <label className="mb-2 block text-orange-700">
               Confirme sua senha
             </label>
             <input
@@ -196,18 +200,18 @@ function LoginForm() {
               placeholder="**********"
               value={passwordConfirmation}
               onChange={(e) => {
-                setPasswordConfirmation(e.target.value);
+                setPasswordConfirmation(e.target.value)
                 if (e.target.value !== password) {
-                  setPasswordConfirmationError('As senhas não conferem!');
+                  setPasswordConfirmationError('As senhas não conferem!')
                 } else {
-                  setPasswordConfirmationError('');
+                  setPasswordConfirmationError('')
                 }
               }}
               required
-              className="block w-full p-3 bg-gray-100 rounded-lg outline-none focus:outline-orange-400"
+              className="block w-full rounded-lg bg-gray-100 p-3 outline-none focus:outline-orange-400"
             />
             {passwordConfirmationError && (
-              <p className="text-red-600 text-sm">
+              <p className="text-sm text-red-600">
                 {passwordConfirmationError}
               </p>
             )}
@@ -218,21 +222,21 @@ function LoginForm() {
               {showPasswordConfirmation ? '🙈' : '👁️'}
             </span>
           </div>
-          <div className="w-80 mb-4">
+          <div className="mb-4 w-80">
             <button
               onClick={handleRegister}
-              className="p-1 bg-gray-800 mt-5 py-2 text-white rounded-md w-full px-22 hover:bg-gray-700"
+              className="px-22 mt-5 w-full rounded-md bg-gray-800 p-1 py-2 text-white hover:bg-gray-700"
             >
               Confirmar cadastro
             </button>
           </div>
-          <div className="flex space-x-1 mb-4 w-80 justify-center">
+          <div className="mb-4 flex w-80 justify-center space-x-1">
             <p>Já tenho uma conta!</p>
             <a href="/perfil" className="text-orange-700 hover:text-orange-800">
               Login
             </a>
           </div>
-          <div className="flex ml-1 mt-6 flex-col space-y-0 mb-0 w-80">
+          <div className="ml-1 mt-6 mb-0 flex w-80 flex-col space-y-0">
             <p className="text-sm">
               {' '}
               COOKSHOW processa os dados coletados para a criação da sua área de
@@ -249,7 +253,7 @@ function LoginForm() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default LoginForm;
+export default LoginForm

@@ -140,6 +140,7 @@ export class RecipeService {
     }
   }
 
+<<<<<<< HEAD
   async searchRecipeByIngredient(ingredientId: number[]): Promise<any> {
     // const foundIngredient = await this.ingredientRepository
     //   .createQueryBuilder('ingredientes')
@@ -159,5 +160,20 @@ export class RecipeService {
       .getOne();
 
     return foundRecipes;
+=======
+  async getFavoritedRecipes(userId: string): Promise<RecipeEntity[]> {
+    try {
+      const recipes = await this.recipeRepository
+        .createQueryBuilder('recipe')
+        .innerJoin('recipe.ratings', 'interacao')
+        .where('interacao.id_usuario = :userId', { userId })
+        .andWhere('recipe.deleted_at IS NULL')
+        .getMany();
+
+      return recipes;
+    } catch (erro) {
+      throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
+    }
+>>>>>>> develop
   }
 }

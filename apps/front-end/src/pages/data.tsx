@@ -1,5 +1,5 @@
-import FotoPerfil from '../assets/images/perfil.png';
-import Pizza from '../assets/images/pizaa.jpg';
+import FotoPerfil from '../assets/images/perfil.png'
+import Pizza from '../assets/images/pizaa.jpg'
 export const recipes = [
   {
     id: 1,
@@ -218,7 +218,7 @@ export const recipes = [
     commentsCount: 10, // Adicionado campo de contagem de comentários
     favoritesCount: 50, // Adicionado campo de contagem de favoritos
   },
-];
+]
 export const favoritedRecipes = [
   {
     id: 1,
@@ -263,9 +263,9 @@ export const favoritedRecipes = [
     commentsCount: 5, // Quantidade de comentários
     favoritesCount: 15, // Quantidade de favoritos
   },
-];
+]
 export const userProfile = {
   name: 'Nicolas',
   email: 'teste@hotmail.com',
   profileImage: FotoPerfil,
-};
+}

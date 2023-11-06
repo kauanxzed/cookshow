@@ -1,8 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 
 function Footer() {
   return (
-    <footer className="bg-white text-black p-5 fixed bottom-0 w-full">
+    <footer className=" bottom-0 w-full bg-white p-5 text-black">
       <div className="container mx-auto text-center">
         <div className="mb-2">
           © 2023 CookShow - Todos os direitos reservados
@@ -13,7 +13,7 @@ function Footer() {
           <Link to="/quem-somos">
             <a
               href="!#"
-              className="mx-1 sm:mx-2 text-sm sm:text-base hover:text-orange-500"
+              className="mx-1 text-sm hover:text-orange-500 sm:mx-2 sm:text-base"
             >
               Quem Somos
             </a>
@@ -22,7 +22,7 @@ function Footer() {
             {' '}
             <a
               href="!#"
-              className="mx-1 sm:mx-2 text-sm sm:text-base hover:text-orange-500"
+              className="mx-1 text-sm hover:text-orange-500 sm:mx-2 sm:text-base"
             >
               Termos
             </a>
@@ -31,7 +31,7 @@ function Footer() {
             {' '}
             <a
               href="!#"
-              className="mx-1 sm:mx-2 text-sm sm:text-base hover:text-orange-500"
+              className="mx-1 text-sm hover:text-orange-500 sm:mx-2 sm:text-base"
             >
               Privacidade
             </a>
@@ -40,7 +40,7 @@ function Footer() {
             {' '}
             <a
               href="!#"
-              className="mx-1 sm:mx-2 text-sm sm:text-base hover:text-orange-500"
+              className="mx-1 text-sm hover:text-orange-500 sm:mx-2 sm:text-base"
             >
               Fale Conosco
             </a>
@@ -48,7 +48,7 @@ function Footer() {
         </div>
       </div>
     </footer>
-  );
+  )
 }
 
-export default Footer;
+export default Footer

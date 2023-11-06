@@ -26,7 +26,7 @@ export class RecipeController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   create(@Body() createRecipeDto: CreateRecipeDto) {
     return this.recipeService.create(createRecipeDto);
   }
@@ -51,7 +51,7 @@ export class RecipeController {
   }
 
   @Post('/:recipeId/rating')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async createRating(@Body() createRecipeRatingDto: CreateRecipeRatingDto) {
     return await this.recipeRatingService.create(createRecipeRatingDto);
   }
@@ -69,6 +69,11 @@ export class RecipeController {
   @Get('/user/:userId')
   async getUserRecipes(@Param('userId') userId: string) {
     return await this.recipeService.getUserRecipes(userId);
+  }
+
+  @Get('/user/:userId/favorites')
+  async getFavoritedRecipes(@Param('userId') userId: string) {
+    return await this.recipeService.getFavoritedRecipes(userId);
   }
 
   @Post('/:recipeId/comment')
@@ -97,6 +102,11 @@ export class RecipeController {
   @Delete('/:recipeId/comment/:id')
   async delete(@Param('id') id: string) {
     return await this.commentService.delete(id);
+  }
+
+  @Get('/:recipeId/commentsQuantity')
+  async getQuantCommentsRecipe(@Param('recipeId') recipeId: string) {
+    return await this.commentService.getQuantCommentsRecipe(recipeId);
   }
 
   @Get('/search/ingredient')

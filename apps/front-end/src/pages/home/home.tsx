@@ -1,5 +1,6 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
-import Logo from '../../assets/images/Logo.png';
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react'
+import Logo from '../../assets/images/Logo.png'
+import ModalDefault from '../recipe/recipe/recipe'
 
 const SearchBar: React.FC = () => {
   const alimentos: string[] = [
@@ -36,49 +37,49 @@ const SearchBar: React.FC = () => {
     'Refrigerante',
     'Bolo',
     'Biscoito',
-  ];
+  ]
 
-  const [inputValue, setInputValue] = useState<string>('');
-  const [chips, setChips] = useState<string[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [isInputFocused, setInputFocused] = useState(false);
+  const [inputValue, setInputValue] = useState<string>('')
+  const [chips, setChips] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [isInputFocused, setInputFocused] = useState(false)
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setInputValue(value);
+    const value = event.target.value
+    setInputValue(value)
 
     const filtered = alimentos.filter((item) =>
-      item.toLowerCase().startsWith(value.toLowerCase())
-    );
-    setSuggestions(value ? filtered.slice(0, 5) : []);
-  };
+      item.toLowerCase().startsWith(value.toLowerCase()),
+    )
+    setSuggestions(value ? filtered.slice(0, 5) : [])
+  }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && inputValue) {
-      setChips([...chips, inputValue]);
-      setInputValue('');
-      setSuggestions([]);
+      setChips([...chips, inputValue])
+      setInputValue('')
+      setSuggestions([])
     }
-  };
+  }
 
   const handleRemoveChip = (index: number) => {
-    const newChips = [...chips];
-    newChips.splice(index, 1);
-    setChips(newChips);
-  };
+    const newChips = [...chips]
+    newChips.splice(index, 1)
+    setChips(newChips)
+  }
 
   const addSuggestionToChips = (suggestion: string) => {
-    setChips([...chips, suggestion]);
-    setInputValue('');
-    setSuggestions([]);
-  };
+    setChips([...chips, suggestion])
+    setInputValue('')
+    setSuggestions([])
+  }
 
   return (
-    <div className="flex flex-col w-full max-w-xl md:max-w-2xl lg:max-w-4xl mx-auto justify-start items-center space-y-2 p-4 sm:p-8 mt-8 md:mt-4 lg:mt-0">
+    <div className="mx-auto mt-8 flex w-full max-w-xl flex-col items-center justify-start space-y-2 p-4 sm:p-8 md:mt-4 md:max-w-2xl lg:mt-0 lg:max-w-4xl">
       <img
         src={Logo}
         alt="Logo CookShow"
-        className="h-[120px] md:h-[130px] lg:h-[170px] w-auto mb-2.5 lg: mt-16"
+        className="lg: mb-2.5 mt-16 h-[120px] w-auto md:h-[130px] lg:h-[170px]"
       />
 
       <div className="w-full">
@@ -88,7 +89,7 @@ const SearchBar: React.FC = () => {
           } rounded-lg p-1 md:p-2`}
         >
           <span
-            className="text-lg mr-1 md:mr-2"
+            className="mr-1 text-lg md:mr-2"
             aria-label="magnifying glass"
             role="img"
           >
@@ -124,12 +125,12 @@ const SearchBar: React.FC = () => {
           {chips.map((chip, index) => (
             <div
               key={index}
-              className="flex items-center bg-orange-500 text-white rounded-xl px-1 m-1 md:px-2 md:m-1.5"
+              className="m-1 flex items-center rounded-xl bg-orange-500 px-1 text-white md:m-1.5 md:px-2"
             >
               <span>{chip}</span>
               <button
                 onClick={() => handleRemoveChip(index)}
-                className="ml-1 relative bottom-0.5 md:ml-2 text-white"
+                className="relative bottom-0.5 ml-1 text-white md:ml-2"
               >
                 x
               </button>
@@ -143,15 +144,15 @@ const SearchBar: React.FC = () => {
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
             placeholder="Digite os alimentos desejados..."
-            className="p-1 flex-1 min-w-0 focus:outline-none"
+            className="min-w-0 flex-1 border-none p-1 focus:outline-none focus:ring-0"
           />
         </div>
         {suggestions.length > 0 && (
-          <div className="mt-2 bg-gray-100 rounded-md shadow">
+          <div className="mt-2 rounded-md bg-gray-100 shadow">
             {suggestions.map((suggestion, index) => (
               <div
                 key={index}
-                className="p-1.5 border-t border-gray-300 cursor-pointer text-orange-500 hover:bg-gray-200"
+                className="cursor-pointer border-t border-gray-300 p-1.5 text-orange-500 hover:bg-gray-200"
                 onClick={() => addSuggestionToChips(suggestion)}
               >
                 {suggestion}
@@ -161,7 +162,7 @@ const SearchBar: React.FC = () => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SearchBar;
+export default SearchBar
