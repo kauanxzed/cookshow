@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
 
+//Commit apenas para arrumar o autor dos commits feitos em sala de aula, pois no computador da cesumar estava configurado o nome de outro usuário.
+
 function Footer() {
   return (
     <footer className="bottom-0 w-full bg-white p-5 text-black">
