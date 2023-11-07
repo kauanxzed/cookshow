@@ -6,11 +6,23 @@ import Ingredient from './Ingredient'
 import Like from '../../../components/ui/like/like'
 import PersonsLiked from '../../../components/ui/personsLiked'
 import axios from 'axios'
+import Comments from './comments'
 
 interface ModalDefaultProps {
   show: boolean | undefined
   setOpenModal: (value: boolean | undefined) => void
   id: string
+}
+
+interface typeRecipeComments {
+  id_usuario: string
+  mensagem: string
+}
+
+interface typeRecipeIngredients {
+  id: number
+  nome: string
+  portion: number
 }
 
 interface typeRecipe {
@@ -22,18 +34,8 @@ interface typeRecipe {
   imagem: string
   calorias: number
   curtidas: number
-  ingredients: any
-}
-
-interface typeRecipeIngredients {
-  id: number
-  nome: string
-  portion: number
-}
-
-interface typeRecipeComments {
-  id: number
-  comentarios: string
+  comentarios: typeRecipeComments
+  ingredients: typeRecipeIngredients
 }
 
 const getRecipeData = async (recipeId: string) => {
@@ -42,10 +44,15 @@ const getRecipeData = async (recipeId: string) => {
     const recipeLikes = await axios.get(
       '/api/recipe/' + recipeId + '/favoritesQuantity',
     )
+    const recipeComments = await axios.get(
+      '/api/recipe/' + recipeId + '/comment',
+    )
+
     if (recipe.status === 200 && recipeLikes.status === 200) {
       const recipeData = {
         ...recipe.data,
         curtidas: recipeLikes.data,
+        comentarios: recipeComments.data,
       }
 
       return recipeData as typeRecipe
@@ -149,7 +156,9 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
                 </div>
               </div>
             </div>
-            <div className="mt-4 h-60 overflow-y-auto"></div>
+            <div className="mt-4 h-60 overflow-y-auto">
+              {commentsVisible && <Comments comments={recipe.comentarios} />}
+            </div>
           </div>
         </Modal.Body>
       ) : (
