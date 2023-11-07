@@ -307,7 +307,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                 />
               </div>
             </div>
-            <div className="flex max-h-[70vh] w-full flex-col space-y-6 overflow-y-scroll p-5">
+            <div className="flex max-h-[70vh] w-full flex-col space-y-6 overflow-y-auto p-5">
               <div className="h-full">
                 <input
                   type="text"
@@ -347,7 +347,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                 return (
                   <div className="box">
                     <div className="flex">
-                      <div className="flex w-4/5 flex-col items-center justify-center">
+                      <div className="flex w-full flex-col items-center justify-center">
                         <div className="flex w-full flex-col">
                           <input
                             type="text"
