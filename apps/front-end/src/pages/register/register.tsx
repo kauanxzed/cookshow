@@ -34,7 +34,7 @@ function LoginForm() {
 
   // Função para validar a força da senha
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{6,}$/
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*.&@#])[0-9a-zA-Z$*&@#]{6,}$/
     return regex.test(password)
   }
 
