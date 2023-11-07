@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
-import timer from "../../assets/images/relogio.png"
-import PersonsLiked from '../../components/ui/personsLiked';
+import React, { useState } from 'react'
+import timer from '../../assets/images/relogio.png'
+import PersonsLiked from '../../components/ui/personsLiked'
 import RecipeModal from '../recipe/recipe/recipe'
 
-
 interface RecipeProps {
-    id: string; // id da receita
-    image: string;
-    imageAlt: string;
-    title: string;
-    category: string;
-    owner: string;
-    hours: number;
-    minutes: number;
-    description: string;
-    moreLikes?: number;
-    personsLiked: number;
-    rating: number;
+  id: string // id da receita
+  image: string
+  imageAlt: string
+  title: string
+  category: string
+  owner: string
+  hours: number
+  minutes: number
+  description: string
+  moreLikes?: number
+  personsLiked: number
+  rating: number
 }
 
 const Recipe: React.FC<RecipeProps> = (props) => {
@@ -34,7 +33,7 @@ const Recipe: React.FC<RecipeProps> = (props) => {
     if (!description.endsWith('"')) {
       description = description + '"'
     }
-    return (      
+    return (
       description[0] +
       description.charAt(1).toUpperCase() +
       description.slice(2).toLowerCase()
@@ -58,25 +57,28 @@ const Recipe: React.FC<RecipeProps> = (props) => {
   )
 
   const handleSetOpenModal = (value: boolean | undefined) => {
-    setOpenModal(value);
-  };
+    setOpenModal(value)
+  }
 
   return (
     <>
       <div className="flex w-full pr-5 pb-2 md:w-1/2 md:flex-col md:p-8 md:pr-0 md:pb-0 lg:w-1/3">
-          <div className="h-36 w-36 overflow-hidden rounded-md md:h-44 md:w-full cursor-pointer">
-            <img
-              src={props.image}
-              alt={props.imageAlt}
-              className="h-full w-full"
-              onClick={() => {
-                handleSetOpenModal(true)
-              }}
-            />
-          </div>
+        <div className="h-36 w-36 cursor-pointer overflow-hidden rounded-md md:h-44 md:w-full">
+          <img
+            src={props.image}
+            alt={props.imageAlt}
+            className="h-full w-full"
+            onClick={() => {
+              handleSetOpenModal(true)
+            }}
+          />
+        </div>
         <div className="ml-1 flex h-full w-full flex-col">
           <div className="flex justify-between">
-            <h1 className="font-medium text-[#ff8c00] cursor-pointer" onClick={() => handleSetOpenModal(true)}>
+            <h1
+              className="cursor-pointer font-medium text-[#ff8c00]"
+              onClick={() => handleSetOpenModal(true)}
+            >
               {transformCase(props.title)}
             </h1>
             <div className="h-6 w-6 rounded-full bg-[#ff8c00] md:hidden">
@@ -108,20 +110,21 @@ const Recipe: React.FC<RecipeProps> = (props) => {
             <div onClick={changeStateLike} className="hidden md:block">
               {likes}
             </div>
-            <div className='flex'>
-              <PersonsLiked personsLiked={props.personsLiked}/>
+            <div className="flex">
+              <PersonsLiked personsLiked={props.personsLiked} />
             </div>
           </div>
         </div>
       </div>
       {openModal === true && (
-        <RecipeModal show={openModal} setOpenModal={handleSetOpenModal} id={props.id}/>
-      )
-      }
+        <RecipeModal
+          show={openModal}
+          setOpenModal={handleSetOpenModal}
+          id={props.id}
+        />
+      )}
     </>
-    
   )
 }
 
 export default Recipe
-
