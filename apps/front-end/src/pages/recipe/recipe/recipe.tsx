@@ -48,9 +48,9 @@ const getRecipeData = async (recipeId: string) => {
         curtidas: recipeLikes.data,
       }
 
-      return recipeData
+      return recipeData as typeRecipe
     } else {
-      return null
+      return undefined
     }
   } catch (error) {
     alert('Algo deu errado')
