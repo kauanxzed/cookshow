@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { userProfile } from '../data'
 import axios from 'axios'
 
@@ -7,20 +7,35 @@ interface UserProfileType {
   name: string
 }
 
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstance = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
-
 function UserProfileSimplified() {
+  const [userProfileData, setUserProfileData] = useState<UserProfileType>({
+    profileImage: '',
+    name: '',
+  })
+
+  useEffect(() => {
+    setUserProfileData({
+      profileImage: userProfile.profileImage,
+      name: userProfile.name,
+    })
+  }, [])
+
+  const token =
+    localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+  const axiosInstance = axios.create({
+    timeout: 5000,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+
   const updateUserProfileImage = (newImageURL: string) => {
-    console.log('Atualize a imagem de perfil com', newImageURL)
+    setUserProfileData((prevData) => ({
+      ...prevData,
+      profileImage: newImageURL,
+    }))
   }
 
   const handleUploadFile = async (file: File) => {
@@ -37,12 +52,10 @@ function UserProfileSimplified() {
         },
       )
       console.log('File uploaded successfully', response.data)
-      // Atualize a imagem de perfil após o upload bem-sucedido, se necessário
-      updateUserProfileImage(
-        `http://localhost:3000/uploads/${response.data.fileName}`,
-      )
+      return response // Certifique-se de retornar a resposta aqui
     } catch (error) {
       console.error('Error uploading file', error)
+      throw error // Lançar o erro para tratamento posterior, se necessário
     }
   }
 
@@ -50,22 +63,34 @@ function UserProfileSimplified() {
     const fileInput = document.createElement('input')
     fileInput.type = 'file'
     fileInput.accept = 'image/*'
-    fileInput.onchange = (e) => {
+
+    fileInput.onchange = async (e) => {
       const target = e.target as HTMLInputElement
       if (target.files && target.files.length > 0) {
-        const file = target.files[0] as File // Adicione 'as File' aqui
-        handleUploadFile(file)
+        const file = target.files[0] as File
+        try {
+          const response = await handleUploadFile(file)
+
+          if (response && 'data' in response && 'fileName' in response.data) {
+            const fileName = response.data.fileName as string
+            setUserProfileData((prevData) => ({
+              ...prevData,
+              profileImage: `http://localhost:3000/uploads/${fileName}`,
+            }))
+          }
+        } catch (error) {
+          console.error('Erro ao carregar o arquivo: ', error)
+        }
       }
     }
     fileInput.click()
   }
-
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-r from-orange-500 to-white">
       <div className="flex w-full justify-center">
         <img
-          src={(userProfile as UserProfileType).profileImage}
-          alt={(userProfile as UserProfileType).name}
+          src={userProfile.profileImage}
+          alt={userProfile.name}
           className="relative h-24 w-24 rounded-full object-cover md:h-72 md:w-72"
         />
       </div>
