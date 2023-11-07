@@ -1,9 +1,14 @@
 import { useState, ChangeEvent, useEffect, FormEvent } from 'react'
-import { Button, Modal } from 'flowbite-react'
+import { Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
 import axios from 'axios'
 
-const ModalDefault = () => {
+interface propsModal {
+  show: boolean | undefined;
+  setOpenModal: (value: boolean | undefined) => void;
+}
+
+const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
   interface inputIngrediente {
     id: number
     ingredient: string
@@ -15,8 +20,6 @@ const ModalDefault = () => {
     nome: string
   }
 
-  const [openModal, setOpenModal] = useState<string | undefined>()
-  const props = { openModal, setOpenModal }
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [inputList, setInputList] = useState([
     { id: 0, ingredient: '', quantity: 0 },
@@ -39,6 +42,7 @@ const ModalDefault = () => {
   const [ingredient, setIngredients] = useState<typeIngredient[]>([
     { nome: '', id: 0 },
   ])
+  const [showModal, setShowModal] = useState(show)
 
   useEffect(() => {
     if (!selectedFile) {
@@ -180,7 +184,6 @@ const ModalDefault = () => {
     e.preventDefault()
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
-      setOpenModal('')
       try {
         /*
         axiosInstace.post("/api/photo/recipe", {
@@ -220,6 +223,8 @@ const ModalDefault = () => {
           return 0
         })
 
+        handleCloseModal()
+        
         setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
         setTimeout(() => {
           setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
@@ -240,11 +245,14 @@ const ModalDefault = () => {
     }
   }
 
+  const handleCloseModal = () => {
+    setShowModal(undefined)
+    setOpenModal(undefined); // Define o valor como undefined no pai
+  };
+
+
   return (
     <>
-      <Button onClick={() => props.setOpenModal('default')}>
-        Toggle modal
-      </Button>
       {showSuccessMessage && (
         <div
           className="fixed top-0 right-0 mb-4 flex items-center rounded-lg border border-green-300 bg-green-50 p-4 text-sm text-green-800 dark:border-green-800 dark:bg-gray-800 dark:text-green-400"
@@ -267,8 +275,8 @@ const ModalDefault = () => {
         </div>
       )}
       <Modal
-        show={props.openModal === 'default'}
-        onClose={() => props.setOpenModal(undefined)}
+        show={showModal}
+        onClose={() => handleCloseModal()}
         size="5xl"
       >
         <form onSubmit={handleSubmit}>
@@ -276,7 +284,7 @@ const ModalDefault = () => {
             <div className="flex flex-col items-center justify-center rounded-tl-lg p-5">
               <button
                 className="self-start text-xl text-black"
-                onClick={() => props.setOpenModal(undefined)}
+                onClick={() => handleCloseModal()}
               >
                 X
               </button>
@@ -530,4 +538,4 @@ const ModalDefault = () => {
   )
 }
 
-export default ModalDefault
+export default RegisterRecipeModal
