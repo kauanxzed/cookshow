@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -17,7 +16,7 @@ function LoginForm() {
   const [passwordConfirmationError, setPasswordConfirmationError] = useState('')
   const [showPasswordTip, setShowPasswordTip] = useState(false)
 
-  //Commit para corrigir o autor, visto que no computador da cesumar estava o git config de outro usuário.
+
   // Hook para navegar entre páginas
   const navigate = useNavigate()
 
@@ -35,7 +34,7 @@ function LoginForm() {
 
   // Função para validar a força da senha
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{6,}$/
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{6,}$/
     return regex.test(password)
   }
 
@@ -67,8 +66,15 @@ function LoginForm() {
           },
         },
       )
-      .then()
-      .catch(() => alert('Erro na requisição!'))
+      .then((response) => {
+        if (response.status === 201) { 
+          alert('Registro bem-sucedido!');
+          navigate('/'); 
+        } else {
+          alert('Erro no registro!');
+        }
+      })
+      .catch(() => alert('Erro na requisição!'));
 
     if (!validatePassword(password)) {
       setPasswordError(
