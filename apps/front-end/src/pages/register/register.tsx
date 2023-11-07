@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
+import Imagem from '../../assets/images/background.png'
 function LoginForm() {
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -94,7 +94,7 @@ function LoginForm() {
   return (
     <div className="flex h-screen overflow-hidden lg:flex-row">
       <div className="hidden lg:flex lg:w-2/3">
-        <img alt="Logo" className="h-full w-full object-cover" />
+        <img src={Imagem} alt="Logo" className="h-full w-full object-cover" />
       </div>
       <div className="mt-14 ml-9 flex h-full scale-[0.85] flex-col items-start sm:mt-6 sm:ml-6 sm:w-full md:w-1/2 lg:mt-0 lg:w-1/3 lg:items-start lg:justify-center lg:px-6">
         <div className="flex w-full flex-col items-start justify-center space-y-4 py-6 lg:mb-20 lg:h-full lg:items-start lg:py-0 lg:pt-0">
