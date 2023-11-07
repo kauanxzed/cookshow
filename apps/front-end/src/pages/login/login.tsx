@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { GrFacebook } from 'react-icons/gr'
 import Logo from '../../assets/images/background.png'
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 function LoginForm() {
@@ -10,6 +11,7 @@ function LoginForm() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
+  const navigate = useNavigate()
 
   /*Validação do email através de Regex*/
   const validateEmail = (email: string) => {
@@ -25,20 +27,15 @@ function LoginForm() {
     const url = '/api/auth'
 
     axios
-      .post(
-        url,
-        {
-          email: email,
-          senha: password,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-        },
-      )
-      .then()
+      .post(url, {
+        email: email,
+        senha: password,
+      })
+      .then((data) => {
+        if (rememberMe) localStorage.setItem('jwtToken', data.data)
+        else sessionStorage.setItem('jwtToken', data.data)
+      })
+      .then(() => navigate('/'))
       .catch(() => alert('Erro na requisição!'))
   }
 

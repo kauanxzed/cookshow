@@ -1,13 +1,13 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { CreateRecipeDto } from './dto/create-recipe.dto';
-import { RecipeEntity } from './entities/recipe.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserService } from '../user/user.service';
-import { UserEntity } from '../user/entities/user.entity';
-import { IngredientService } from '../ingredient/ingredient.service';
-import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity';
-import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common'
+import { CreateRecipeDto } from './dto/create-recipe.dto'
+import { RecipeEntity } from './entities/recipe.entity'
+import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import { UserService } from '../user/user.service'
+import { UserEntity } from '../user/entities/user.entity'
+import { IngredientService } from '../ingredient/ingredient.service'
+import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
+import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 
 @Injectable()
 export class RecipeService {
@@ -19,34 +19,34 @@ export class RecipeService {
     @Inject(UserService)
     private readonly userService: UserService,
     @InjectRepository(RecipeIngredientEntity)
-    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>
+    private readonly recipeIngredientRepository: Repository<RecipeIngredientEntity>,
   ) {}
 
   async create(createRecipeDto: CreateRecipeDto): Promise<RecipeEntity> {
-    const foundRecipe = await this.findByTitle(createRecipeDto.titulo);
+    const foundRecipe = await this.findByTitle(createRecipeDto.titulo)
     if (foundRecipe) {
-      throw new HttpException('Recipe already exists', HttpStatus.FORBIDDEN);
+      throw new HttpException('Recipe already exists', HttpStatus.FORBIDDEN)
     }
 
     const user = (await this.userService.findById(
-      createRecipeDto.userId
-    )) as UserEntity;
+      createRecipeDto.userId,
+    )) as UserEntity
 
     const recipeEntityDto = {
       ...createRecipeDto,
       user,
-    };
+    }
 
     try {
       const recipe = await this.recipeRepository
         .createQueryBuilder()
         .insert()
         .values(recipeEntityDto)
-        .execute();
+        .execute()
 
-      return recipe.raw[0];
+      return recipe.raw[0]
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -55,9 +55,9 @@ export class RecipeService {
       .createQueryBuilder('receita')
       .where('receita.titulo = :titulo', { titulo: title })
       .andWhere('receita.deleted_at IS NULL')
-      .getOne();
+      .getOne()
 
-    return foundRecipe;
+    return foundRecipe
   }
 
   async findById(id: string): Promise<RecipeEntity | null> {
@@ -67,48 +67,41 @@ export class RecipeService {
         'recipe.ingredients',
         RecipeIngredientEntity,
         'recipeIngredient',
-        'recipeIngredient.recipe = recipe.id'
+        'recipeIngredient.recipe = recipe.id',
       )
       .where('recipe.id = :id', { id })
       .andWhere('recipe.deleted_at IS NULL')
-      .getOne();
+      .getOne()
 
-    return foundRecipe;
+    return foundRecipe
   }
 
   async isIngredientInRecipe(
     recipe: RecipeEntity,
-    ingredient: IngredientEntity
+    ingredient: IngredientEntity,
   ): Promise<boolean> {
     recipe.ingredients.find(
       (recipeIngredient) =>
-        Number(recipeIngredient.ingredient) === ingredient.id
-    );
-    if (recipe.ingredients.length === 0) return false;
-    return true;
+        Number(recipeIngredient.ingredient) === ingredient.id,
+    )
+    if (recipe.ingredients.length === 0) return false
+    return true
   }
 
   async addRecipeIngredient(
     recipeId: string,
     ingredientId: number,
-    ingredientPortion: number
+    ingredientPortion: number,
   ): Promise<void> {
     try {
-      const recipe = await this.findById(recipeId);
+      const recipe = await this.findById(recipeId)
       if (!recipe) {
-        throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND);
+        throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND)
       }
 
-      const ingredient = await this.ingredientService.findById(ingredientId);
+      const ingredient = await this.ingredientService.findById(ingredientId)
       if (!ingredient) {
-        throw new HttpException('Ingredient not found', HttpStatus.NOT_FOUND);
-      }
-
-      if (await this.isIngredientInRecipe(recipe, ingredient)) {
-        throw new HttpException(
-          'Ingredint already in recipe',
-          HttpStatus.BAD_REQUEST
-        );
+        throw new HttpException('Ingredient not found', HttpStatus.NOT_FOUND)
       }
 
       await this.recipeIngredientRepository
@@ -119,9 +112,9 @@ export class RecipeService {
           recipe: recipe,
           portion: ingredientPortion,
         })
-        .execute();
+        .execute()
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -131,12 +124,34 @@ export class RecipeService {
         .createQueryBuilder('recipe')
         .where('recipe.id_usuario = :userId', { userId })
         .andWhere('recipe.deleted_at IS NULL')
-        .getMany();
+        .getMany()
 
-      return allRecipes;
+      return allRecipes
     } catch (erro) {
-      throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(erro.message, HttpStatus.BAD_REQUEST)
     }
+  }
+
+  async searchRecipeByIngredient(ingredientId: number[]): Promise<any> {
+    const foundRecipes = await this.recipeRepository
+      .createQueryBuilder('receita')
+      .distinct()
+      .innerJoin('receita_ingredientes', 'ri', 'receita.id = ri.id_receita')
+      .innerJoin(
+        (subQuery) => {
+          return subQuery
+            .select('id')
+            .from('ingredientes', 'ingredientes')
+            .where('id IN (:...id)', {
+              id: ingredientId,
+            })
+        },
+        'ig',
+        'ig.id = ri.id_ingrediente',
+      )
+      .getMany()
+
+    return foundRecipes
   }
 
   async getFavoritedRecipes(userId: string): Promise<RecipeEntity[]> {
@@ -146,11 +161,11 @@ export class RecipeService {
         .innerJoin('recipe.ratings', 'interacao')
         .where('interacao.id_usuario = :userId', { userId })
         .andWhere('recipe.deleted_at IS NULL')
-        .getMany();
+        .getMany()
 
-      return recipes;
+      return recipes
     } catch (erro) {
-      throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(erro.message, HttpStatus.BAD_REQUEST)
     }
   }
 }

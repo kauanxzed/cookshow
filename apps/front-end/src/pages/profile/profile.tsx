@@ -2,16 +2,23 @@ import { useEffect, useState } from 'react'
 import RecipeCard from './recipeCard'
 import UserProfile from './userProfile'
 import axios from 'axios'
-import { RecipeType } from './types/recipe.type'
+import { RecipeType, UserPayloadType } from './types/recipe.type'
 import { Backdrop, CircularProgress } from '@mui/material'
 
-interface Props {
-  userId: string
-}
+const token =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+const axiosInstace = axios.create({
+  timeout: 5000,
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+})
 
 async function getRecipesCreatedByUser(userId: string) {
   try {
-    return await axios.get('/api/recipe/user/' + userId)
+    return await axiosInstace.get('/api/recipe/user/' + userId)
   } catch (error) {
     alert(error)
   }
@@ -19,32 +26,46 @@ async function getRecipesCreatedByUser(userId: string) {
 
 async function getFavoritesRecipesUser(userId: string) {
   try {
-    return await axios.get('/api/recipe/user/' + userId + '/favorites')
+    return await axiosInstace.get('/api/recipe/user/' + userId + '/favorites')
   } catch (error) {
     alert(error)
   }
 }
 
-function ProfilePage(props: Props) {
+async function getPayloadUser() {
+  try {
+    return await axiosInstace.get('/api/auth')
+  } catch (error) {
+    alert(error)
+  }
+}
+
+function ProfilePage() {
   const [showPublicacoes, setShowPublicacoes] = useState<boolean>(true)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [receitas, setReceitas] = useState<RecipeType[]>([])
+  const [payload, setPayload] = useState<UserPayloadType>()
 
   useEffect(() => {
-    if (showPublicacoes) {
-      setIsLoading(true)
-      getRecipesCreatedByUser(props.userId).then((data) => {
-        if (data) setReceitas(data.data)
-        setIsLoading(false)
-      })
-    } else {
-      setIsLoading(true)
-      getFavoritesRecipesUser(props.userId).then((data) => {
-        if (data) setReceitas(data.data)
-        setIsLoading(false)
-      })
-    }
-  }, [props.userId, showPublicacoes])
+    getPayloadUser().then((payload) => {
+      if (payload) {
+        setPayload(payload.data)
+        if (showPublicacoes) {
+          setIsLoading(true)
+          getRecipesCreatedByUser(payload.data.userId).then((data) => {
+            if (data) setReceitas(data.data)
+            setIsLoading(false)
+          })
+        } else {
+          setIsLoading(true)
+          getFavoritesRecipesUser(payload.data.userId).then((data) => {
+            if (data) setReceitas(data.data)
+            setIsLoading(false)
+          })
+        }
+      }
+    })
+  }, [showPublicacoes])
 
   const handleShowPublicacoes = async () => {
     setShowPublicacoes(true)
@@ -54,10 +75,14 @@ function ProfilePage(props: Props) {
     setShowPublicacoes(false)
   }
 
+  const handleAddRecipe = () => {
+    console.log('Abrir página modal de adicionar receita')
+  }
+
   return (
     <div className="flex h-[90vh] flex-col md:flex-row">
       <div className="max-h-[40vh] w-full md:max-h-full md:w-1/4 lg:w-1/3 xl:w-1/4  ">
-        <UserProfile />
+        <UserProfile userId={payload?.userId} username={payload?.username} />
       </div>
       <div className="relative w-full bg-white p-4 md:w-3/4 lg:w-2/3 xl:w-3/4">
         <div className="mx-auto mb-4 flex max-w-md justify-between md:max-w-lg lg:max-w-2xl">
@@ -80,9 +105,23 @@ function ProfilePage(props: Props) {
             <span>Favoritos</span>
           </div>
         </div>
+        <div className="mt-4 flex w-full justify-center style={{ marginTop: 'auto' }}">
+          <button
+            className="rounded-lg bg-orange-500 p-3 text-white shadow-md transition-all duration-200 hover:bg-orange-600"
+            onClick={handleAddRecipe}
+          >
+            Adicionar Receita
+          </button>
+        </div>
 
-        <div className="flex h-full max-h-[50vh] flex-col overflow-y-auto overflow-x-hidden md:max-h-full md:overflow-y-hidden">
-          <div className="grid w-full  grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="flex h-full max-h-[50vh] flex-col overflow-y-auto overflow-x-hidden md:max-h-[80vh]">
+          <div
+            className={
+              receitas && receitas.length > 0
+                ? 'grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'
+                : 'flex h-full items-center justify-center'
+            }
+          >
             {receitas && receitas.length > 0 ? (
               receitas.map((recipe: RecipeType) => (
                 <RecipeCard key={recipe.id} recipe={recipe} />
