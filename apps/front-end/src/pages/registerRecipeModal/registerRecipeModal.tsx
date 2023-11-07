@@ -234,7 +234,14 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
   }
 
   const handleCloseModal = () => {
-    setShowModal(undefined)
+    setPreview("");
+    setRecipeName("");
+    setInputList([{id: 0, ingredient: "", quantity: 0}]);
+    setRecipeTime("");
+    setRecipeDifficulty("Facil");
+    setRecipeCategory("");
+    setRecipeMode("");
+    setShowModal(undefined);
     setOpenModal(undefined); // Define o valor como undefined no pai
   };
 
@@ -304,6 +311,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                   accept="image/*"
                   onChange={onSelectFile}
                   className="hidden"
+                  required
                 />
               </div>
             </div>
