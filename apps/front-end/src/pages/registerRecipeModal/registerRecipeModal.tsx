@@ -37,6 +37,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
     recipeTime: '',
     recipeCategory: '',
     recipeMode: '',
+    recipePhoto: '',
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
   const [ingredient, setIngredients] = useState<typeIngredient[]>([
@@ -312,8 +313,17 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                   onChange={onSelectFile}
                   className="hidden"
                   required
+                  onInvalid={() => {
+                    handleFieldChange(
+                      'recipePhoto',
+                      'Foto obrigatoria',
+                    )
+                  }}
                 />
               </div>
+              {errors.recipePhoto && (
+                  <p className="text-red-500">{errors.recipePhoto}</p>
+                )}
             </div>
             <div className="flex max-h-[70vh] w-full flex-col space-y-6 overflow-y-auto p-5">
               <div className="h-full">
