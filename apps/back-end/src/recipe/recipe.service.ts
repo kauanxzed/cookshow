@@ -132,7 +132,9 @@ export class RecipeService {
     }
   }
 
-  async searchRecipeByIngredient(ingredientId: number[]): Promise<any> {
+  async searchRecipeByIngredient(
+    ingredientId: number[],
+  ): Promise<RecipeEntity[]> {
     const foundRecipes = await this.recipeRepository
       .createQueryBuilder('receita')
       .distinct()

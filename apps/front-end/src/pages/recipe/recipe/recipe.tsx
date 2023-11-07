@@ -7,7 +7,7 @@ import Like from '../../../components/ui/like/like'
 import PersonsLiked from '../../../components/ui/personsLiked'
 import axios from 'axios'
 import Comments from './comments'
-import { CommentType } from './types/CommentType'
+import { CommentType } from './types/comment.type'
 
 interface ModalDefaultProps {
   show: boolean | undefined
@@ -32,6 +32,7 @@ interface typeRecipe {
   curtidas: number
   comentarios: CommentType[]
   ingredients: typeRecipeIngredients[]
+  rating: number
 }
 
 const getRecipeData = async (recipeId: string) => {
@@ -44,20 +45,22 @@ const getRecipeData = async (recipeId: string) => {
       '/api/recipe/' + recipeId + '/comment',
     )
 
+    const recipeRating = await axios.get('/api/recipe/' + recipeId + '/rating')
+
     if (recipe.status === 200 && recipeLikes.status === 200) {
-      const recipeData = {
+      const recipeData: typeRecipe = {
         ...recipe.data,
         curtidas: recipeLikes.data,
         comentarios: recipeComments.data,
+        rating: recipeRating.data,
       }
 
-      return recipeData as typeRecipe
+      return recipeData
     } else {
       return undefined
     }
   } catch (error) {
     alert('Algo deu errado')
-    console.log(error)
   }
 }
 
@@ -69,9 +72,6 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
   const [commentsVisible, setCommentsVisible] = useState(true)
   const [showModal, setShowModal] = useState(show)
   const [recipe, setRecipe] = useState<typeRecipe>()
-  const [recipeIngredients, setRecipeIngredients] =
-    useState<typeRecipeIngredients[]>()
-  const [recipeComments, setRecipeComments] = useState<CommentType[]>()
 
   useEffect(() => {
     try {
@@ -83,7 +83,7 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
     } catch (err) {
       alert('Algo deu errado')
     }
-  }, [show, recipe])
+  }, [show])
 
   function showComments() {
     setCommentsVisible(!commentsVisible)
@@ -113,7 +113,7 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
             <div className="flex h-3/5 flex-row">
               <div className="flex w-1/2 flex-col justify-between">
                 <div>
-                  <h1 className="text-xl text-[#9C4B00]">{recipe?.titulo}</h1>
+                  <h1 className="text-xl text-[#9C4B00]">{recipe.titulo}</h1>
                   <p className="text-xs text-[#999999]">origem</p>
                   <p className='mt-2 font-["Poppins"] text-base text-[#666565]'>
                     TESTE ARRUMAR
@@ -124,11 +124,11 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
                     <RecipeInfo info={'🔥 ' + recipe.calorias + ' Kcal'} />
                   </div>
                   <div className="mt-2 flex flex-row items-center">
-                    <RecipeRating rating={4.8} />
-                    <p className="ml-1">{4.8}</p>
+                    <RecipeRating rating={recipe.rating} />
+                    <p className="ml-1">{recipe.rating}</p>
                   </div>
                   <div className="mt-2 flex flex-row flex-wrap">
-                    {recipeIngredients?.map((ingredient) => {
+                    {recipe.ingredients.map((ingredient) => {
                       return <Ingredient name={ingredient.nome} />
                     })}
                   </div>

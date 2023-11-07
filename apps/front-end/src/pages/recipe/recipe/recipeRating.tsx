@@ -35,4 +35,3 @@ const Rating: React.FC<RatingProps> = (props) => {
 }
 
 export default Rating
-

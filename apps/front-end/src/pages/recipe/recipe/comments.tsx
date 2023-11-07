@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
-import { CommentType } from './types/CommentType'
+import { CommentType } from './types/comment.type'
 
 interface CommentsProps {
   comments: Array<CommentType>
@@ -76,9 +76,9 @@ const Comments: React.FC<CommentsProps> = (props) => {
           className="mb-2 border-b border-solid border-[#e6e6e6]"
         >
           <p className="text-sm font-medium text-[#2D3748]">
-            {comment.commentAuthor}
+            {comment.id_usuario}
           </p>
-          <p className="flex-wrap break-words">{comment.commentContent}</p>
+          <p className="flex-wrap break-words">{comment.mensagem}</p>
         </div>
       ))}
     </div>

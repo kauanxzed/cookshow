@@ -32,7 +32,7 @@ export class RecipeController {
   }
 
   @Post('/:recipeId/ingredient/:ingredientId')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async addRecipeIngredient(
     @Param('recipeId') recipeId: string,
     @Param('ingredientId') ingredientId: number,
@@ -51,7 +51,7 @@ export class RecipeController {
   }
 
   @Post('/:recipeId/rating')
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   async createRating(@Body() createRecipeRatingDto: CreateRecipeRatingDto) {
     return await this.recipeRatingService.create(createRecipeRatingDto)
   }
@@ -72,6 +72,7 @@ export class RecipeController {
   }
 
   @Post('/:recipeId/comment')
+  @UseGuards(JwtAuthGuard)
   async(@Body() createCommentDto: CreateCommentDto) {
     return this.commentService.create(createCommentDto)
   }
@@ -87,6 +88,7 @@ export class RecipeController {
   }
 
   @Put('/:recipeId/comment/:id')
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id') id: string,
     @Body() updateCommentDto: UpdateCommentDto,
@@ -95,6 +97,7 @@ export class RecipeController {
   }
 
   @Delete('/:recipeId/comment/:id')
+  @UseGuards(JwtAuthGuard)
   async delete(@Param('id') id: string) {
     return await this.commentService.delete(id)
   }
