@@ -104,12 +104,13 @@ export class RecipeService {
         throw new HttpException('Ingredient not found', HttpStatus.NOT_FOUND);
       }
 
-      if (await this.isIngredientInRecipe(recipe, ingredient)) {
-        throw new HttpException(
-          'Ingredint already in recipe',
-          HttpStatus.BAD_REQUEST
-        );
-      }
+      // if (await this.isIngredientInRecipe(recipe, ingredient)) {
+      //   console.log(recipe, ingredient);
+      //   throw new HttpException(
+      //     'Ingredint already in recipe',
+      //     HttpStatus.BAD_REQUEST
+      //   );
+      // }
 
       await this.recipeIngredientRepository
         .createQueryBuilder()
@@ -139,6 +140,27 @@ export class RecipeService {
     }
   }
 
+<<<<<<< HEAD
+  async searchRecipeByIngredient(ingredientId: number[]): Promise<any> {
+    // const foundIngredient = await this.ingredientRepository
+    //   .createQueryBuilder('ingredientes')
+    //   .where('ingredientes.id = :id', { id: ingredientId })
+    //   .andWhere('ingredientes.deleted_at IS NULL')
+    //   .getOne();
+
+    // if (!foundIngredient) {
+    //   throw new HttpException(
+    //     'Ingrediente não encontrado',
+    //     HttpStatus.NOT_FOUND
+    //   );
+    // }
+    const foundRecipes = await this.recipeIngredientRepository
+      .createQueryBuilder('ingredientes')
+      .leftJoin('ingredientes.ingredient', 'receita')
+      .getOne();
+
+    return foundRecipes;
+=======
   async getFavoritedRecipes(userId: string): Promise<RecipeEntity[]> {
     try {
       const recipes = await this.recipeRepository
@@ -152,5 +174,6 @@ export class RecipeService {
     } catch (erro) {
       throw new HttpException(erro.message, HttpStatus.BAD_REQUEST);
     }
+>>>>>>> develop
   }
 }
