@@ -110,9 +110,13 @@ const ModalDefault = () => {
     const ingredientName = ingredient.map((el) => {
       return el.nome
     })
+    const selectedIngredients = inputList.map((item) => item.ingredient);
 
     const filtered = ingredientName?.filter((item) => {
-      if (item) return item.toLowerCase().startsWith(value.toLowerCase())
+      if (item) return (
+        item.toLowerCase().startsWith(value.toLowerCase()) &&
+        !selectedIngredients.includes(item) // Exclua os ingredientes selecionados
+      );
     })
     setSuggestions(value ? filtered.slice(0, 5) : [])
     const focused: Array<boolean> = [...isFocused]
