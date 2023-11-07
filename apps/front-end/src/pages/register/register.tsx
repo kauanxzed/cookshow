@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -16,6 +15,7 @@ function LoginForm() {
   const [passwordError, setPasswordError] = useState('')
   const [passwordConfirmationError, setPasswordConfirmationError] = useState('')
   const [showPasswordTip, setShowPasswordTip] = useState(false)
+
 
   // Hook para navegar entre páginas
   const navigate = useNavigate()
@@ -34,7 +34,7 @@ function LoginForm() {
 
   // Função para validar a força da senha
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*?.%+=_/`,><~^()[;&@#])[0-9a-zA-Z$*?.%+=_/`,><~^()[;&@#]{6,}$/
     return regex.test(password)
   }
 
@@ -66,12 +66,19 @@ function LoginForm() {
           },
         },
       )
-      .then()
-      .catch(() => alert('Erro na requisição!'))
+      .then((response) => {
+        if (response.status === 201) { 
+          alert('Registro bem-sucedido!');
+          navigate('/'); 
+        } else {
+          alert('Erro no registro!');
+        }
+      })
+      .catch(() => alert('Erro na requisição!'));
 
     if (!validatePassword(password)) {
       setPasswordError(
-        'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número.',
+        'A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
       )
       return
     }
@@ -160,7 +167,7 @@ function LoginForm() {
                 setPasswordError('')
                 if (!validatePassword(e.target.value)) {
                   setPasswordError(
-                    'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número.',
+                    'A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
                   )
                 }
               }}
@@ -177,8 +184,7 @@ function LoginForm() {
                   zIndex: 1000,
                 }}
               >
-                A senha deve ter no mínimo 8 caracteres, uma letra maiúscula e
-                um número.
+                A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.
               </p>
             )}
             {passwordError && (

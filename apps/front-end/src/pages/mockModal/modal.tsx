@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect, FormEvent } from 'react'
+import { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
 import axios from 'axios'
@@ -36,7 +36,9 @@ const ModalDefault = () => {
     recipeMode: '',
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
-  const [ingredient, setIngredients] = useState<typeIngredient[]>([{ nome: '', id: 0 },])
+  const [ingredient, setIngredients] = useState<typeIngredient[]>([
+    { nome: '', id: 0 },
+  ])
 
   useEffect(() => {
     if (!selectedFile) {
@@ -164,13 +166,24 @@ const ModalDefault = () => {
   const [linkPhoto, setLinkPhoto] = useState('google.com')
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const token =
+      localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+    const axiosInstace = axios.create({
+      timeout: 5000,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
     e.preventDefault()
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       setOpenModal('')
       try {
         /*
-        axios.post("/api/photo/recipe", {
+        axiosInstace.post("/api/photo/recipe", {
           photo: preview
         }),{
           headers: {
@@ -179,36 +192,28 @@ const ModalDefault = () => {
           }
         }).then(Response => {
           setLinkPhoto(Response.data)
-          console.log(linkPhoto);
         })
         */
-        const Response = await axios.post(
-          '/api/recipe',
-          {
-            titulo: recipeName,
-            //modo_preparo: recipeMode,
-            descricao: recipeMode,
-            tempo_preparo: recipeTime,
-            dificuldade: recipeDifficulty,
-            imagem: linkPhoto,
-            calorias: 0, //remover
-            //recipeCategory: recipeCategory,
-            userId: '3739c554-34b0-4e1e-915c-ebf93dfd0559',
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-            },
-          },
-        )
+
+        const payload = await axiosInstace.get('/api/auth')
+
+        const Response = await axiosInstace.post('/api/recipe', {
+          titulo: recipeName,
+          //modo_preparo: recipeMode,
+          descricao: recipeMode,
+          tempo_preparo: recipeTime,
+          dificuldade: recipeDifficulty,
+          imagem: linkPhoto,
+          calorias: 0, //remover
+          //recipeCategory: recipeCategory,
+          userId: payload.data.userId,
+        })
 
         inputList.map(async (Ingredient) => {
           const urlIngredient =
             '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
 
-          console.log('criando ingrediente')
-          await axios.post(urlIngredient, {
+          await axiosInstace.post(urlIngredient, {
             portion: Ingredient.quantity,
           })
 

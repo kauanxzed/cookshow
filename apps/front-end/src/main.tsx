@@ -33,7 +33,7 @@ root.render(
           element={
             <>
               <Header />
-              <Perfil userId="3739c554-34b0-4e1e-915c-ebf93dfd0559" />
+              <Perfil />
             </>
           }
         />
