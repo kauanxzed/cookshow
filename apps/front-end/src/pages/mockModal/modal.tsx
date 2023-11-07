@@ -132,20 +132,8 @@ const ModalDefault = () => {
 
   const handleAddClick = () => {
     const lastIndex = inputList[inputList.length - 1]
-    if (lastIndex.ingredient !== '' && lastIndex.quantity !== 0) {
+    if (lastIndex.ingredient !== '') {
       setInputList([...inputList, { id: 0, ingredient: '', quantity: 0 }])
-    }
-  }
-
-  const handleQuantityChange = (
-    event: ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    const value = event.target.value
-    if (!isNaN(+value)) {
-      const list = [...inputList]
-      list[index].quantity = +value
-      setInputList(list)
     }
   }
 
@@ -367,19 +355,6 @@ const ModalDefault = () => {
                         <div className="relative w-full">
                           {isFocused[i] && LoadSuggestions(item, i)}
                         </div>
-                      </div>
-                      <div className="ml-14 h-full w-1/5">
-                        <input
-                          className="block h-full w-full rounded-lg border-none bg-gray-100 p-3 text-center outline-none focus:outline-orange-400 focus:ring-0"
-                          type="text"
-                          required
-                          name="quantity"
-                          placeholder="Qnt"
-                          value={item.quantity}
-                          onChange={(e) => {
-                            handleQuantityChange(e, i)
-                          }}
-                        />
                       </div>
                     </div>
                     <div className="btn-box flex flex-col items-start">
