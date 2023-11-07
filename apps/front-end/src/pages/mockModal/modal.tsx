@@ -2,17 +2,13 @@ import { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
 import axios from 'axios'
+import { typeIngredient } from '../../types/typeIngredient'
 
 const ModalDefault = () => {
   interface inputIngrediente {
     id: number
     ingredient: string
     quantity: number
-  }
-
-  interface typeIngredient {
-    id: number
-    nome: string
   }
 
   const [openModal, setOpenModal] = useState<string | undefined>()
