@@ -1,13 +1,9 @@
 import React, { FormEvent, useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
-
-interface comment {
-  commentAuthor: string
-  commentContent: string
-}
+import { CommentType } from './types/CommentType'
 
 interface CommentsProps {
-  comments: Array<comment>
+  comments: Array<CommentType>
 }
 
 const Comments: React.FC<CommentsProps> = (props) => {

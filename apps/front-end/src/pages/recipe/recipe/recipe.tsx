@@ -7,16 +7,12 @@ import Like from '../../../components/ui/like/like'
 import PersonsLiked from '../../../components/ui/personsLiked'
 import axios from 'axios'
 import Comments from './comments'
+import { CommentType } from './types/CommentType'
 
 interface ModalDefaultProps {
   show: boolean | undefined
   setOpenModal: (value: boolean | undefined) => void
   id: string
-}
-
-interface typeRecipeComments {
-  id_usuario: string
-  mensagem: string
 }
 
 interface typeRecipeIngredients {
@@ -34,8 +30,8 @@ interface typeRecipe {
   imagem: string
   calorias: number
   curtidas: number
-  comentarios: typeRecipeComments
-  ingredients: typeRecipeIngredients
+  comentarios: CommentType[]
+  ingredients: typeRecipeIngredients[]
 }
 
 const getRecipeData = async (recipeId: string) => {
@@ -75,7 +71,7 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
   const [recipe, setRecipe] = useState<typeRecipe>()
   const [recipeIngredients, setRecipeIngredients] =
     useState<typeRecipeIngredients[]>()
-  const [recipeComments, setRecipeComments] = useState<typeRecipeComments[]>()
+  const [recipeComments, setRecipeComments] = useState<CommentType[]>()
 
   useEffect(() => {
     try {

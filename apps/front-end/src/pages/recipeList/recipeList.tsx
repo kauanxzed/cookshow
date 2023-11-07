@@ -1,12 +1,11 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
-import alimentos from './alimentos';
-import Recipe from './recipe';
-import prato1 from "../../assets/images/prato1.png"
-import prato2 from "../../assets/images/prato2.png"
-import prato3 from "../../assets/images/prato3.png"
-import prato4 from "../../assets/images/prato4.png"
-import prato5 from "../../assets/images/prato5.png"
-import prato6 from "../../assets/images/prato6.png"
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react'
+import Recipe from './recipe'
+import prato1 from '../../assets/images/prato1.png'
+import prato2 from '../../assets/images/prato2.png'
+import prato3 from '../../assets/images/prato3.png'
+import prato4 from '../../assets/images/prato4.png'
+import prato5 from '../../assets/images/prato5.png'
+import prato6 from '../../assets/images/prato6.png'
 
 const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('')
@@ -106,7 +105,7 @@ const RecipeList: React.FC = () => {
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
             placeholder="Digite os alimentos desejados..."
-            className="min-w-0 flex-1 p-1 border-none focus:outline-none focus:ring-0"
+            className="min-w-0 flex-1 border-none p-1 focus:outline-none focus:ring-0"
           />
         </div>
         {suggestions.length > 0 && (
@@ -123,30 +122,95 @@ const RecipeList: React.FC = () => {
           </div>
         )}
       </div>
-      <div className="w-full h-screen flex flex-wrap overflow-y-auto overflow-x-hidden scrollbar-hidden pb-60">
-        <Recipe image = {prato1} imageAlt='foto representando o prato Pizza margherita' title='pizza marGherIta' category='ITALIANO' owner='fabiana' hours={0} minutes={50} 
-        description='"Receita de PIZZA Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"' 
-        personsLiked={80} moreLikes = {50} id='teste1' rating={4.8} />
+      <div className="scrollbar-hidden flex h-screen w-full flex-wrap overflow-y-auto overflow-x-hidden pb-60">
+        <Recipe
+          image={prato1}
+          imageAlt="foto representando o prato Pizza margherita"
+          title="pizza marGherIta"
+          category="ITALIANO"
+          owner="fabiana"
+          hours={0}
+          minutes={50}
+          description='"Receita de PIZZA Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"'
+          personsLiked={80}
+          moreLikes={50}
+          id="teste1"
+          rating={4.8}
+        />
 
-        <Recipe image = {prato2} imageAlt='foto representando o prato Sopa de Rámen' title='Sopa de Rámen' category='CHINÊS' owner='Yuri' hours={1} minutes={30} 
-        description='Diferente e delicioso!'
-        personsLiked={12} moreLikes = {42} id='teste2' rating={4.4} />
+        <Recipe
+          image={prato2}
+          imageAlt="foto representando o prato Sopa de Rámen"
+          title="Sopa de Rámen"
+          category="CHINÊS"
+          owner="Yuri"
+          hours={1}
+          minutes={30}
+          description="Diferente e delicioso!"
+          personsLiked={12}
+          moreLikes={42}
+          id="teste2"
+          rating={4.4}
+        />
 
-        <Recipe image = {prato3} imageAlt='foto representando o prato shakshuka' title='shakshuka' category='ORIENTE MÉDIO' owner='Thiago' hours={0} minutes={5} 
-        description='Rápido e sofisticado.' 
-        personsLiked={34} moreLikes = {90} id='teste3' rating={4.9} />
+        <Recipe
+          image={prato3}
+          imageAlt="foto representando o prato shakshuka"
+          title="shakshuka"
+          category="ORIENTE MÉDIO"
+          owner="Thiago"
+          hours={0}
+          minutes={5}
+          description="Rápido e sofisticado."
+          personsLiked={34}
+          moreLikes={90}
+          id="teste3"
+          rating={4.9}
+        />
 
-        <Recipe image = {prato4} imageAlt='foto representando o prato Torta de carne com ovo' title='Torta de carne com ovo' category='GREGO' owner='Marcela' hours={1} minutes={10} 
-        description='Diferente e delicioso!' 
-        personsLiked={6} moreLikes = {26} id='teste4' rating={4.7} />
+        <Recipe
+          image={prato4}
+          imageAlt="foto representando o prato Torta de carne com ovo"
+          title="Torta de carne com ovo"
+          category="GREGO"
+          owner="Marcela"
+          hours={1}
+          minutes={10}
+          description="Diferente e delicioso!"
+          personsLiked={6}
+          moreLikes={26}
+          id="teste4"
+          rating={4.7}
+        />
 
-        <Recipe image = {prato5} imageAlt='foto representando o prato Picadinho' title='Picadinho' category='BRASILEIRO' owner='Rafa' hours={2} minutes={0} 
-        description='Típico prato brasileiro!' 
-        personsLiked={55} moreLikes = {26} id='teste5' rating={4.8} />
+        <Recipe
+          image={prato5}
+          imageAlt="foto representando o prato Picadinho"
+          title="Picadinho"
+          category="BRASILEIRO"
+          owner="Rafa"
+          hours={2}
+          minutes={0}
+          description="Típico prato brasileiro!"
+          personsLiked={55}
+          moreLikes={26}
+          id="teste5"
+          rating={4.8}
+        />
 
-        <Recipe image = {prato6} imageAlt='foto representando o prato Carne de panela desfiada' title='Carne de panela desfiada' category='CHINÊS' owner='Yuri' hours={1} minutes={30} 
-         description='Diferente e delicioso!' 
-         personsLiked={8} id='teste6' rating={4.1}/>
+        <Recipe
+          image={prato6}
+          imageAlt="foto representando o prato Carne de panela desfiada"
+          title="Carne de panela desfiada"
+          category="CHINÊS"
+          owner="Yuri"
+          hours={1}
+          minutes={30}
+          description="Diferente e delicioso!"
+          personsLiked={8}
+          id="teste6"
+          rating={4.1}
+        />
       </div>
     </div>
   )
