@@ -8,6 +8,7 @@ import { UserEntity } from '../user/entities/user.entity'
 import { IngredientService } from '../ingredient/ingredient.service'
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
+import { UpdateRecipeDto } from './dto/update-recipe.dto'
 
 @Injectable()
 export class RecipeService {
@@ -69,12 +70,8 @@ export class RecipeService {
         'recipeIngredient',
         'recipeIngredient.recipe = recipe.id',
       )
-      .leftJoinAndMapOne(
-        'recipe.user',
-        UserEntity,
-        'user',
-        'user.id = recipe.id_usuario',
-      )
+      .leftJoin('recipe.user', 'user')
+      .addSelect(['user.id', 'user.foto_perfil'])
       .where('recipe.id = :id', { id })
       .andWhere('recipe.deleted_at IS NULL')
       .getOne()
@@ -172,6 +169,29 @@ export class RecipeService {
       return recipes
     } catch (erro) {
       throw new HttpException(erro.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async updateRecipe(
+    recipeId: string,
+    recipe: UpdateRecipeDto,
+  ): Promise<RecipeEntity> {
+    try {
+      const recipeToUpdate = await this.findById(recipeId)
+      if (!recipeToUpdate) {
+        throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND)
+      }
+
+      const updatedRecipe = await this.recipeRepository
+        .createQueryBuilder()
+        .update(RecipeEntity)
+        .set(recipe)
+        .where('id = :id', { id: recipeId })
+        .execute()
+
+      return updatedRecipe.raw[0]
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
