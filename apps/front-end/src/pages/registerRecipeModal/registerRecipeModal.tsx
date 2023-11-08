@@ -66,7 +66,10 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
       setSelectedFile(undefined)
       return
     }
-
+    handleFieldChange(
+      'recipePhoto',
+      '',
+    )
     setSelectedFile(e.target.files[0])
   }
 
@@ -217,7 +220,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
         
         window.alert("Receita enviada aguarde a análise.")
       } catch (err) {
-        alert(err)
+        window.alert("erro")
       }
     }
   }
