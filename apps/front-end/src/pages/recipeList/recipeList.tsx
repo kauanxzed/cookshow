@@ -11,7 +11,7 @@ import prato6 from "../../assets/images/prato6.png"
 const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('')
   const [chips, setChips] = useState<string[]>([])
-  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<string[]>(["teste1","teste1","teste1","teste1","teste1","teste1","teste1","teste1"])
   const [isInputFocused, setInputFocused] = useState(false)
 
   const handleRemoveChip = (index: number) => {
@@ -44,11 +44,11 @@ const RecipeList: React.FC = () => {
 
   return (
     <div className="mx-auto flex w-full flex-col items-center space-y-2 md:max-w-2xl lg:max-w-4xl">
-      <div className="flex w-screen flex-col items-center justify-center bg-cover bg-center p-8">
+      <div className="flex w-screen flex-col items-center justify-center pt-8 relative">
         <div
-          className={`flex flex-wrap items-center border-2 ${
+          className={`flex flex-wrap items-center border-2 w-full rounded-lg bg-white p-1 md:w-1/2 md:p-2 ${
             isInputFocused ? 'border-orange-500' : 'border-gray-300'
-          } w-full rounded-lg bg-white p-1 md:w-1/2 md:p-2`}
+          } `}
         >
           <span
             className="mr-1 text-lg md:mr-2"
@@ -106,15 +106,15 @@ const RecipeList: React.FC = () => {
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
             placeholder="Digite os alimentos desejados..."
-            className="min-w-0 flex-1 p-1 focus:outline-none"
+            className="min-w-0 flex-1 p-1 focus:outline-none border-none focus:ring-0"
           />
         </div>
         {suggestions.length > 0 && (
-          <div className="mt-2 w-full rounded-md bg-gray-100 shadow md:w-1/2">
+          <div className="w-full rounded-md mx-8 bg-gray-100 shadow md:w-1/2 absolute top-[83px]">
             {suggestions.map((suggestion, index) => (
               <div
                 key={index}
-                className="cursor-pointer border-t border-gray-300 p-1.5 text-orange-500 hover:bg-gray-200"
+                className="cursor-pointer border-b border-gray-300 p-1.5 text-orange-500 hover:bg-gray-200"
                 onClick={() => addSuggestionToChips(suggestion)}
               >
                 {suggestion}
