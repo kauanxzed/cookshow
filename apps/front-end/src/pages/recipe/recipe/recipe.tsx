@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'flowbite-react'
 import RecipeInfo from './recipeInfo'
-import RecipeRating from './recipeRating'
+import { Rating } from './recipeRating'
 import Ingredient from './Ingredient'
 import Like from '../../../components/ui/like/like'
 import PersonsLiked from '../../../components/ui/personsLiked'
@@ -85,6 +85,8 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
   const [commentsVisible, setCommentsVisible] = useState(true)
   const [showModal, setShowModal] = useState(show)
   const [recipe, setRecipe] = useState<typeRecipe>()
+  const [rating, setRating] = React.useState(0);
+
 
   useEffect(() => {
     try {
@@ -100,7 +102,7 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
 
   const postRecipeLikes = async (recipeId: string, id_usuario: string, id_receita: string, favorito: boolean ) => {
     try {
-      const recipeLike = await axiosInstace.post('/api/recipe/' + recipeId + '/rating',{
+      await axiosInstace.post('/api/recipe/' + recipeId + '/rating',{
         id_usuario: id_usuario,
         id_receita: id_receita,
         favorito: favorito,
@@ -150,8 +152,17 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
                     <RecipeInfo info={'🔥 ' + recipe.calorias + ' Kcal'} />
                   </div>
                   <div className="mt-2 flex flex-row items-center">
-                    <RecipeRating rating={recipe.rating} />
-                    <p className="ml-1">{recipe.rating}</p>
+                    <h3>Avalie!</h3>
+                    <Rating
+                      count={5}
+                      value={rating}
+                      edit={true}
+                      onChange={(value) => setRating(value)}
+                    />
+                    <p>
+                      <b>Nota: </b>
+                      {rating} stars
+                    </p>
                   </div>
                   <div className="mt-2 flex flex-row flex-wrap">
                     {recipe.ingredients.map((ingredient) => {
