@@ -70,6 +70,8 @@ export class RecipeService {
         'recipeIngredient',
         'recipeIngredient.recipe = recipe.id',
       )
+      .leftJoin('recipe.user', 'user')
+      .addSelect(['user.id', 'user.foto_perfil'])
       .where('recipe.id = :id', { id })
       .andWhere('recipe.deleted_at IS NULL')
       .getOne()
@@ -207,7 +209,6 @@ export class RecipeService {
     }
 
     try {
-      console.log(ingredientId)
       await this.recipeIngredientRepository
         .createQueryBuilder()
         .delete()
