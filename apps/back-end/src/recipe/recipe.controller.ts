@@ -135,4 +135,9 @@ export class RecipeController {
       idReceita.id_receita,
     )
   }
+
+  @Delete()
+  async deleteRecipe(@Body('id_receita') recipeId: string) {
+    return await this.recipeService.deleteRecipe(recipeId)
+  }
 }
