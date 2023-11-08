@@ -463,14 +463,14 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                       setRecipeCategory('')
                       handleFieldChange(
                         'recipeCategory',
-                        'O campo deve conter letras',
+                        'A categoria deve ser informada',
                       )
                     }
                     if (!inputValue.match(/^[^\d]+$/)) {
                       setRecipeCategory('')
                       handleFieldChange(
                         'recipeCategory',
-                        'O campo deve apenas letras e espaços',
+                        'A categoria não deve conter números',
                       )
                     }
                   }}
@@ -499,14 +499,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                       setRecipeMode('')
                       handleFieldChange(
                         'recipeMode',
-                        'O campo deve conter letras',
-                      )
-                    }
-                    if (!inputValue.match(/^[^\d]+$/)) {
-                      setRecipeMode('')
-                      handleFieldChange(
-                        'recipeMode',
-                        'O campo deve apenas letras e espaços',
+                        'O modo de preparo deve ser informado',
                       )
                     }
                   }}
