@@ -178,18 +178,8 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       try {
-        /*
-        axiosInstace.post("/api/photo/recipe", {
-          photo: preview
-        }),{
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept' : 'application/json',
-          }
-        }).then(Response => {
-          setLinkPhoto(Response.data)
-        })
-        */
+        // post da foto
+        
 
         const payload = await axiosInstace.get('/api/auth')
 
