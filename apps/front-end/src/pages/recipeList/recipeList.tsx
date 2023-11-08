@@ -11,7 +11,7 @@ import prato6 from "../../assets/images/prato6.png"
 const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('')
   const [chips, setChips] = useState<string[]>([])
-  const [suggestions, setSuggestions] = useState<string[]>(["teste1","teste1","teste1","teste1","teste1"])
+  const [suggestions, setSuggestions] = useState<string[]>([])
   const [isInputFocused, setInputFocused] = useState(false)
 
   const handleRemoveChip = (index: number) => {
