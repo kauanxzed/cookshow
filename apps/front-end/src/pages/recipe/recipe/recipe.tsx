@@ -9,6 +9,17 @@ import axios from 'axios'
 import Comments from './comments'
 import { CommentType } from './types/comment.type'
 
+const token =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+const axiosInstace = axios.create({
+  timeout: 5000,
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+})
+
 interface ModalDefaultProps {
   show: boolean | undefined
   setOpenModal: (value: boolean | undefined) => void
@@ -64,6 +75,8 @@ const getRecipeData = async (recipeId: string) => {
   }
 }
 
+
+
 const ModalDefault: React.FC<ModalDefaultProps> = ({
   show,
   setOpenModal,
@@ -84,6 +97,19 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
       alert('Algo deu errado')
     }
   }, [show])
+
+  const postRecipeLikes = async (recipeId: string, id_usuario: string, id_receita: string, favorito: boolean ) => {
+    try {
+      const recipeLike = await axiosInstace.post('/api/recipe/' + recipeId + '/rating',{
+        id_usuario: id_usuario,
+        id_receita: id_receita,
+        favorito: favorito,
+      })      
+      
+    } catch (error) {
+      alert('Não foi possivel concluir a ação')
+    }
+  }
 
   function showComments() {
     setCommentsVisible(!commentsVisible)
