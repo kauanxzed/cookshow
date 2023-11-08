@@ -43,7 +43,7 @@ async function getPayloadUser() {
 
 function ProfilePage() {
   const [showPublicacoes, setShowPublicacoes] = useState<boolean>(true)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [receitas, setReceitas] = useState<RecipeType[]>([])
   const [payload, setPayload] = useState<UserPayloadType>()
   const [openModal, setOpenModal] = useState<undefined | boolean>(undefined)

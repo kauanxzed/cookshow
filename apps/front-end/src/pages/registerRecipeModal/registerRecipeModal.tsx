@@ -159,6 +159,8 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
   const [linkPhoto, setLinkPhoto] = useState('google.com')
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
     const token =
       localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
@@ -170,7 +172,6 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
       },
     })
 
-    e.preventDefault()
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       try {
@@ -214,10 +215,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
 
         handleCloseModal()
         
-        setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
-        setTimeout(() => {
-          setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
-        }, 3000)
+        window.alert("Receita enviada aguarde a análise.")
       } catch (err) {
         alert(err)
       }
@@ -292,6 +290,9 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                     className="h-full w-full"
                   />
                 )}
+                {errors.recipePhoto && (
+                  <p className="text-red-500 self-center text-center">{errors.recipePhoto}</p>
+                )}
               </div>
               <div className="flex flex-col items-center justify-center p-2">
                 <p className="">Selecione uma foto do seu dispositivo</p>
@@ -321,9 +322,6 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                   }}
                 />
               </div>
-              {errors.recipePhoto && (
-                  <p className="text-red-500">{errors.recipePhoto}</p>
-                )}
             </div>
             <div className="flex max-h-[70vh] w-full flex-col space-y-6 overflow-y-auto p-5">
               <div className="h-full">
