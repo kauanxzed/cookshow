@@ -1,17 +1,18 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from '../user/user.module';
-import { UserEntity } from '../user/entities/user.entity';
-import { readFileSync } from 'fs';
-import { AuthModule } from '../auth/auth.module';
-import { IngredientModule } from '../ingredient/ingredient.module';
-import { IngredientEntity } from '../ingredient/entities/ingredient.entity';
-import { RecipeModule } from '../recipe/recipe.module';
-import { RecipeEntity } from '../recipe/entities/recipe.entity';
-import { CommentEntity } from '../recipe/entities/recipe-comment.entity';
-import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.entity';
-import { RatingEntity } from '../recipe/entities/recipe-rating.entity';
+import { Module } from '@nestjs/common'
+import { AppController } from '../uploads/app.controller'
+import { ConfigModule } from '@nestjs/config'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { UserModule } from '../user/user.module'
+import { UserEntity } from '../user/entities/user.entity'
+import { readFileSync } from 'fs'
+import { AuthModule } from '../auth/auth.module'
+import { IngredientModule } from '../ingredient/ingredient.module'
+import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
+import { RecipeModule } from '../recipe/recipe.module'
+import { RecipeEntity } from '../recipe/entities/recipe.entity'
+import { CommentEntity } from '../recipe/entities/recipe-comment.entity'
+import { RecipeIngredientEntity } from '../recipe/entities/recipe-ingredient.entity'
+import { RatingEntity } from '../recipe/entities/recipe-rating.entity'
 
 @Module({
   imports: [
@@ -39,10 +40,11 @@ import { RatingEntity } from '../recipe/entities/recipe-rating.entity';
       ssl: {
         rejectUnauthorized: false,
         ca: readFileSync(
-          'apps/back-end/src/assets/ca-certificate.crt'
+          'apps/back-end/src/assets/ca-certificate.crt',
         ).toString(),
       },
     }),
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

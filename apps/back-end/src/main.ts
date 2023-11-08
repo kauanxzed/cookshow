@@ -3,13 +3,13 @@
  * This is only a minimal backend to get started.
  */
 
-import { Logger, ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { AppModule } from './app/app.module';
-
+import { Logger, ValidationPipe } from '@nestjs/common'
+import { NestFactory } from '@nestjs/core'
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import { AppModule } from './app/app.module'
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface'
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule)
 
   const config = new DocumentBuilder()
     .setTitle('CookShow')
@@ -17,23 +17,33 @@ async function bootstrap() {
       'The CookShow API The CookShow offers a pleasant and intuitive user experience,                  ' +
         'providing a wide range of recipes for users, along with detailed information about ingredients, ' +
         'step-by-step instructions, nutrition facts, and suggestions for variations.                     ' +
-        'It also allows users to save their favorite recipes, share them with friends and family.        '
+        'It also allows users to save their favorite recipes, share them with friends and family.        ',
     )
     .setVersion('1.0')
     .addTag('CookShow')
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+    .build()
+  const document = SwaggerModule.createDocument(app, config)
+  SwaggerModule.setup('api', app, document)
 
-  const globalPrefix = 'api';
-  app.useGlobalPipes(new ValidationPipe());
-  app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3000;
+  const globalPrefix = 'api'
+  app.useGlobalPipes(new ValidationPipe())
+  app.setGlobalPrefix(globalPrefix)
+  const corsOptions: CorsOptions = {
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+    credentials: true,
+  }
 
-  await app.listen(port);
+  app.enableCors(corsOptions)
+
+  const port = process.env.PORT || 3000
+
+  await app.listen(port)
   Logger.log(
-    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  );
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
+  )
 }
 
-bootstrap();
+bootstrap()
