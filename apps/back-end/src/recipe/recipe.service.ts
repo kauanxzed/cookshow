@@ -192,4 +192,31 @@ export class RecipeService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
+
+  async deleteRecipeIngredient(
+    ingredientId: number,
+    recipeId: string,
+  ): Promise<void> {
+    const foundRecipeIngredient = await this.findById(recipeId)
+
+    if (!foundRecipeIngredient) {
+      throw new HttpException(
+        'Recipe ingredient not found',
+        HttpStatus.NOT_FOUND,
+      )
+    }
+
+    try {
+      console.log(ingredientId)
+      await this.recipeIngredientRepository
+        .createQueryBuilder()
+        .delete()
+        .from(RecipeIngredientEntity)
+        .where('id_ingrediente = :ingredientId', { ingredientId })
+        .andWhere('id_receita = :recipeId', { recipeId })
+        .execute()
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
+  }
 }

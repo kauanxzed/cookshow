@@ -123,4 +123,16 @@ export class RecipeController {
   ) {
     return await this.recipeService.updateRecipe(recipeId, recipe)
   }
+
+  @Delete('/ingredientRecipe')
+  async deleteRecipeIngredient(
+    @Param('recipeId') recipeId: string,
+    @Body() ingredientId: { id_ingrediente: number },
+    @Body() idReceita: { id_receita: string },
+  ) {
+    return await this.recipeService.deleteRecipeIngredient(
+      ingredientId.id_ingrediente,
+      idReceita.id_receita,
+    )
+  }
 }
