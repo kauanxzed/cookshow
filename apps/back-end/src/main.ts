@@ -24,7 +24,6 @@ async function bootstrap() {
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document)
-
   const globalPrefix = 'api'
   app.useGlobalPipes(new ValidationPipe())
   app.setGlobalPrefix(globalPrefix)
