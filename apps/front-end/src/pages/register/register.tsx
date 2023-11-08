@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Imagem from '../../assets/images/background.png'
+
 function LoginForm() {
   const [email, setEmail] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -16,6 +17,7 @@ function LoginForm() {
   const [passwordConfirmationError, setPasswordConfirmationError] = useState('')
   const [showPasswordTip, setShowPasswordTip] = useState(false)
 
+  //Commit apenas para arrumar o autor dos commits feitos em sala de aula, pois no computador da cesumar estava configurado o nome de outro usuário.
 
   // Hook para navegar entre páginas
   const navigate = useNavigate()
@@ -34,7 +36,8 @@ function LoginForm() {
 
   // Função para validar a força da senha
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*?.%+=_/`,><~^()[;&@#])[0-9a-zA-Z$*?.%+=_/`,><~^()[;&@#]{6,}$/
+    const regex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*?.%+=_/`,><~^()[;&@#])[0-9a-zA-Z$*?.%+=_/`,><~^()[;&@#]{6,}$/
     return regex.test(password)
   }
 
@@ -67,14 +70,14 @@ function LoginForm() {
         },
       )
       .then((response) => {
-        if (response.status === 201) { 
-          alert('Registro bem-sucedido!');
-          navigate('/'); 
+        if (response.status === 201) {
+          alert('Registro bem-sucedido!')
+          navigate('/')
         } else {
-          alert('Erro no registro!');
+          alert('Erro no registro!')
         }
       })
-      .catch(() => alert('Erro na requisição!'));
+      .catch(() => alert('Erro na requisição!'))
 
     if (!validatePassword(password)) {
       setPasswordError(
@@ -184,7 +187,8 @@ function LoginForm() {
                   zIndex: 1000,
                 }}
               >
-                A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.
+                A senha deve ter no mínimo 6 caracteres, uma letra maiúscula,
+                uma letra minúscula, um número e um caractere especial.
               </p>
             )}
             {passwordError && (
