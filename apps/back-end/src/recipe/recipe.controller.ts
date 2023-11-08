@@ -114,4 +114,16 @@ export class RecipeController {
   async getFavoritedRecipes(@Param('userId') userId: string) {
     return await this.recipeService.getFavoritedRecipes(userId)
   }
+
+  @Delete('/ingredientRecipe')
+  async deleteRecipeIngredient(
+    @Param('recipeId') recipeId: string,
+    @Body() ingredientId: { id_ingrediente: number },
+    @Body() idReceita: { id_receita: string },
+  ) {
+    return await this.recipeService.deleteRecipeIngredient(
+      ingredientId.id_ingrediente,
+      idReceita.id_receita,
+    )
+  }
 }
