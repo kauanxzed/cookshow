@@ -173,14 +173,14 @@ export class RecipeService {
     ingredientId: number,
     recipeId: string,
   ): Promise<void> {
-    // const foundRecipeIngredient = await
+    const foundRecipeIngredient = await this.findById(recipeId)
 
-    // if (!foundRecipeIngredient) {
-    //   throw new HttpException(
-    //     'Recipe ingredient not found',
-    //     HttpStatus.NOT_FOUND,
-    //   )
-    // }
+    if (!foundRecipeIngredient) {
+      throw new HttpException(
+        'Recipe ingredient not found',
+        HttpStatus.NOT_FOUND,
+      )
+    }
 
     try {
       console.log(ingredientId)
