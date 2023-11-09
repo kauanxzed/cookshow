@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import Imagem from '../../assets/images/background.png'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -16,6 +16,8 @@ function LoginForm() {
   const [passwordError, setPasswordError] = useState('')
   const [passwordConfirmationError, setPasswordConfirmationError] = useState('')
   const [showPasswordTip, setShowPasswordTip] = useState(false)
+
+  //Commit apenas para arrumar o autor dos commits feitos em sala de aula, pois no computador da cesumar estava configurado o nome de outro usuário.
 
   // Hook para navegar entre páginas
   const navigate = useNavigate()
@@ -34,7 +36,8 @@ function LoginForm() {
 
   // Função para validar a força da senha
   const validatePassword = (password: string) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+    const regex =
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*?.%+=_/`,><~^()[;&@#])[0-9a-zA-Z$*?.%+=_/`,><~^()[;&@#]{6,}$/
     return regex.test(password)
   }
 
@@ -66,12 +69,19 @@ function LoginForm() {
           },
         },
       )
-      .then()
+      .then((response) => {
+        if (response.status === 201) {
+          alert('Registro bem-sucedido!')
+          navigate('/')
+        } else {
+          alert('Erro no registro!')
+        }
+      })
       .catch(() => alert('Erro na requisição!'))
 
     if (!validatePassword(password)) {
       setPasswordError(
-        'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número.',
+        'A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
       )
       return
     }
@@ -87,7 +97,7 @@ function LoginForm() {
   return (
     <div className="flex h-screen overflow-hidden lg:flex-row">
       <div className="hidden lg:flex lg:w-2/3">
-        <img alt="Logo" className="h-full w-full object-cover" />
+        <img src={Imagem} alt="Logo" className="h-full w-full object-cover" />
       </div>
       <div className="mt-14 ml-9 flex h-full scale-[0.85] flex-col items-start sm:mt-6 sm:ml-6 sm:w-full md:w-1/2 lg:mt-0 lg:w-1/3 lg:items-start lg:justify-center lg:px-6">
         <div className="flex w-full flex-col items-start justify-center space-y-4 py-6 lg:mb-20 lg:h-full lg:items-start lg:py-0 lg:pt-0">
@@ -160,7 +170,7 @@ function LoginForm() {
                 setPasswordError('')
                 if (!validatePassword(e.target.value)) {
                   setPasswordError(
-                    'A senha deve ter no mínimo 8 caracteres, uma letra maiúscula, uma letra minúscula e um número.',
+                    'A senha deve ter no mínimo 6 caracteres, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.',
                   )
                 }
               }}
@@ -177,8 +187,8 @@ function LoginForm() {
                   zIndex: 1000,
                 }}
               >
-                A senha deve ter no mínimo 8 caracteres, uma letra maiúscula e
-                um número.
+                A senha deve ter no mínimo 6 caracteres, uma letra maiúscula,
+                uma letra minúscula, um número e um caractere especial.
               </p>
             )}
             {passwordError && (

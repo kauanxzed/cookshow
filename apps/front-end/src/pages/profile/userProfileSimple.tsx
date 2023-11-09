@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { userProfile } from '../data'
+import axios from 'axios'
 
 interface UserProfileType {
   profileImage: string
@@ -7,12 +8,28 @@ interface UserProfileType {
 }
 
 function UserProfileSimplified() {
+  const [userProfileData, setUserProfileData] = useState<UserProfileType>({
+    profileImage: '',
+    name: '',
+  })
+
+  const token =
+    localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+  const axiosInstance = axios.create({
+    timeout: 5000,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-r from-orange-500 to-white ">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-r from-orange-500 to-white">
       <div className="flex w-full justify-center">
         <img
-          src={(userProfile as UserProfileType).profileImage}
-          alt={(userProfile as UserProfileType).name}
+          src={userProfile.profileImage}
+          alt={userProfile.name}
           className="relative h-24 w-24 rounded-full object-cover md:h-72 md:w-72"
         />
       </div>

@@ -16,6 +16,7 @@ import { RecipeRatingService } from './recipe.rating.service'
 import { CreateCommentDto } from './dto/create-recipe-comment.dto'
 import { RecipeCommentService } from './recipe.comment.service'
 import { UpdateCommentDto } from './dto/update-recipe-comment.dto'
+import { UpdateRecipeDto } from './dto/update-recipe.dto'
 
 @Controller('recipe')
 export class RecipeController {
@@ -26,7 +27,7 @@ export class RecipeController {
   ) {}
 
   @Post()
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   create(@Body() createRecipeDto: CreateRecipeDto) {
     return this.recipeService.create(createRecipeDto)
   }
@@ -51,7 +52,7 @@ export class RecipeController {
   }
 
   @Post('/:recipeId/rating')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async createRating(@Body() createRecipeRatingDto: CreateRecipeRatingDto) {
     return await this.recipeRatingService.create(createRecipeRatingDto)
   }
@@ -71,11 +72,6 @@ export class RecipeController {
     return await this.recipeService.getUserRecipes(userId)
   }
 
-  @Get('/user/:userId/favorites')
-  async getFavoritedRecipes(@Param('userId') userId: string) {
-    return await this.recipeService.getFavoritedRecipes(userId)
-  }
-
   @Post('/:recipeId/comment')
   async(@Body() createCommentDto: CreateCommentDto) {
     return this.commentService.create(createCommentDto)
@@ -86,7 +82,7 @@ export class RecipeController {
     return await this.commentService.findById(id)
   }
 
-  @Get('/comments')
+  @Get('/:recipeId/comment')
   async findAll() {
     return await this.commentService.findAll()
   }
@@ -104,8 +100,44 @@ export class RecipeController {
     return await this.commentService.delete(id)
   }
 
+  @Get('/search/ingredient')
+  async fyndRecipeByIngredients(@Body() idIngredient: { id: number }[]) {
+    const ingredientesId = idIngredient.map((ingrediente) => ingrediente.id)
+    return await this.recipeService.searchRecipeByIngredient(ingredientesId)
+  }
+
   @Get('/:recipeId/commentsQuantity')
   async getQuantCommentsRecipe(@Param('recipeId') recipeId: string) {
     return await this.commentService.getQuantCommentsRecipe(recipeId)
+  }
+
+  @Get('/user/:userId/favorites')
+  async getFavoritedRecipes(@Param('userId') userId: string) {
+    return await this.recipeService.getFavoritedRecipes(userId)
+  }
+
+  @Put('/:recipeId')
+  async updateRecipe(
+    @Param('recipeId') recipeId: string,
+    @Body() recipe: UpdateRecipeDto,
+  ) {
+    return await this.recipeService.updateRecipe(recipeId, recipe)
+  }
+
+  @Delete('/ingredientRecipe')
+  async deleteRecipeIngredient(
+    @Param('recipeId') recipeId: string,
+    @Body() ingredientId: { id_ingrediente: number },
+    @Body() idReceita: { id_receita: string },
+  ) {
+    return await this.recipeService.deleteRecipeIngredient(
+      ingredientId.id_ingrediente,
+      idReceita.id_receita,
+    )
+  }
+
+  @Delete()
+  async deleteRecipe(@Body('id_receita') recipeId: string) {
+    return await this.recipeService.deleteRecipe(recipeId)
   }
 }
