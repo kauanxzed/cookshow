@@ -52,14 +52,14 @@ const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id, ed
           <div className="text-center">
             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-              Tem certeza que deseja cancelar essa receita?
+              Tem certeza que deseja deletar essa receita?
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={() => deleteRecipe()}>
-                Sim, tenho certeza
+                Sim
               </Button>
               <Button color="gray" onClick={() => handleCloseModal()}>
-                Não, quero cancelar
+                Não
               </Button>
             </div>
           </div>
