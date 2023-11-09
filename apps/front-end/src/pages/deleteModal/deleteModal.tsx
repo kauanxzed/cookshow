@@ -7,10 +7,11 @@ interface ModalDeleteProps {
     show: boolean | undefined
     setOpenModalDelete: (value: boolean | undefined) => void
     id: string
+    editedDelete: (value: boolean) => void
   }
   
 
-const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id}) => {
+const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id, editedDelete}) => {
   const [showModal, setShowModal] = useState(show)
 
   const deleteRecipe = () => {
@@ -35,6 +36,7 @@ const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id}) =
         id_receita: id
       }
     });
+    editedDelete(true)
     setShowModal(undefined)
     setOpenModalDelete(undefined)
   }

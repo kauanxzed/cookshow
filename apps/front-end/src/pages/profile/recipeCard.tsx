@@ -5,6 +5,7 @@ import DeletModal from '../deleteModal/deleteModal'
 
 interface Recipe {
   recipe: RecipeType
+  edited: (value: boolean) => void
 }
 
 async function getLikes(recipeId: string) {
@@ -31,7 +32,7 @@ async function getComments(recipeId: string) {
   }
 }
 
-function RecipeCard({ recipe }: Recipe) {
+const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
   const [likes, setLikes] = useState<number>(0)
   const [rating, setRating] = useState<number>(0)
   const [comments, setComments] = useState<number>(0)
@@ -50,7 +51,7 @@ function RecipeCard({ recipe }: Recipe) {
         if (data) setComments(data.data)
       })
     }
-  }, [recipe.id, recipe.publicado, openModalDelete])
+  }, [recipe.id, recipe.publicado])
 
   const handleSetOpenModalEdit = (value: boolean | undefined) => {
     setOpenModalEdit(value)
@@ -105,6 +106,7 @@ function RecipeCard({ recipe }: Recipe) {
           show={openModalDelete}
           setOpenModalDelete={handleSetOpenModalDelete}
           id={recipe.id}
+          editedDelete= {edited}
         />
       )}
   </>
