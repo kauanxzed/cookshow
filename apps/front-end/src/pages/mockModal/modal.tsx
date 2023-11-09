@@ -101,7 +101,7 @@ const ModalDefault = () => {
 
   const handleInputIngredientChange = (
     e: ChangeEvent<HTMLInputElement>,
-    index: number,
+    index: number | string,
   ) => {
     const { name, value } = e.target
     const list: Array<inputIngrediente> = [...inputList]
