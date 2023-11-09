@@ -56,7 +56,7 @@ const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id}) =
               <Button color="failure" onClick={() => deleteRecipe()}>
                 Sim, tenho certeza
               </Button>
-              <Button color="gray" onClick={() => setOpenModalDelete(undefined)}>
+              <Button color="gray" onClick={() => handleCloseModal()}>
                 Não, quero cancelar
               </Button>
             </div>
