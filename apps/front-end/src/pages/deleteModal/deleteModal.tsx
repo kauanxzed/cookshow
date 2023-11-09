@@ -5,13 +5,13 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 interface ModalDeleteProps {
     show: boolean | undefined
-    setOpenModal: (value: boolean | undefined) => void
+    setOpenModalDelete: (value: boolean | undefined) => void
     id: string
   }
   
 
-const DeletModal:React.FC<ModalDeleteProps> = () => {
-  const [openModal, setOpenModal] = useState(false);
+const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id}) => {
+  const [showModal, setShowModal] = useState(show)
 
   const deleteRecipe = () => {
     const token =
@@ -27,12 +27,25 @@ const DeletModal:React.FC<ModalDeleteProps> = () => {
 
 
 
-    //axiosInstace.delete("api/recipe/")
-    setOpenModal(false)
+    axiosInstace.delete("api/recipe/", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      data: {
+        id_receita: id
+      }
+    });
+    setShowModal(undefined)
+    setOpenModalDelete(undefined)
+  }
+
+  const handleCloseModal = () => {
+    setShowModal(undefined)
+    setOpenModalDelete(undefined)
   }
 
   return (
-    <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
+    <Modal show={showModal} size="md" onClose={() => handleCloseModal()} popup>
         <Modal.Body>
           <div className="text-center">
             <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
@@ -43,7 +56,7 @@ const DeletModal:React.FC<ModalDeleteProps> = () => {
               <Button color="failure" onClick={() => deleteRecipe()}>
                 Sim, tenho certeza
               </Button>
-              <Button color="gray" onClick={() => setOpenModal(false)}>
+              <Button color="gray" onClick={() => setOpenModalDelete(undefined)}>
                 Não, quero cancelar
               </Button>
             </div>

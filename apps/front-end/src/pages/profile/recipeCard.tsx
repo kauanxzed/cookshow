@@ -35,7 +35,8 @@ function RecipeCard({ recipe }: Recipe) {
   const [likes, setLikes] = useState<number>(0)
   const [rating, setRating] = useState<number>(0)
   const [comments, setComments] = useState<number>(0)
-  const [openModal, setOpenModal] = useState<undefined | boolean>(undefined)
+  const [openModalEdit, setOpenModalEdit] = useState<undefined | boolean>(undefined)
+  const [openModalDelete, setOpenModalDelete] = useState<undefined | boolean>(undefined)
 
   useEffect(() => {
     if (recipe.publicado) {
@@ -51,10 +52,13 @@ function RecipeCard({ recipe }: Recipe) {
     }
   }, [recipe.id, recipe.publicado])
 
-  const handleSetOpenModal = (value: boolean | undefined) => {
-    setOpenModal(value)
+  const handleSetOpenModalEdit = (value: boolean | undefined) => {
+    setOpenModalEdit(value)
   }
 
+  const handleSetOpenModalDelete = (value: boolean | undefined) => {
+    setOpenModalDelete(value)
+  }
 
   return (
     <>
@@ -68,7 +72,10 @@ function RecipeCard({ recipe }: Recipe) {
           <h2 className="mt-2 text-xl font-bold text-orange-600">
             {recipe.titulo}
           </h2>
-          <i className="fa-solid fa-pen-to-square" style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModal(true)}}></i>
+          <div className='flex flex-col'>
+            <i className="fa-solid fa-pen-to-square" style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalEdit(true)}}></i>
+            <i className="fa-solid fa-trash-can"  style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalDelete(true)}}></i>
+          </div>
         </div>
         <p className="uppercase text-gray-400">{recipe.subtitulo}</p>
         <p className="mb-2 flex items-center">
@@ -93,10 +100,10 @@ function RecipeCard({ recipe }: Recipe) {
           </span>
         </div>
       </div>
-      {openModal === true && (
+      {openModalDelete === true && (
         <DeletModal
-          show={openModal}
-          setOpenModal={handleSetOpenModal}
+          show={openModalDelete}
+          setOpenModalDelete={handleSetOpenModalDelete}
           id={recipe.id}
         />
       )}
