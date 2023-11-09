@@ -29,4 +29,9 @@ export class UserController {
   async delete(@Param('userId') userId: string) {
     return await this.userService.delete(userId)
   }
+
+  @Get('/:userId/userInfo')
+  async getUserInfo(@Param('userId') userId: string) {
+    return await this.userService.getUserInfo(userId)
+  }
 }

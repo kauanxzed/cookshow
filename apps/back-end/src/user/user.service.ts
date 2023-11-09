@@ -111,4 +111,25 @@ export class UserService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
+
+  async getUserInfo(id: string): Promise<UserEntity | null> {
+    const user = await this.findById(id)
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    }
+
+    try {
+      const userInfo = await this.userRepository
+        .createQueryBuilder('usuario')
+        .select(['usuario.id', 'usuario.foto_perfil']) // Seleciona o ID e a foto_perfil do usuário
+        .where('usuario.id = :id', { id })
+        .andWhere('usuario.deleted_at IS NULL')
+        .getOne()
+
+      return userInfo
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
+  }
 }
