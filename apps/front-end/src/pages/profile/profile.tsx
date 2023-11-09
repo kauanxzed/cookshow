@@ -66,6 +66,7 @@ function ProfilePage() {
         }
       }
     })
+    setEdited(false);
   }, [showPublicacoes, edited])
 
   const handleShowPublicacoes = async () => {
