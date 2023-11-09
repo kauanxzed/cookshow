@@ -11,7 +11,7 @@ import prato6 from "../../assets/images/prato6.png"
 const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('')
   const [chips, setChips] = useState<string[]>([])
-  const [suggestions, setSuggestions] = useState<string[]>(["teste1","teste1","teste1","teste1","teste1","teste1","teste1","teste1"])
+  const [suggestions, setSuggestions] = useState<string[]>([])
   const [isInputFocused, setInputFocused] = useState(false)
 
   const handleRemoveChip = (index: number) => {
@@ -110,7 +110,7 @@ const RecipeList: React.FC = () => {
           />
         </div>
         {suggestions.length > 0 && (
-          <div className="w-full rounded-md mx-8 bg-gray-100 shadow md:w-1/2 absolute top-[83px]">
+          <div className="w-full rounded-md mx-8 bg-gray-100 shadow md:w-1/2 absolute top-[83px] z-20">
             {suggestions.map((suggestion, index) => (
               <div
                 key={index}
