@@ -100,14 +100,22 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
     }
   }, [show])
 
-  const postRecipeLikes = async (recipeId: string, id_usuario: string, id_receita: string, favorito: boolean ) => {
+    async (recipeId: string, id_usuario: string, id_receita: string, favorito: boolean ) => {
     try {
       await axiosInstace.post('/api/recipe/' + recipeId + '/rating',{
         id_usuario: id_usuario,
         id_receita: id_receita,
         favorito: favorito,
-      })      
-      
+      });    
+
+      /*if (favorito) {
+        const likesData = {
+          [id_receita]: (likesData[id_receita] || 0) + 1,
+        }
+
+      } else {
+        alert('Não foi possível adicionar o like');
+      };*/
     } catch (error) {
       alert('Não foi possivel concluir a ação')
     }
@@ -152,17 +160,13 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
                     <RecipeInfo info={'🔥 ' + recipe.calorias + ' Kcal'} />
                   </div>
                   <div className="mt-2 flex flex-row items-center">
-                    <h3>Avalie!</h3>
                     <Rating
                       count={5}
                       value={rating}
                       edit={true}
                       onChange={(value) => setRating(value)}
+                      className='flex flex-row'
                     />
-                    <p>
-                      <b>Nota: </b>
-                      {rating} stars
-                    </p>
                   </div>
                   <div className="mt-2 flex flex-row flex-wrap">
                     {recipe.ingredients.map((ingredient) => {
