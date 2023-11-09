@@ -1,6 +1,7 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react'
+import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
 import Logo from '../../assets/images/Logo.png'
-import ModalDefault from '../recipe/recipe/recipe'
+import axios from 'axios'
+import { typeIngredient } from '../../types/typeIngredient'
 
 const SearchBar: React.FC = () => {
   const alimentos: string[] = [
@@ -43,14 +44,38 @@ const SearchBar: React.FC = () => {
   const [chips, setChips] = useState<string[]>([])
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [isInputFocused, setInputFocused] = useState(false)
+  const [ingredients, setIngredients] = useState<typeIngredient[]>([
+    { nome: '', id: 0 },
+  ])
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
+  useEffect(() => {
+    loadIngredients()
+  }, [])
+
+  const loadIngredients = async () => {
+    try {
+      await axios.get('/api/ingredient').then((Response) => {
+        setIngredients(Response.data)
+      })
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement>,
+  ) => {
+    const value = e.target.value
     setInputValue(value)
-
-    const filtered = alimentos.filter((item) =>
-      item.toLowerCase().startsWith(value.toLowerCase()),
-    )
+    const ingredientName = ingredients.map((el) => {
+      return el.nome
+    })
+    const filtered = ingredientName?.filter((item) => {
+      if (item) {
+        return (item.toLowerCase().startsWith(value.toLowerCase()) && 
+                !chips.includes(item))
+      }
+    })
     setSuggestions(value ? filtered.slice(0, 5) : [])
   }
 
