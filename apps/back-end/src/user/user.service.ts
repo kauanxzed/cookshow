@@ -5,6 +5,7 @@ import { UserEntity } from './entities/user.entity'
 import { Repository } from 'typeorm'
 import { SharedUtilServer } from '@cook-show/shared/util-server'
 import { UpdateUserDto } from './dto/update-user.dto'
+import cloudinary from '../util/cloudinary'
 
 @Injectable()
 export class UserService {
@@ -78,6 +79,14 @@ export class UserService {
         updateUserDto.senha = await this.sharedUtilServer.hash(
           updateUserDto.senha,
         )
+      }
+
+      if (updateUserDto.foto_perfil) {
+        const result = await cloudinary.uploader.upload(
+          updateUserDto.foto_perfil,
+          { folder: 'users' },
+        )
+        updateUserDto.foto_perfil = result.url
       }
 
       await this.userRepository

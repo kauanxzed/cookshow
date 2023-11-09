@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger'
 import {
   IsEmail,
   IsNotEmpty,
@@ -7,7 +7,7 @@ import {
   IsUrl,
   MinLength,
   IsOptional,
-} from 'class-validator';
+} from 'class-validator'
 
 export class CreateUserDto {
   @ApiProperty({
@@ -18,7 +18,7 @@ export class CreateUserDto {
   @IsNotEmpty({
     message: 'Username cannot be empty',
   })
-  usuario: string;
+  usuario: string
 
   @ApiProperty({
     description: 'The email of the user',
@@ -26,7 +26,7 @@ export class CreateUserDto {
   })
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  email: string
 
   @ApiProperty({
     description: 'The password of the user',
@@ -42,7 +42,7 @@ export class CreateUserDto {
     },
     {
       message: 'Password not strong enough',
-    }
+    },
   )
   @IsNotEmpty({
     message: 'Password cannot be empty',
@@ -50,13 +50,12 @@ export class CreateUserDto {
   @MinLength(6, {
     message: 'Password should be at least 6 letters',
   })
-  senha: string;
+  senha: string
 
   @ApiProperty({
     description: 'The profile picture of the user',
     example: ['https://www.google.com.br'],
   })
-  @IsUrl()
   @IsOptional()
-  foto_perfil?: string;
+  foto_perfil?: string
 }

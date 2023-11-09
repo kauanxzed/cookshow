@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { userProfile } from '../data'
 import axios from 'axios'
 
@@ -8,11 +8,6 @@ interface UserProfileType {
 }
 
 function UserProfileSimplified() {
-  const [userProfileData, setUserProfileData] = useState<UserProfileType>({
-    profileImage: '',
-    name: '',
-  })
-
   const token =
     localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
@@ -23,6 +18,32 @@ function UserProfileSimplified() {
       'Content-Type': 'application/json',
     },
   })
+
+  const handleImage = () => {
+    const fileInput = document.createElement('input')
+    fileInput.type = 'file'
+    fileInput.accept = 'image/*'
+
+    fileInput.onchange = async (e) => {
+      const target = e.target as HTMLInputElement
+      if (target.files && target.files.length > 0) {
+        const file = target.files[0] as File
+        setFileToBase(file)
+      }
+    }
+
+    fileInput.click()
+  }
+
+  const setFileToBase = (file: File) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onloadend = async () => {
+      await axios.put('/api/user/b399a42a-411e-4cdb-9e30-3ed5a0e78d53', {
+        foto_perfil: reader.result,
+      })
+    }
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-gradient-to-r from-orange-500 to-white">
@@ -38,7 +59,10 @@ function UserProfileSimplified() {
           <button className="rounded bg-red-800 px-5 py-2 text-white">
             Remover
           </button>
-          <button className="rounded bg-gray-700 px-7 py-2 text-white">
+          <button
+            className="rounded bg-gray-700 px-7 py-2 text-white"
+            onClick={handleImage}
+          >
             Alterar
           </button>
         </div>
