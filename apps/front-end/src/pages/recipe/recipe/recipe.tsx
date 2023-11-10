@@ -100,26 +100,13 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
     }
   }, [show])
 
-    async (recipeId: string, id_usuario: string, id_receita: string, favorito: boolean ) => {
-    try {
-      await axiosInstace.post('/api/recipe/' + recipeId + '/rating',{
-        id_usuario: id_usuario,
-        id_receita: id_receita,
-        favorito: favorito,
-      });    
-
-      /*if (favorito) {
-        const likesData = {
-          [id_receita]: (likesData[id_receita] || 0) + 1,
-        }
-
-      } else {
-        alert('Não foi possível adicionar o like');
-      };*/
-    } catch (error) {
-      alert('Não foi possivel concluir a ação')
-    }
-  }
+  /* 
+    await axiosInstace.post('/api/recipe/'+ id_receita +'/favoritesQuantity',{
+        id_usuario,
+        id_receita,
+        favorito,
+      }); 
+  */
 
   function showComments() {
     setCommentsVisible(!commentsVisible)
