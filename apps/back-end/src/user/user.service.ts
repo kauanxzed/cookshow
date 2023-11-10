@@ -5,6 +5,7 @@ import { UserEntity } from './entities/user.entity'
 import { Repository } from 'typeorm'
 import { SharedUtilServer } from '@cook-show/shared/util-server'
 import { UpdateUserDto } from './dto/update-user.dto'
+import { RatingEntity } from '../recipe/entities/recipe-rating.entity'
 
 @Injectable()
 export class UserService {
@@ -131,5 +132,20 @@ export class UserService {
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
+  }
+
+  async getRecipeFavoitedByUser(
+    userId: string,
+    recipeId: string,
+  ): Promise<boolean> {
+    const foundRecipe = await this.userRepository
+      .createQueryBuilder('usuario')
+      .leftJoin('usuario.ratings', 'ri')
+      .where('ri.favorito = true')
+      .andWhere('ri.id_receita = :recipeId', { recipeId: recipeId })
+      .andWhere('usuario.id = :userId', { userId: userId })
+      .getOne()
+
+    return foundRecipe ? true : false
   }
 }

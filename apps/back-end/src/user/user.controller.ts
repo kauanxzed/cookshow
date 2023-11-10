@@ -34,4 +34,12 @@ export class UserController {
   async getUserInfo(@Param('userId') userId: string) {
     return await this.userService.getUserInfo(userId)
   }
+
+  @Get('/:userId/:recipeId')
+  async getRecipeFavoited(
+    @Param('userId') userId: string,
+    @Param('recipeId') recipeId: string,
+  ) {
+    return await this.userService.getRecipeFavoitedByUser(userId, recipeId)
+  }
 }
