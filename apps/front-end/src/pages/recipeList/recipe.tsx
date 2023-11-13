@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import timer from '../../assets/images/relogio.png'
 import PersonsLiked from '../../components/ui/personsLiked'
-import RecipeModal from '../recipe/recipe/recipe'
+import RecipeModal from '../recipe/recipe'
 
 interface RecipeProps {
   id: string // id da receita

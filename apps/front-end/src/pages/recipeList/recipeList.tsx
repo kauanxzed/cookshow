@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
 import Recipe from './recipe'
 import prato1 from '../../assets/images/prato1.png'
-import { IngredientType } from '../recipe/recipe/types/ingredient.type'
+import { IngredientType } from '../recipe/types/ingredient.type'
 import axios from 'axios'
 import { RecipeType } from '../profile/types/recipe.type'
 
@@ -11,7 +11,7 @@ const getIngredients = async () => {
   else return undefined
 }
 
-const getRecipes = async (ingredients: IngredientType[]) => {
+const getRecipes = async (ingredients: IngredientType[] | string[]) => {
   const res = await axios.get('/api/recipe/search/ingredient', {
     data: { ingredients },
   })
@@ -27,7 +27,6 @@ const RecipeList: React.FC = () => {
   const [ingredient, setIngredients] = useState<IngredientType[]>([
     { id: 0, nome: '' },
   ])
-  const [recipes, setRecipes] = useState<RecipeType[]>([])
 
   const handleRemoveChip = (index: number) => {
     const newChips = [...chips]
