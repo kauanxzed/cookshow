@@ -45,6 +45,7 @@ function ProfilePage() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [receitas, setReceitas] = useState<RecipeType[]>([])
   const [payload, setPayload] = useState<UserPayloadType>()
+  const [edited, setEdited] = useState<boolean>(false)
 
   useEffect(() => {
     getPayloadUser().then((payload) => {
@@ -65,7 +66,8 @@ function ProfilePage() {
         }
       }
     })
-  }, [showPublicacoes])
+    setEdited(false);
+  }, [showPublicacoes, edited])
 
   const handleShowPublicacoes = async () => {
     setShowPublicacoes(true)
@@ -124,7 +126,7 @@ function ProfilePage() {
           >
             {receitas && receitas.length > 0 ? (
               receitas.map((recipe: RecipeType) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
+                <RecipeCard key={recipe.id} recipe={recipe} edited={setEdited}/>
               ))
             ) : (
               <div className="flex flex-col items-center justify-center">
