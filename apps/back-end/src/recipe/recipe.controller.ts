@@ -17,6 +17,7 @@ import { CreateCommentDto } from './dto/create-recipe-comment.dto'
 import { RecipeCommentService } from './recipe.comment.service'
 import { UpdateCommentDto } from './dto/update-recipe-comment.dto'
 import { UpdateRecipeDto } from './dto/update-recipe.dto'
+import { ApiResponse } from '@nestjs/swagger'
 
 @Controller('recipe')
 export class RecipeController {
@@ -47,6 +48,11 @@ export class RecipeController {
   }
 
   @Get('/:recipeId')
+  @ApiResponse({
+    status: 200,
+    description: '',
+    type: CreateRecipeDto,
+  })
   async findById(@Param('recipeId') recipeId: string) {
     return await this.recipeService.findById(recipeId)
   }
@@ -134,5 +140,10 @@ export class RecipeController {
       ingredientId.id_ingrediente,
       idReceita.id_receita,
     )
+  }
+
+  @Delete()
+  async deleteRecipe(@Body('id_receita') recipeId: string) {
+    return await this.recipeService.deleteRecipe(recipeId)
   }
 }

@@ -3,16 +3,12 @@ import { Button, Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
 import axios, { AxiosError } from 'axios'
 import { UserPayloadType } from '../profile/types/recipe.type'
+import { typeIngredient } from '../../types/typeIngredient'
 
 interface inputIngrediente {
   id: number
   ingredient: string
   quantity: number
-}
-
-interface typeIngredient {
-  id: number
-  nome: string
 }
 
 const token =
@@ -36,6 +32,12 @@ const getUserPayload = async () => {
 }
 
 const ModalDefault = () => {
+  interface inputIngrediente {
+    id: number
+    ingredient: string
+    quantity: number
+  }
+
   const [openModal, setOpenModal] = useState<string | undefined>()
   const props = { openModal, setOpenModal }
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -126,7 +128,7 @@ const ModalDefault = () => {
 
   const handleInputIngredientChange = (
     e: ChangeEvent<HTMLInputElement>,
-    index: number,
+    index: number | string,
   ) => {
     const { name, value } = e.target
     const list: Array<inputIngrediente> = [...inputList]
@@ -135,9 +137,14 @@ const ModalDefault = () => {
     const ingredientName = ingredient.map((el) => {
       return el.nome
     })
+    const selectedIngredients = inputList.map((item) => item.ingredient)
 
     const filtered = ingredientName?.filter((item) => {
-      if (item) return item.toLowerCase().startsWith(value.toLowerCase())
+      if (item)
+        return (
+          item.toLowerCase().startsWith(value.toLowerCase()) &&
+          !selectedIngredients.includes(item) // Exclua os ingredientes selecionados
+        )
     })
     setSuggestions(value ? filtered.slice(0, 5) : [])
     const focused: Array<boolean> = [...isFocused]
@@ -153,20 +160,8 @@ const ModalDefault = () => {
 
   const handleAddClick = () => {
     const lastIndex = inputList[inputList.length - 1]
-    if (lastIndex.ingredient !== '' && lastIndex.quantity !== 0) {
+    if (lastIndex.ingredient !== '') {
       setInputList([...inputList, { id: 0, ingredient: '', quantity: 0 }])
-    }
-  }
-
-  const handleQuantityChange = (
-    event: ChangeEvent<HTMLInputElement>,
-    index: number,
-  ) => {
-    const value = event.target.value
-    if (!isNaN(+value)) {
-      const list = [...inputList]
-      list[index].quantity = +value
-      setInputList(list)
     }
   }
 
@@ -364,19 +359,6 @@ const ModalDefault = () => {
                         <div className="relative w-full">
                           {isFocused[i] && LoadSuggestions(item, i)}
                         </div>
-                      </div>
-                      <div className="ml-14 h-full w-1/5">
-                        <input
-                          className="block h-full w-full rounded-lg border-none bg-gray-100 p-3 text-center outline-none focus:outline-orange-400 focus:ring-0"
-                          type="text"
-                          required
-                          name="quantity"
-                          placeholder="Qnt"
-                          value={item.quantity}
-                          onChange={(e) => {
-                            handleQuantityChange(e, i)
-                          }}
-                        />
                       </div>
                     </div>
                     <div className="btn-box flex flex-col items-start">

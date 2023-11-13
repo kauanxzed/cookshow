@@ -227,4 +227,23 @@ export class RecipeService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
+
+  async deleteRecipe(recipeId: string): Promise<void> {
+    const foundRecipe = await this.findById(recipeId)
+
+    if (!foundRecipe) {
+      throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND)
+    }
+
+    try {
+      await this.recipeRepository
+        .createQueryBuilder()
+        .update(RecipeEntity)
+        .set({ deleted_at: new Date() })
+        .where('id = :id', { id: recipeId })
+        .execute()
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
+  }
 }
