@@ -165,7 +165,7 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
                   <PersonsLiked personsLiked={recipe.curtidas} />
                 </div>
                 <div className="flex flex-row">
-                  <Like />
+                  <Like id_receita={recipe.id} />
                   <p className="ml-2 cursor-pointer" onClick={showComments}>
                     {commentsVisible
                       ? 'Ocultar todos os comentários'
