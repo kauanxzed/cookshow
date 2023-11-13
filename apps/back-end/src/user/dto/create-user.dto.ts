@@ -54,8 +54,15 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'The profile picture of the user',
-    example: ['https://www.google.com.br'],
+    example: 'https://www.google.com.br',
   })
   @IsOptional()
   foto_perfil?: string
+
+  @ApiProperty({
+    description: 'foto id fot cloudinary',
+    example: 'aowdnaoiwdnaoiwnd',
+  })
+  @IsOptional()
+  foto_id?: string
 }

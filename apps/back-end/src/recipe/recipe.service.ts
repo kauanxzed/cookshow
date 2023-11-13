@@ -9,6 +9,7 @@ import { IngredientService } from '../ingredient/ingredient.service'
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { UpdateRecipeDto } from './dto/update-recipe.dto'
+import cloudinary from '../util/cloudinary'
 
 @Injectable()
 export class RecipeService {
@@ -29,12 +30,18 @@ export class RecipeService {
       throw new HttpException('Recipe already exists', HttpStatus.FORBIDDEN)
     }
 
+    const result = await cloudinary.uploader.upload(createRecipeDto.imagem, {
+      folder: 'recipes',
+    })
+    createRecipeDto.imagem = result.url
+
     const user = (await this.userService.findById(
       createRecipeDto.userId,
     )) as UserEntity
 
     const recipeEntityDto = {
       ...createRecipeDto,
+      ...{ imagem_id: result.public_id },
       user,
     }
 

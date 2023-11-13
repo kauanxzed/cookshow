@@ -2,11 +2,11 @@ import React, { useState, ChangeEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
 import RecipeInfo from './recipeInfo'
 import RecipePhotoMock from '../../../assets/images/carne.jpg'
-import RecipeRating from "./recipeRating"
-import Ingredient from './Ingredient';
-import Like from '../../../components/ui/like/like';
-import Comments from './comments';
-import PersonsLiked from '../../../components/ui/personsLiked';
+import RecipeRating from './recipeRating'
+import Ingredient from './Ingredient'
+import Like from '../../../components/ui/like/like'
+import Comments from './comments'
+import PersonsLiked from '../../../components/ui/personsLiked'
 
 const ingredients = [
   { nome: 'carne' },
@@ -83,7 +83,8 @@ const ModalDefault = () => {
       },
     ],
     personsLiked: 80,
-    recipeMode: "modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /"
+    recipeMode:
+      'modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /modo de preparo da receita ... / modo de preparo da receita ... /',
   }
 
   function showComments() {
@@ -150,8 +151,8 @@ const ModalDefault = () => {
                     })}
                   </div>
                 </div>
-                <div className='flex flex-row'>
-                  <PersonsLiked personsLiked={recipeMock.personsLiked}/>
+                <div className="flex flex-row">
+                  <PersonsLiked personsLiked={recipeMock.personsLiked} />
                 </div>
                 <div className="flex flex-row">
                   <Like />

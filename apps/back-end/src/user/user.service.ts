@@ -82,11 +82,24 @@ export class UserService {
       }
 
       if (updateUserDto.foto_perfil) {
-        const result = await cloudinary.uploader.upload(
-          updateUserDto.foto_perfil,
-          { folder: 'users' },
-        )
-        updateUserDto.foto_perfil = result.url
+        const foto = await this.getUserFotoInfo(id)
+
+        if (foto && foto.foto_id) {
+          await cloudinary.uploader.destroy(foto.foto_id)
+          const result = await cloudinary.uploader.upload(
+            updateUserDto.foto_perfil,
+            { folder: 'users' },
+          )
+          updateUserDto.foto_perfil = result.url
+          updateUserDto.foto_id = result.public_id
+        } else {
+          const result = await cloudinary.uploader.upload(
+            updateUserDto.foto_perfil,
+            { folder: 'users' },
+          )
+          updateUserDto.foto_perfil = result.url
+          updateUserDto.foto_id = result.public_id
+        }
       }
 
       await this.userRepository
@@ -118,6 +131,32 @@ export class UserService {
         .execute()
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async getUserFotoInfo(userId: string): Promise<UserEntity | null> {
+    try {
+      const foundUser = await this.userRepository
+        .createQueryBuilder('usuario')
+        .select(['usuario.foto_id', 'usuario.foto_perfil'])
+        .where('usuario.id = :userId', { userId })
+        .getOne()
+
+      return foundUser
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async deleteFoto(userId: string, fotoId: string) {
+    try {
+      await this.update(userId, {
+        foto_perfil: '',
+        foto_id: '',
+      })
+      cloudinary.uploader.destroy(fotoId)
+    } catch (error) {
+      throw new HttpException('imagem não encontrada', HttpStatus.NOT_FOUND)
     }
   }
 }
