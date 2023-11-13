@@ -7,8 +7,8 @@ interface likeProps {
 }
 
 const Like: React.FC<likeProps> = ({id_receita}) => {
-  const [stateFav, setStateFav] = useState<boolean>()
-  const [payload, setPayload] = useState<UserPayloadType>()
+  const [stateFav, setStateFav] = useState<boolean>(false)
+  const [payload, setPayload] = useState<string>()
 
   useEffect(() => {
     getPayloadUser().then((payload) => {
