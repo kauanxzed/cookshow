@@ -81,6 +81,10 @@ export class RecipeController {
 
   @Post('/:recipeId/rating')
   @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'The record has been successfully found.',
+  })
   @ApiParam({
     name: 'recipeId',
     description: 'The uuid of the recipe',
