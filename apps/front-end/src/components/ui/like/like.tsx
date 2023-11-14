@@ -56,14 +56,14 @@ const Like: React.FC<likeProps> = ({id_receita}) => {
   const handleFavorite = async (id_receita: string) => {
     try {
       if(stateFav) {
-        await axiosInstace.post('/api/recipe/' + id_receita + '/rating',{
+        axiosInstace.post('/api/recipe/' + id_receita + '/rating',{
           id_usuario: payload,
           id_receita,
           favorito: stateFav,
         });
         setStateFav(false)
       } else {
-        await axiosInstace.post('/api/recipe/' + id_receita + '/rating',{
+        axiosInstace.post('/api/recipe/' + id_receita + '/rating',{
           id_usuario: payload,
           id_receita,
           favorito: stateFav,
