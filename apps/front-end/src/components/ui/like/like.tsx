@@ -10,23 +10,22 @@ const Like: React.FC<likeProps> = ({id_receita}) => {
   const [stateFav, setStateFav] = useState<boolean>(false)
   const [payload, setPayload] = useState<string>()
 
+  const fetchFav = async (userId: string) => {
+    const fav = await axios.get('/api/user/'+ userId +'/favorite/'+ id_receita)
+    if(fav){
+      setStateFav(true)
+    } else{
+      setStateFav(false)
+    }
+  }
+
   useEffect(() => {
     getPayloadUser().then((payload) => {
       if (payload) {
         setPayload(payload.data.userId)
+        fetchFav(payload.data.userId)
       }
     })
-
-    const fetchFav = async () => {
-      const fav = await axios.get('/api/user/'+ payload +'/favorite/'+ id_receita)
-      if(fav){
-        setStateFav(true)
-      } else{
-        setStateFav(false)
-      }
-    }
-    fetchFav()
-    console.log("sem dep")
   }, [])
 
   useEffect(() => {
