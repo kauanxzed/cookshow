@@ -6,15 +6,17 @@ interface likeProps {
   id_receita: string
 }
 
-const Like: React.FC<likeProps> = ({id_receita}) => {
+const Like: React.FC<likeProps> = ({ id_receita }) => {
   const [stateFav, setStateFav] = useState<boolean>(false)
   const [payload, setPayload] = useState<string>()
 
   const fetchFav = async (userId: string) => {
-    const fav = await axios.get('/api/user/'+ userId +'/favorite/'+ id_receita)
-    if(fav){
+    const fav = await axios.get(
+      '/api/user/' + userId + '/favorite/' + id_receita,
+    )
+    if (fav) {
       setStateFav(true)
-    } else{
+    } else {
       setStateFav(false)
     }
   }
@@ -29,20 +31,24 @@ const Like: React.FC<likeProps> = ({id_receita}) => {
   }, [])
 
   useEffect(() => {
-    const fetchFav = async () => {
-      const fav = await axios.get('/api/user/'+ payload +'/favorite/'+ id_receita)
-      if(fav){
-        setStateFav(true)
-      } else{
-        setStateFav(false)
+    if (payload) {
+      const fetchFav = async () => {
+        const fav = await axios.get(
+          '/api/user/' + payload + '/favorite/' + id_receita,
+        )
+        if (fav) {
+          setStateFav(true)
+        } else {
+          setStateFav(false)
+        }
       }
+      fetchFav()
+      console.log('com dep de stateFav')
     }
-    fetchFav()
-    console.log("com dep de stateFav")
   }, [stateFav])
-  
+
   const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+    localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
   const axiosInstace = axios.create({
     timeout: 5000,
@@ -54,19 +60,19 @@ const Like: React.FC<likeProps> = ({id_receita}) => {
 
   const handleFavorite = async (id_receita: string) => {
     try {
-      if(stateFav) {
-        axiosInstace.post('/api/recipe/' + id_receita + '/rating',{
+      if (stateFav) {
+        axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
           id_usuario: payload,
           id_receita,
           favorito: stateFav,
-        });
+        })
         setStateFav(false)
       } else {
-        axiosInstace.post('/api/recipe/' + id_receita + '/rating',{
+        axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
           id_usuario: payload,
           id_receita,
           favorito: stateFav,
-        });
+        })
         setStateFav(true)
       }
     } catch (error) {

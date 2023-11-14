@@ -29,4 +29,23 @@ export class UserController {
   async delete(@Param('userId') userId: string) {
     return await this.userService.delete(userId)
   }
+
+  @Post('/deleteFoto')
+  async deleteFoto(@Body() foto: { userId: string; fotoId: string }) {
+    console.log(foto.fotoId)
+    return await this.userService.deleteFoto(foto.userId, foto.fotoId)
+  }
+
+  @Get('/:userId/userInfo')
+  async getUserInfo(@Param('userId') userId: string) {
+    return await this.userService.getUserInfo(userId)
+  }
+
+  @Get('/:userId/:recipeId')
+  async getRecipeFavoited(
+    @Param('userId') userId: string,
+    @Param('recipeId') recipeId: string,
+  ) {
+    return await this.userService.getRecipeFavoitedByUser(userId, recipeId)
+  }
 }

@@ -1,5 +1,5 @@
-import { IsString, IsUrl, IsNumber, IsUUID, IsOptional } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNumber, IsUUID, IsOptional } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateRecipeDto {
   @ApiProperty({
@@ -7,7 +7,7 @@ export class CreateRecipeDto {
     example: ['Bolo de Cenoura'],
   })
   @IsString()
-  titulo: string;
+  titulo: string
 
   @ApiProperty({
     description: 'The subtitle of the recipe',
@@ -15,7 +15,7 @@ export class CreateRecipeDto {
   })
   @IsString()
   @IsOptional()
-  subtitulo?: string;
+  subtitulo?: string
 
   @ApiProperty({
     description: 'The description of the recipe',
@@ -24,39 +24,38 @@ export class CreateRecipeDto {
     ],
   })
   @IsString()
-  descricao: string;
+  descricao: string
 
   @ApiProperty({
     description: 'The preparation time of the recipe',
     example: ['60 minutes'],
   })
-  tempo_preparo: string;
+  tempo_preparo: string
 
   @ApiProperty({
     description: 'The difficulty of the recipe',
     example: ['Easy'],
   })
   @IsString()
-  dificuldade: string;
+  dificuldade: string
 
   @ApiProperty({
     description: 'The calories of the recipe',
     example: ['200Kcal'],
   })
   @IsNumber()
-  calorias: number;
+  calorias: number
 
   @ApiProperty({
     description: 'The image of the recipe',
     example: ['https://www.google.com.br'],
   })
-  @IsUrl()
-  imagem: string;
+  imagem: string
 
   @ApiProperty({
     description: 'The uuid of the recipe',
     example: ['123e4567-e89b-12d3-a456-426614174000'],
   })
   @IsUUID()
-  userId: string;
+  userId: string
 }
