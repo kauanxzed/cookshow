@@ -44,8 +44,6 @@ const Recipe: React.FC<RecipeProps> = (props) => {
     return minutes.toString().padStart(2, '0')
   }
 
-  const recipeURL = `/api/recipe/${props.id}`
-
   function changeStateLike() {
     setStateLike(!stateLike)
   }
@@ -61,15 +59,9 @@ const Recipe: React.FC<RecipeProps> = (props) => {
   }
 
   return (
-<<<<<<< HEAD
     <>
       <div className="flex w-full pr-5 pb-2 md:w-1/2 md:flex-col md:p-8 md:pr-0 md:pb-0 lg:w-1/3">
         <div className="h-36 w-36 cursor-pointer overflow-hidden rounded-md md:h-44 md:w-full">
-=======
-    <div className="flex w-full pr-5 pb-2 md:w-1/2 md:flex-col md:p-8 md:pr-0 md:pb-0 lg:w-1/3">
-      <Link to={recipeURL} className="h-36 w-36 md:h-44 md:w-full">
-        <div className="h-36 w-36 overflow-hidden rounded-md md:h-44 md:w-full">
->>>>>>> develop
           <img
             src={props.image}
             alt={props.imageAlt}

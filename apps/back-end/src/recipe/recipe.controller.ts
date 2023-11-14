@@ -18,6 +18,7 @@ import { RecipeCommentService } from './recipe.comment.service'
 import { UpdateCommentDto } from './dto/update-recipe-comment.dto'
 import { UpdateRecipeDto } from './dto/update-recipe.dto'
 import { ApiResponse } from '@nestjs/swagger'
+import { UpdateRecipeRatingDto } from './dto/update-recipe-rating.dto'
 
 @Controller('recipe')
 export class RecipeController {
@@ -126,6 +127,7 @@ export class RecipeController {
   }
 
   @Put('/:recipeId')
+  @UseGuards(JwtAuthGuard)
   async updateRecipe(
     @Param('recipeId') recipeId: string,
     @Body() recipe: UpdateRecipeDto,
@@ -146,7 +148,30 @@ export class RecipeController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
   async deleteRecipe(@Body('id_receita') recipeId: string) {
     return await this.recipeService.deleteRecipe(recipeId)
+  }
+
+  @Get('/:recipeId/user/:userId/interaction')
+  async getUserInteracted(
+    @Param('recipeId') recipeId: string,
+    @Param('userId') userId: string,
+  ) {
+    return await this.recipeRatingService.getById(recipeId, userId)
+  }
+
+  @Put('/:recipeId/user/:userId/rating')
+  @UseGuards(JwtAuthGuard)
+  async updateRating(
+    @Param('recipeId') recipeId: string,
+    @Param('userId') userId: string,
+    @Body() dto: UpdateRecipeRatingDto,
+  ) {
+    return await this.recipeRatingService.updateRecipeRating(
+      recipeId,
+      userId,
+      dto,
+    )
   }
 }

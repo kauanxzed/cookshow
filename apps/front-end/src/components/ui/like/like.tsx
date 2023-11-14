@@ -9,11 +9,10 @@ interface likeProps {
 const Like: React.FC<likeProps> = ({ id_receita }) => {
   const [stateFav, setStateFav] = useState<boolean>(false)
   const [payload, setPayload] = useState<string>()
+  const [interaction, setInteraction] = useState<boolean>(false)
 
   const fetchFav = async (userId: string) => {
-    const fav = await axios.get(
-      '/api/user/' + userId + '/favorite/' + id_receita,
-    )
+    const fav = await axios.get('/api/user/' + userId + '/' + id_receita)
     if (fav) {
       setStateFav(true)
     } else {
@@ -28,14 +27,21 @@ const Like: React.FC<likeProps> = ({ id_receita }) => {
         fetchFav(payload.data.userId)
       }
     })
-  }, [])
+    console.log(payload)
+    if (payload) {
+      axiosInstace
+        .get('/api/recipe/' + id_receita + '/user/' + payload + '/interaction')
+        .then((res) => {
+          console.log(res)
+          setInteraction(res ? true : false)
+        })
+    }
+  }, [payload])
 
   useEffect(() => {
     if (payload) {
       const fetchFav = async () => {
-        const fav = await axios.get(
-          '/api/user/' + payload + '/favorite/' + id_receita,
-        )
+        const fav = await axios.get('/api/user/' + payload + '/' + id_receita)
         if (fav) {
           setStateFav(true)
         } else {
@@ -60,20 +66,18 @@ const Like: React.FC<likeProps> = ({ id_receita }) => {
 
   const handleFavorite = async (id_receita: string) => {
     try {
-      if (stateFav) {
-        axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
-          id_usuario: payload,
-          id_receita,
-          favorito: stateFav,
-        })
-        setStateFav(false)
+      if (interaction) {
+        axiosInstace.put(
+          '/api/recipe/' + id_receita + '/user/' + payload + '/rating',
+        )
       } else {
         axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
           id_usuario: payload,
           id_receita,
-          favorito: stateFav,
+          favorito: !stateFav,
         })
-        setStateFav(true)
+
+        setStateFav(!stateFav)
       }
     } catch (error) {
       window.alert('Não foi possivel concluir a ação')

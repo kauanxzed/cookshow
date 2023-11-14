@@ -78,9 +78,9 @@ const RecipeList: React.FC = () => {
 
   return (
     <div className="mx-auto flex w-full flex-col items-center space-y-2 md:max-w-2xl lg:max-w-4xl">
-      <div className="flex w-screen flex-col items-center justify-center pt-8 relative">
+      <div className="relative flex w-screen flex-col items-center justify-center pt-8">
         <div
-          className={`flex flex-wrap items-center border-2 w-full rounded-lg bg-white p-1 md:w-1/2 md:p-2 ${
+          className={`flex w-full flex-wrap items-center rounded-lg border-2 bg-white p-1 md:w-1/2 md:p-2 ${
             isInputFocused ? 'border-orange-500' : 'border-gray-300'
           } `}
         >
@@ -143,15 +143,11 @@ const RecipeList: React.FC = () => {
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
             placeholder="Digite os alimentos desejados..."
-<<<<<<< HEAD
             className="min-w-0 flex-1 border-none p-1 focus:outline-none focus:ring-0"
-=======
-            className="min-w-0 flex-1 p-1 focus:outline-none border-none focus:ring-0"
->>>>>>> develop
           />
         </div>
         {suggestions.length > 0 && (
-          <div className="w-full rounded-md mx-8 bg-gray-100 shadow md:w-1/2 absolute top-[83px] z-20">
+          <div className="absolute top-[83px] z-20 mx-8 w-full rounded-md bg-gray-100 shadow md:w-1/2">
             {suggestions.map((suggestion, index) => (
               <div
                 key={index}

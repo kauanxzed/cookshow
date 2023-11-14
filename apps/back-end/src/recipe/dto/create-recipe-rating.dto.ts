@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsUUID } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { IsBoolean, IsNumber, IsOptional, IsUUID } from 'class-validator'
 
 export class CreateRecipeRatingDto {
   @ApiProperty({
@@ -8,7 +8,7 @@ export class CreateRecipeRatingDto {
     example: '123456',
   })
   @IsUUID()
-  id_usuario: string;
+  id_usuario: string
 
   @ApiProperty({
     type: 'uuid',
@@ -16,21 +16,23 @@ export class CreateRecipeRatingDto {
     example: '123456',
   })
   @IsUUID()
-  id_receita: string;
+  id_receita: string
 
   @ApiPropertyOptional({
     type: 'numeric',
     description: 'Rating of the recipe',
     example: 5,
   })
+  @IsOptional()
   @IsNumber()
-  avaliacao?: number;
+  avaliacao?: number
 
   @ApiPropertyOptional({
     type: 'boolean',
     description: 'Favorite recipe',
     example: true,
   })
+  @IsOptional()
   @IsBoolean()
-  favorito?: boolean;
+  favorito?: boolean
 }
