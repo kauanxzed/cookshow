@@ -30,6 +30,12 @@ export class UserController {
     return await this.userService.delete(userId)
   }
 
+  @Post('/deleteFoto')
+  async deleteFoto(@Body() foto: { userId: string; fotoId: string }) {
+    console.log(foto.fotoId)
+    return await this.userService.deleteFoto(foto.userId, foto.fotoId)
+  }
+
   @Get('/:userId/userInfo')
   async getUserInfo(@Param('userId') userId: string) {
     return await this.userService.getUserInfo(userId)

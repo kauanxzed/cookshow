@@ -5,6 +5,7 @@ import { UserEntity } from './entities/user.entity'
 import { Repository } from 'typeorm'
 import { SharedUtilServer } from '@cook-show/shared/util-server'
 import { UpdateUserDto } from './dto/update-user.dto'
+import cloudinary from '../util/cloudinary'
 import { RatingEntity } from '../recipe/entities/recipe-rating.entity'
 
 @Injectable()
@@ -81,6 +82,27 @@ export class UserService {
         )
       }
 
+      if (updateUserDto.foto_perfil) {
+        const foto = await this.getUserFotoInfo(id)
+
+        if (foto && foto.foto_id) {
+          await cloudinary.uploader.destroy(foto.foto_id)
+          const result = await cloudinary.uploader.upload(
+            updateUserDto.foto_perfil,
+            { folder: 'users' },
+          )
+          updateUserDto.foto_perfil = result.url
+          updateUserDto.foto_id = result.public_id
+        } else {
+          const result = await cloudinary.uploader.upload(
+            updateUserDto.foto_perfil,
+            { folder: 'users' },
+          )
+          updateUserDto.foto_perfil = result.url
+          updateUserDto.foto_id = result.public_id
+        }
+      }
+
       await this.userRepository
         .createQueryBuilder()
         .update(UserEntity)
@@ -113,6 +135,19 @@ export class UserService {
     }
   }
 
+  async getUserFotoInfo(userId: string): Promise<UserEntity | null> {
+    try {
+      const foundUser = await this.userRepository
+        .createQueryBuilder('usuario')
+        .select(['usuario.foto_id', 'usuario.foto_perfil'])
+        .where('usuario.id = :userId', { userId })
+        .getOne()
+
+      return foundUser
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
+  }
   async getUserInfo(id: string): Promise<UserEntity | null> {
     const user = await this.findById(id)
 
@@ -134,18 +169,34 @@ export class UserService {
     }
   }
 
+  async deleteFoto(userId: string, fotoId: string) {
+    try {
+      await this.update(userId, {
+        foto_perfil: '',
+        foto_id: '',
+      })
+      cloudinary.uploader.destroy(fotoId)
+    } catch (error) {
+      throw new HttpException('imagem não encontrada', HttpStatus.NOT_FOUND)
+    }
+  }
+
   async getRecipeFavoitedByUser(
     userId: string,
     recipeId: string,
   ): Promise<boolean> {
-    const foundRecipe = await this.userRepository
-      .createQueryBuilder('usuario')
-      .leftJoin('usuario.ratings', 'ri')
-      .where('ri.favorito = true')
-      .andWhere('ri.id_receita = :recipeId', { recipeId: recipeId })
-      .andWhere('usuario.id = :userId', { userId: userId })
-      .getOne()
+    try {
+      const foundRecipe = await this.userRepository
+        .createQueryBuilder('usuario')
+        .leftJoin('usuario.ratings', 'ri')
+        .where('ri.favorito = true')
+        .andWhere('ri.id_receita = :recipeId', { recipeId: recipeId })
+        .andWhere('usuario.id = :userId', { userId: userId })
+        .getOne()
 
-    return foundRecipe ? true : false
+      return foundRecipe ? true : false
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
   }
 }

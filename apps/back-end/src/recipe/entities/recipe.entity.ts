@@ -43,6 +43,9 @@ export class RecipeEntity {
   @Column({ name: 'imagem', nullable: false })
   imagem: string
 
+  @Column({ name: 'imagem_id', nullable: false })
+  imagem_id: string
+
   @OneToMany(
     () => RecipeIngredientEntity,
     (recipeIngredient: RecipeIngredientEntity) => recipeIngredient.ingredient,

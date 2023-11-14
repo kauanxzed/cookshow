@@ -1,10 +1,10 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { RatingEntity } from './entities/recipe-rating.entity';
-import { HttpException, Injectable, Inject, HttpStatus } from '@nestjs/common';
-import { CreateRecipeRatingDto } from './dto/create-recipe-rating.dto';
-import { Repository } from 'typeorm';
-import { RecipeService } from './recipe.service';
-import { UserService } from '../user/user.service';
+import { InjectRepository } from '@nestjs/typeorm'
+import { RatingEntity } from './entities/recipe-rating.entity'
+import { HttpException, Injectable, Inject, HttpStatus } from '@nestjs/common'
+import { CreateRecipeRatingDto } from './dto/create-recipe-rating.dto'
+import { Repository } from 'typeorm'
+import { RecipeService } from './recipe.service'
+import { UserService } from '../user/user.service'
 
 @Injectable()
 export class RecipeRatingService {
@@ -14,26 +14,26 @@ export class RecipeRatingService {
     @Inject(RecipeService)
     private readonly recipeService: RecipeService,
     @Inject(UserService)
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   async create(createRecipeRatingDto: CreateRecipeRatingDto): Promise<void> {
     const recipe = await this.recipeService.findById(
-      createRecipeRatingDto.id_receita
-    );
+      createRecipeRatingDto.id_receita,
+    )
 
     const user = await this.userService.findById(
-      createRecipeRatingDto.id_usuario
-    );
+      createRecipeRatingDto.id_usuario,
+    )
 
     if (!recipe) {
-      throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND)
     } else if (recipe.publicado === false) {
-      throw new HttpException('Recipe not published', HttpStatus.NOT_FOUND);
+      throw new HttpException('Recipe not published', HttpStatus.NOT_FOUND)
     }
 
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
     }
 
     try {
@@ -46,36 +46,36 @@ export class RecipeRatingService {
           avaliacao: createRecipeRatingDto.avaliacao,
           favorito: createRecipeRatingDto.favorito,
         })
-        .execute();
+        .execute()
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
   async getRating(recipeId: string): Promise<number> {
-    const recipe = await this.recipeService.findById(recipeId);
+    const recipe = await this.recipeService.findById(recipeId)
 
     if (!recipe) {
-      throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND)
     } else if (recipe.publicado === false) {
-      throw new HttpException('Recipe not published', HttpStatus.NOT_FOUND);
+      throw new HttpException('Recipe not published', HttpStatus.NOT_FOUND)
     }
 
     try {
       const ratings = await this.ratingRepository
         .createQueryBuilder('rating')
         .where('rating.id_receita = :id_receita', { id_receita: recipeId })
-        .getMany();
+        .getMany()
 
-      if (!ratings) return 0;
+      if (!ratings) return 0
       const sum = ratings.reduce((acc, rating) => {
-        if (!rating.avaliacao) return acc + 0;
-        return acc + rating.avaliacao;
-      }, 0);
+        if (!rating.avaliacao) return acc + 0
+        return acc + rating.avaliacao
+      }, 0)
 
-      return sum / ratings.length;
+      return sum / ratings.length
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -84,8 +84,8 @@ export class RecipeRatingService {
       .createQueryBuilder('favorites')
       .where('favorites.id_receita = :id', { id: recipeId })
       .andWhere('favorites.favorito')
-      .getMany();
+      .getMany()
 
-    return favorited.length;
+    return favorited.length
   }
 }
