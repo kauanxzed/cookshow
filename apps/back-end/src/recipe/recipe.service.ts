@@ -9,6 +9,7 @@ import { IngredientService } from '../ingredient/ingredient.service'
 import { RecipeIngredientEntity } from './entities/recipe-ingredient.entity'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
 import { UpdateRecipeDto } from './dto/update-recipe.dto'
+import cloudinary from '../util/cloudinary'
 
 @Injectable()
 export class RecipeService {
@@ -29,12 +30,18 @@ export class RecipeService {
       throw new HttpException('Recipe already exists', HttpStatus.FORBIDDEN)
     }
 
+    const result = await cloudinary.uploader.upload(createRecipeDto.imagem, {
+      folder: 'recipes',
+    })
+    createRecipeDto.imagem = result.url
+
     const user = (await this.userService.findById(
       createRecipeDto.userId,
     )) as UserEntity
 
     const recipeEntityDto = {
       ...createRecipeDto,
+      ...{ imagem_id: result.public_id },
       user,
     }
 
@@ -70,6 +77,8 @@ export class RecipeService {
         'recipeIngredient',
         'recipeIngredient.recipe = recipe.id',
       )
+      .leftJoin('recipe.user', 'user')
+      .addSelect(['user.id', 'user.foto_perfil'])
       .where('recipe.id = :id', { id })
       .andWhere('recipe.deleted_at IS NULL')
       .getOne()
@@ -207,13 +216,31 @@ export class RecipeService {
     }
 
     try {
-      console.log(ingredientId)
       await this.recipeIngredientRepository
         .createQueryBuilder()
         .delete()
         .from(RecipeIngredientEntity)
         .where('id_ingrediente = :ingredientId', { ingredientId })
         .andWhere('id_receita = :recipeId', { recipeId })
+        .execute()
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
+  async deleteRecipe(recipeId: string): Promise<void> {
+    const foundRecipe = await this.findById(recipeId)
+
+    if (!foundRecipe) {
+      throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND)
+    }
+
+    try {
+      await this.recipeRepository
+        .createQueryBuilder()
+        .update(RecipeEntity)
+        .set({ deleted_at: new Date() })
+        .where('id = :id', { id: recipeId })
         .execute()
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)

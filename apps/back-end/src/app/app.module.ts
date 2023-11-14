@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common'
-import { AppController } from '../uploads/app.controller'
 import { ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from '../user/user.module'
@@ -45,6 +44,5 @@ import { RatingEntity } from '../recipe/entities/recipe-rating.entity'
       },
     }),
   ],
-  controllers: [AppController],
 })
 export class AppModule {}
