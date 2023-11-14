@@ -17,7 +17,7 @@ import { CreateCommentDto } from './dto/create-recipe-comment.dto'
 import { RecipeCommentService } from './recipe.comment.service'
 import { UpdateCommentDto } from './dto/update-recipe-comment.dto'
 import { UpdateRecipeDto } from './dto/update-recipe.dto'
-import { ApiResponse } from '@nestjs/swagger'
+import { ApiBody, ApiParam, ApiResponse } from '@nestjs/swagger'
 import { UpdateRecipeRatingDto } from './dto/update-recipe-rating.dto'
 
 @Controller('recipe')
@@ -154,6 +154,21 @@ export class RecipeController {
   }
 
   @Get('/:recipeId/user/:userId/interaction')
+  @ApiResponse({
+    status: 200,
+    description: 'Interaction of user with recipe',
+    type: CreateRecipeRatingDto,
+  })
+  @ApiParam({
+    name: 'recipeId',
+    description: 'The uuid of the recipe',
+    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+  })
+  @ApiParam({
+    name: 'userId',
+    description: 'The uuid of the user',
+    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+  })
   async getUserInteracted(
     @Param('recipeId') recipeId: string,
     @Param('userId') userId: string,
@@ -163,6 +178,33 @@ export class RecipeController {
 
   @Put('/:recipeId/user/:userId/rating')
   @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Update rating of recipe',
+  })
+  @ApiParam({
+    name: 'recipeId',
+    description: 'The uuid of the recipe',
+    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+  })
+  @ApiParam({
+    name: 'userId',
+    description: 'The uuid of the user',
+    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+  })
+  @ApiBody({
+    type: UpdateRecipeRatingDto,
+    examples: {
+      update: {
+        value: {
+          id_usuario: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+          id_receita: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+          avaliacao: 5,
+          favorito: true,
+        },
+      },
+    },
+  })
   async updateRating(
     @Param('recipeId') recipeId: string,
     @Param('userId') userId: string,
