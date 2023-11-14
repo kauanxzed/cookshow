@@ -53,10 +53,11 @@ export class CreateUserDto {
   senha: string
 
   @ApiProperty({
-    description: 'The profile picture of the user',
-    example: 'https://www.google.com.br',
+    description: 'foto id fot cloudinary',
+    example: 'aowdnaoiwdnaoiwnd',
   })
-  @IsUrl()
   @IsOptional()
   foto_perfil?: string
+
+  foto_id?: string
 }

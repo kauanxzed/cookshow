@@ -108,13 +108,6 @@ function EditProfile() {
         </div>
         <div className="mb-4 md:mb-0">
           <hr className="my-4 border-t-2 border-gray-300" />
-          <a
-            href="/alterar-senha"
-            className="text-lg text-orange-500 hover:underline"
-          >
-            Alterar senha
-          </a>
-          <hr className="my-4 border-t-2 border-gray-300" />
         </div>
         <div className="mt-8 flex justify-center space-x-4">
           <button

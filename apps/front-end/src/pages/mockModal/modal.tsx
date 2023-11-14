@@ -1,8 +1,35 @@
 import { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Button, Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
+import { UserPayloadType } from '../profile/types/recipe.type'
 import { typeIngredient } from '../../types/typeIngredient'
+
+interface inputIngrediente {
+  id: number
+  ingredient: string
+  quantity: number
+}
+
+const token =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+const axiosInstance = axios.create({
+  timeout: 5000,
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+})
+
+const getUserPayload = async () => {
+  try {
+    const res = await axiosInstance.get('/api/auth')
+    return res.data as UserPayloadType
+  } catch (error) {
+    alert('usuario não logado')
+  }
+}
 
 const ModalDefault = () => {
   interface inputIngrediente {
@@ -43,6 +70,7 @@ const ModalDefault = () => {
     }
 
     const objectUrl = URL.createObjectURL(selectedFile)
+
     setPreview(objectUrl)
 
     return () => URL.revokeObjectURL(objectUrl)
@@ -57,7 +85,6 @@ const ModalDefault = () => {
       setSelectedFile(undefined)
       return
     }
-
     setSelectedFile(e.target.files[0])
   }
 
@@ -101,7 +128,7 @@ const ModalDefault = () => {
 
   const handleInputIngredientChange = (
     e: ChangeEvent<HTMLInputElement>,
-    index: number,
+    index: number | string,
   ) => {
     const { name, value } = e.target
     const list: Array<inputIngrediente> = [...inputList]
@@ -110,13 +137,14 @@ const ModalDefault = () => {
     const ingredientName = ingredient.map((el) => {
       return el.nome
     })
-    const selectedIngredients = inputList.map((item) => item.ingredient);
+    const selectedIngredients = inputList.map((item) => item.ingredient)
 
     const filtered = ingredientName?.filter((item) => {
-      if (item) return (
-        item.toLowerCase().startsWith(value.toLowerCase()) &&
-        !selectedIngredients.includes(item) // Exclua os ingredientes selecionados
-      );
+      if (item)
+        return (
+          item.toLowerCase().startsWith(value.toLowerCase()) &&
+          !selectedIngredients.includes(item) // Exclua os ingredientes selecionados
+        )
     })
     setSuggestions(value ? filtered.slice(0, 5) : [])
     const focused: Array<boolean> = [...isFocused]
@@ -151,62 +179,38 @@ const ModalDefault = () => {
     }
   }
 
-  const [linkPhoto, setLinkPhoto] = useState('google.com')
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    const token =
-      localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-    const axiosInstace = axios.create({
-      timeout: 5000,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-
     e.preventDefault()
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       setOpenModal('')
       try {
-        /*
-        axiosInstace.post("/api/photo/recipe", {
-          photo: preview
-        }),{
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept' : 'application/json',
-          }
-        }).then(Response => {
-          setLinkPhoto(Response.data)
-        })
-        */
+        const payload = await axiosInstance.get('/api/auth')
 
-        const payload = await axiosInstace.get('/api/auth')
+        if (!selectedFile) throw new AxiosError('imagem não definida')
 
-        const Response = await axiosInstace.post('/api/recipe', {
-          titulo: recipeName,
-          //modo_preparo: recipeMode,
-          descricao: recipeMode,
-          tempo_preparo: recipeTime,
-          dificuldade: recipeDifficulty,
-          imagem: linkPhoto,
-          calorias: 0, //remover
-          //recipeCategory: recipeCategory,
-          userId: payload.data.userId,
-        })
-
-        inputList.map(async (Ingredient) => {
-          const urlIngredient =
-            '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
-
-          await axiosInstace.post(urlIngredient, {
-            portion: Ingredient.quantity,
+        const reader = new FileReader()
+        reader.readAsDataURL(selectedFile)
+        reader.onloadend = async () => {
+          const Response = await axiosInstance.post('/api/recipe', {
+            titulo: recipeName,
+            descricao: recipeMode,
+            tempo_preparo: recipeTime,
+            dificuldade: recipeDifficulty,
+            calorias: 0, //remover
+            imagem: reader.result,
+            userId: payload.data.userId,
           })
 
-          return 0
-        })
+          inputList.map(async (Ingredient) => {
+            const urlIngredient =
+              '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
+
+            await axiosInstance.post(urlIngredient, {
+              portion: Ingredient.quantity,
+            })
+          })
+        }
 
         setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
         setTimeout(() => {

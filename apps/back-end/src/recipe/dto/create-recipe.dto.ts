@@ -1,4 +1,4 @@
-import { IsString, IsUrl, IsNumber, IsUUID, IsOptional } from 'class-validator'
+import { IsString, IsNumber, IsUUID, IsOptional } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateRecipeDto {
@@ -49,7 +49,6 @@ export class CreateRecipeDto {
     description: 'The image of the recipe',
     example: 'https://www.google.com.br',
   })
-  @IsUrl()
   imagem: string
 
   @ApiProperty({

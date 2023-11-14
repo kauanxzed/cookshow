@@ -45,6 +45,7 @@ function ProfilePage() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [receitas, setReceitas] = useState<RecipeType[]>([])
   const [payload, setPayload] = useState<UserPayloadType>()
+  const [edited, setEdited] = useState<boolean>(false)
 
   useEffect(() => {
     getPayloadUser().then((payload) => {
@@ -65,7 +66,8 @@ function ProfilePage() {
         }
       }
     })
-  }, [showPublicacoes])
+    setEdited(false)
+  }, [showPublicacoes, edited])
 
   const handleShowPublicacoes = async () => {
     setShowPublicacoes(true)
@@ -80,7 +82,7 @@ function ProfilePage() {
   }
 
   return (
-    <div className="flex h-[90vh] flex-col md:flex-row">
+    <div className="relative flex h-[90vh] flex-col md:flex-row">
       <div className="max-h-[40vh] w-full md:max-h-full md:w-1/4 lg:w-1/3 xl:w-1/4  ">
         <UserProfile userId={payload?.userId} username={payload?.username} />
       </div>
@@ -106,12 +108,14 @@ function ProfilePage() {
           </div>
         </div>
         <div className="mt-4 flex w-full justify-center style={{ marginTop: 'auto' }}">
-          <button
-            className="rounded-lg bg-orange-500 p-3 text-white shadow-md transition-all duration-200 hover:bg-orange-600"
-            onClick={handleAddRecipe}
-          >
-            Adicionar Receita
-          </button>
+          {
+            <button
+              className="rounded-lg bg-orange-500 p-3 text-white shadow-md transition-all duration-200 hover:bg-orange-600 md:absolute md:bottom-4 md:right-4"
+              onClick={handleAddRecipe}
+            >
+              Adicionar Receita
+            </button>
+          }
         </div>
 
         <div className="flex h-full max-h-[50vh] flex-col overflow-y-auto overflow-x-hidden md:max-h-[80vh]">
@@ -124,7 +128,11 @@ function ProfilePage() {
           >
             {receitas && receitas.length > 0 ? (
               receitas.map((recipe: RecipeType) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  edited={setEdited}
+                />
               ))
             ) : (
               <div className="flex flex-col items-center justify-center">
