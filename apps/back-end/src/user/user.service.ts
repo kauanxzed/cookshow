@@ -168,7 +168,6 @@ export class UserService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
-
   async deleteFoto(userId: string, fotoId: string) {
     try {
       await this.update(userId, {
@@ -180,7 +179,6 @@ export class UserService {
       throw new HttpException('imagem não encontrada', HttpStatus.NOT_FOUND)
     }
   }
-
   async getRecipeFavoitedByUser(
     userId: string,
     recipeId: string,
