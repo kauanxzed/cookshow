@@ -114,16 +114,7 @@ function LoginForm() {
               Esqueceu a senha?
             </a>
           </div>
-          <div className="ml-1 mt-12 mb-4 flex w-80 flex-col space-y-4">
-            <button className="flex  w-full items-center rounded-md border-2 border-gray-700 bg-white p-4 text-black hover:bg-gray-300 ">
-              <FcGoogle size={20} className="mr-1 ml-12 " />
-              Continue com Google
-            </button>
-            <button className="flex w-full items-center rounded-md border-2 border-gray-700 p-4 text-black hover:bg-gray-300">
-              <GrFacebook size={18} color="darkblue" className="mr-1 ml-12" />
-              Continue com Facebook
-            </button>
-          </div>
+          <div className="ml-1 mt-12 mb-4 flex w-80 flex-col space-y-4"></div>
         </div>
       </div>
     </div>
