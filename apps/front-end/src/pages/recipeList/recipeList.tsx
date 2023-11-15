@@ -109,11 +109,17 @@ const RecipeList: React.FC = () => {
     })
   }, [])
 
+  const handleSearch = () => {
+    window.location.reload()
+  }
+
   useEffect(() => {
     setIngredientsParams(ingredientsArray)
-    getRecipes(ingredientsArray).then((data) => {
-      if (data) setRecipes(data)
-    })
+    if (ingredientsArray.length > 0) {
+      getRecipes(ingredientsArray).then((data) => {
+        if (data) setRecipes(data)
+      })
+    }
     setChips([])
     ingredientsArray.forEach((ingredient) => {
       setChips((prev) => [...prev, ingredient])
@@ -139,9 +145,10 @@ const RecipeList: React.FC = () => {
           } `}
         >
           <span
-            className="mr-1 text-lg md:mr-2"
+            className="mr-1 text-lg hover:cursor-pointer md:mr-2"
             aria-label="magnifying glass"
             role="img"
+            onClick={handleSearch}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
