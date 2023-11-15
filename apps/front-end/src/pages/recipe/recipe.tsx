@@ -12,7 +12,7 @@ import { CommentType } from './types/comment.type'
 const token =
   localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
-const axiosInstace = axios.create({
+const axiosInstance = axios.create({
   timeout: 5000,
   headers: {
     Authorization: `Bearer ${token}`,
@@ -75,9 +75,7 @@ const getRecipeData = async (recipeId: string) => {
   }
 }
 
-
-
-const ModalDefault: React.FC<ModalDefaultProps> = ({
+const RecipeDetails: React.FC<ModalDefaultProps> = ({
   show,
   setOpenModal,
   id,
@@ -85,8 +83,7 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
   const [commentsVisible, setCommentsVisible] = useState(true)
   const [showModal, setShowModal] = useState(show)
   const [recipe, setRecipe] = useState<typeRecipe>()
-  const [rating, setRating] = React.useState(0);
-
+  const [rating, setRating] = React.useState(0)
 
   useEffect(() => {
     try {
@@ -100,21 +97,13 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
     }
   }, [show])
 
-  /* 
-    await axiosInstace.post('/api/recipe/'+ id_receita +'/favoritesQuantity',{
-        id_usuario,
-        id_receita,
-        favorito,
-      }); 
-  */
-
   function showComments() {
     setCommentsVisible(!commentsVisible)
   }
 
   const handleCloseModal = () => {
     setShowModal(undefined)
-    setOpenModal(undefined) // Define o valor como undefined no pai
+    setOpenModal(undefined)
   }
 
   return (
@@ -152,7 +141,7 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
                       value={rating}
                       edit={true}
                       onChange={(value) => setRating(value)}
-                      className='flex flex-row'
+                      className="flex flex-row"
                     />
                   </div>
                   <div className="mt-2 flex flex-row flex-wrap">
@@ -181,7 +170,9 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
               </div>
             </div>
             <div className="mt-4 h-60 overflow-y-auto">
-              {commentsVisible && <Comments comments={recipe.comentarios} />}
+              {commentsVisible && (
+                <Comments comments={recipe.comentarios} recipeId={recipe.id} />
+              )}
             </div>
           </div>
         </Modal.Body>
@@ -192,4 +183,4 @@ const ModalDefault: React.FC<ModalDefaultProps> = ({
   )
 }
 
-export default ModalDefault
+export default RecipeDetails

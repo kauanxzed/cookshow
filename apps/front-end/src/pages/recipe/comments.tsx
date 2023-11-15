@@ -5,8 +5,8 @@ import { CommentType } from './types/comment.type'
 
 interface CommentsProps {
   comments: Array<CommentType>
+  recipeId: string
 }
-
 const token =
   localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
@@ -28,7 +28,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
   const getUserName = async (userId: any) => {
     try {
       console.log('Obtendo nome do usuário para o userId:', userId)
-      const response = await axiosInstance.get(`/api/user/${userId}`)
+      const response = await axios.get(`/api/user/${userId}`)
       console.log('Resposta do servidor:', response)
 
       if (response?.data?.usuario) {
@@ -60,6 +60,39 @@ const Comments: React.FC<CommentsProps> = (props) => {
 
     fetchUserNames()
   }, [props.comments])
+  async function getPayloadUser() {
+    try {
+      const response = await axiosInstance.get('/api/auth')
+      const userData = response.data
+
+      console.log('Resposta da API /api/auth:', response)
+      console.log('Dados do usuário na resposta:', userData)
+
+      if (userData && 'userId' in userData && 'username' in userData) {
+        console.log(
+          'Dados do usuário completos:',
+          userData.userId,
+          userData.username,
+        )
+
+        return {
+          userId: userData.userId,
+          username: userData.username,
+        }
+      } else {
+        console.error(
+          'Dados do usuário incompletos ou incorretos na resposta:',
+          userData,
+        )
+        console.error('Tipo de userData:', typeof userData)
+        console.error('Chaves em userData:', Object.keys(userData))
+        return null
+      }
+    } catch (error) {
+      console.error('Erro ao obter dados do usuário:', error)
+      return null
+    }
+  }
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -70,12 +103,61 @@ const Comments: React.FC<CommentsProps> = (props) => {
       return
     }
 
-    const userPayload = await getPayloadUser()
-    const userName = userPayload?.username || 'Nome do usuário não encontrado'
+    try {
+      console.log('Antes de obter o payload do usuário')
+      const userPayload = await getPayloadUser()
+      console.log('Depois de obter o payload do usuário', userPayload)
+      const checkIfRecipeExists = async (
+        recipeId: string,
+      ): Promise<boolean> => {
+        try {
+          // Implemente a lógica para verificar se a receita com o ID especificado existe
+          const response = await axiosInstance.get(`/api/recipe/${recipeId}`)
+          return response.status === 200 // Assume que um status 200 indica que a receita existe
+        } catch (error) {
+          console.error('Erro ao verificar a existência da receita:', error)
+          return false
+        }
+      }
+      if (userPayload) {
+        const recipeExists = await checkIfRecipeExists(props.recipeId)
+        if (!recipeExists) {
+          console.error('A receita com o ID especificado não existe.')
+          // Lógica adicional, como exibir uma mensagem ao usuário
+          return
+        }
+        console.log('Dados enviados para o servidor:', {
+          id_usuario: [userPayload.userId],
+          id_receita: [props.recipeId],
+          mensagem: [inputValue],
+        })
+        const response = await axiosInstance.post(
+          `/api/recipe/${props.recipeId}/comment`,
+          {
+            id_usuario: userPayload.userId,
+            id_receita: props.recipeId,
+            mensagem: inputValue,
+          },
+        )
+        console.log('Resposta da API de comentário:', response)
 
-    window.alert(`Comentário de ${userName}: ${inputValue}`)
+        window.alert(
+          `Comentário de ${userPayload?.username || 'Usuário'}: ${inputValue}`,
+        )
+      }
+    } catch (error) {
+      console.error('Erro ao publicar comentário:', error)
+      if (axios.isAxiosError(error)) {
+        // A partir daqui, o TypeScript deve entender que 'error' é um AxiosError
+        console.error('Detalhes do erro:', error.response?.data)
+        console.error('Status do erro:', error.response?.status)
+        console.error('Headers do erro:', error.response?.headers)
+      } else {
+        // Se não for um AxiosError, trate-o de acordo com o que você espera
+        console.error('Erro desconhecido:', error)
+      }
+    }
   }
-
   const handleFieldChange = (fieldName: string, msg: string) => {
     if (msg) {
       setErrors((prevErrors) => ({
@@ -90,29 +172,6 @@ const Comments: React.FC<CommentsProps> = (props) => {
     }
   }
 
-  async function getPayloadUser() {
-    try {
-      const response = await axiosInstance.get('/api/auth')
-
-      if (response && response.data) {
-        const userData = response.data
-
-        if (userData && userData.id && userData.usuario) {
-          return { userId: userData.id, username: userData.usuario }
-        } else {
-          console.error('Dados do usuário ausentes ou incorretos na resposta.')
-          return null
-        }
-      } else {
-        console.error('Resposta vazia ou sem dados do usuário.')
-        return null
-      }
-    } catch (error) {
-      console.error('Erro ao obter dados do usuário:', error)
-      return null
-    }
-  }
-
   return (
     <div>
       <form onSubmit={handleSubmit} className="mb-2">
@@ -122,7 +181,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
             maxRows={2}
             name="comment"
             id="comment"
-            placeholder="Adiciona um comentario"
+            placeholder="Adicione um comentário"
             className="block w-full break-words rounded-lg border-2 border-transparent bg-gray-100 outline-none ring-orange-400 focus:border-orange-400 focus:ring-0 focus:ring-offset-0"
             value={comment}
             onChange={(e) => {
