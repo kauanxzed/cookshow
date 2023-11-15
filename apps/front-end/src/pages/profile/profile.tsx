@@ -4,6 +4,7 @@ import UserProfile from './userProfile'
 import axios from 'axios'
 import { RecipeType, UserPayloadType } from './types/recipe.type'
 import { Backdrop, CircularProgress } from '@mui/material'
+import RegisterRecipeModal from '../registerRecipeModal/registerRecipeModal'
 
 const token =
   localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
@@ -45,6 +46,7 @@ function ProfilePage() {
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [receitas, setReceitas] = useState<RecipeType[]>([])
   const [payload, setPayload] = useState<UserPayloadType>()
+  const [openModal, setOpenModal] = useState<undefined | boolean>(undefined)
   const [edited, setEdited] = useState<boolean>(false)
 
   useEffect(() => {
@@ -77,13 +79,13 @@ function ProfilePage() {
     setShowPublicacoes(false)
   }
 
-  const handleAddRecipe = () => {
-    console.log('Abrir página modal de adicionar receita')
+  const handleAddRecipe = (value: boolean | undefined) => {
+    setOpenModal(value);
   }
 
   return (
     <div className="relative flex h-[90vh] flex-col md:flex-row">
-      <div className="max-h-[40vh] w-full md:max-h-full md:w-1/4 lg:w-1/3 xl:w-1/4  ">
+      <div className="max-h-[40vh] w-full md:max-h-full md:w-1/4 lg:w-1/3 xl:w-1/4 ">
         <UserProfile userId={payload?.userId} username={payload?.username} />
       </div>
       <div className="relative w-full bg-white p-4 md:w-3/4 lg:w-2/3 xl:w-3/4">
@@ -111,7 +113,7 @@ function ProfilePage() {
           {
             <button
               className="rounded-lg bg-orange-500 p-3 text-white shadow-md transition-all duration-200 hover:bg-orange-600 md:absolute md:bottom-4 md:right-4"
-              onClick={handleAddRecipe}
+              onClick={() => handleAddRecipe(true)}
             >
               Adicionar Receita
             </button>
@@ -160,6 +162,10 @@ function ProfilePage() {
           </div>
         </div>
       </div>
+      {openModal === true && (
+        <RegisterRecipeModal show={openModal} setOpenModal={handleAddRecipe}/>
+      )
+      }
     </div>
   )
 }
