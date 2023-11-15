@@ -8,7 +8,6 @@ import ReactDOM from 'react-dom/client'
 import FaleConosco from './pages/faleconosco/faleconosco'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Register from '../src/pages/register/register'
-import ModalDefaultRegister from './pages/mockModal/modal'
 import RecipeList from './pages/recipeList/recipeList'
 import ModalDefault from './pages/recipe/recipe/recipe'
 import PerfilEditar from '../src/pages/profile/editProfile'
@@ -69,7 +68,6 @@ root.render(
             </>
           }
         />
-        <Route path="/modal" element={<ModalDefaultRegister />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

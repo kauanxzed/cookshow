@@ -1,15 +1,8 @@
 import { useState, ChangeEvent, useEffect, FormEvent } from 'react'
-import { Button, Modal } from 'flowbite-react'
+import { Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
 import axios, { AxiosError } from 'axios'
-import { UserPayloadType } from '../profile/types/recipe.type'
 import { typeIngredient } from '../../types/typeIngredient'
-
-interface inputIngrediente {
-  id: number
-  ingredient: string
-  quantity: number
-}
 
 const token =
   localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
@@ -22,24 +15,18 @@ const axiosInstance = axios.create({
   },
 })
 
-const getUserPayload = async () => {
-  try {
-    const res = await axiosInstance.get('/api/auth')
-    return res.data as UserPayloadType
-  } catch (error) {
-    alert('usuario não logado')
-  }
+interface propsModal {
+  show: boolean | undefined
+  setOpenModal: (value: boolean | undefined) => void
 }
 
-const ModalDefault = () => {
+const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
   interface inputIngrediente {
     id: number
     ingredient: string
     quantity: number
   }
 
-  const [openModal, setOpenModal] = useState<string | undefined>()
-  const props = { openModal, setOpenModal }
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [inputList, setInputList] = useState([
     { id: 0, ingredient: '', quantity: 0 },
@@ -57,11 +44,13 @@ const ModalDefault = () => {
     recipeTime: '',
     recipeCategory: '',
     recipeMode: '',
+    recipePhoto: '',
   })
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
   const [ingredient, setIngredients] = useState<typeIngredient[]>([
     { nome: '', id: 0 },
   ])
+  const [showModal, setShowModal] = useState(show)
 
   useEffect(() => {
     if (!selectedFile) {
@@ -85,6 +74,7 @@ const ModalDefault = () => {
       setSelectedFile(undefined)
       return
     }
+    handleFieldChange('recipePhoto', '')
     setSelectedFile(e.target.files[0])
   }
 
@@ -181,14 +171,12 @@ const ModalDefault = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
-      setOpenModal('')
       try {
         const payload = await axiosInstance.get('/api/auth')
-
         if (!selectedFile) throw new AxiosError('imagem não definida')
-
         const reader = new FileReader()
         reader.readAsDataURL(selectedFile)
         reader.onloadend = async () => {
@@ -201,7 +189,6 @@ const ModalDefault = () => {
             imagem: reader.result,
             userId: payload.data.userId,
           })
-
           inputList.map(async (Ingredient) => {
             const urlIngredient =
               '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
@@ -211,13 +198,10 @@ const ModalDefault = () => {
             })
           })
         }
-
-        setShowSuccessMessage(true) // Mostrar a mensagem de sucesso
-        setTimeout(() => {
-          setShowSuccessMessage(false) // Ocultar a mensagem de sucesso após alguns segundos
-        }, 3000)
+        handleCloseModal()
+        window.alert('Receita enviada aguarde a análise.')
       } catch (err) {
-        alert(err)
+        window.alert(err)
       }
     }
   }
@@ -232,11 +216,20 @@ const ModalDefault = () => {
     }
   }
 
+  const handleCloseModal = () => {
+    setPreview('')
+    setRecipeName('')
+    setInputList([{ id: 0, ingredient: '', quantity: 0 }])
+    setRecipeTime('')
+    setRecipeDifficulty('Facil')
+    setRecipeCategory('')
+    setRecipeMode('')
+    setShowModal(undefined)
+    setOpenModal(undefined) // Define o valor como undefined no pai
+  }
+
   return (
     <>
-      <Button onClick={() => props.setOpenModal('default')}>
-        Toggle modal
-      </Button>
       {showSuccessMessage && (
         <div
           className="fixed top-0 right-0 mb-4 flex items-center rounded-lg border border-green-300 bg-green-50 p-4 text-sm text-green-800 dark:border-green-800 dark:bg-gray-800 dark:text-green-400"
@@ -258,17 +251,13 @@ const ModalDefault = () => {
           </div>
         </div>
       )}
-      <Modal
-        show={props.openModal === 'default'}
-        onClose={() => props.setOpenModal(undefined)}
-        size="5xl"
-      >
+      <Modal show={showModal} onClose={() => handleCloseModal()} size="5xl">
         <form onSubmit={handleSubmit}>
           <Modal.Body className="flex flex-col justify-between bg-white p-0 md:flex-row">
             <div className="flex flex-col items-center justify-center rounded-tl-lg p-5">
               <button
                 className="self-start text-xl text-black"
-                onClick={() => props.setOpenModal(undefined)}
+                onClick={() => handleCloseModal()}
               >
                 X
               </button>
@@ -279,6 +268,11 @@ const ModalDefault = () => {
                     alt="imagem escolhida"
                     className="h-full w-full"
                   />
+                )}
+                {errors.recipePhoto && (
+                  <p className="self-center text-center text-red-500">
+                    {errors.recipePhoto}
+                  </p>
                 )}
               </div>
               <div className="flex flex-col items-center justify-center p-2">
@@ -300,10 +294,14 @@ const ModalDefault = () => {
                   accept="image/*"
                   onChange={onSelectFile}
                   className="hidden"
+                  required
+                  onInvalid={() => {
+                    handleFieldChange('recipePhoto', 'Foto obrigatoria')
+                  }}
                 />
               </div>
             </div>
-            <div className="flex max-h-[70vh] w-full flex-col space-y-6 overflow-y-scroll p-5">
+            <div className="flex max-h-[70vh] w-full flex-col space-y-6 overflow-y-auto p-5">
               <div className="h-full">
                 <input
                   type="text"
@@ -343,7 +341,7 @@ const ModalDefault = () => {
                 return (
                   <div className="box">
                     <div className="flex">
-                      <div className="flex w-4/5 flex-col items-center justify-center">
+                      <div className="flex w-full flex-col items-center justify-center">
                         <div className="flex w-full flex-col">
                           <input
                             type="text"
@@ -440,14 +438,14 @@ const ModalDefault = () => {
                       setRecipeCategory('')
                       handleFieldChange(
                         'recipeCategory',
-                        'O campo deve conter letras',
+                        'A categoria deve ser informada',
                       )
                     }
                     if (!inputValue.match(/^[^\d]+$/)) {
                       setRecipeCategory('')
                       handleFieldChange(
                         'recipeCategory',
-                        'O campo deve apenas letras e espaços',
+                        'A categoria não deve conter números',
                       )
                     }
                   }}
@@ -476,14 +474,7 @@ const ModalDefault = () => {
                       setRecipeMode('')
                       handleFieldChange(
                         'recipeMode',
-                        'O campo deve conter letras',
-                      )
-                    }
-                    if (!inputValue.match(/^[^\d]+$/)) {
-                      setRecipeMode('')
-                      handleFieldChange(
-                        'recipeMode',
-                        'O campo deve apenas letras e espaços',
+                        'O modo de preparo deve ser informado',
                       )
                     }
                   }}
@@ -509,4 +500,4 @@ const ModalDefault = () => {
   )
 }
 
-export default ModalDefault
+export default RegisterRecipeModal
