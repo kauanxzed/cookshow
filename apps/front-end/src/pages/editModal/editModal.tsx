@@ -53,26 +53,29 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
 
 
   useEffect(() => {
+    loadIngredients()
     loadInfoRecipe()
     deleteAllIngrediente()
-    loadIngredients()
   }, [])
 
   const loadInfoRecipe = async () => {
     const recipe = await axios.get('/api/recipe/' + id)
     const recipeData = {...recipe.data}
 
-    setRecipeName(recipeData.titulo)
-    setRecipeTime(recipeData.tempo_preparo)
-    setInputList(recipeData.ingredients)
-    setRecipeMode(recipeData.description)
+    console.log(recipeData)
     setSelectedFile(recipeData.imagem)
     setPreview(recipeData.imagem)
+    setRecipeName(recipeData.titulo)
+    setInputList(recipeData.ingredients)
+    setRecipeTime(recipeData.tempo_preparo)
+    setRecipeMode(recipeData.descricao)
     setRecipeDifficulty(recipeData.dificuldade)
   }
 
   const deleteAllIngrediente = () => {
-    inputList.map((ingredient) => {
+    const inputListSpread = [...inputList]
+    inputListSpread.map((ingredient) => {
+      console.log(ingredient)
       axiosInstance.delete('/recipe/ingredientRecipe', {
         headers: {
           Authorization: `Bearer ${token}`
@@ -182,19 +185,14 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       try {
-        const payload = await axiosInstance.get('/api/auth')
-        if (!selectedFile) throw new AxiosError('imagem não definida')
-        const reader = new FileReader()
-        reader.readAsDataURL(selectedFile)
-        reader.onloadend = async () => {
-          const Response = await axiosInstance.put('/api/recipe/' + id, {
+        const recipe = await axios.get('/api/recipe/' + id)
+        const Response = await axiosInstance.put('/api/recipe/' + id, {
             titulo: recipeName,
             descricao: recipeMode,
             tempo_preparo: recipeTime,
             dificuldade: recipeDifficulty,
             calorias: 0, //remover
-            imagem: reader.result,
-            userId: payload.data.userId,
+            imagem: recipe.data.imagem
           })
 
           inputList.map(async (Ingredient) => {
@@ -205,10 +203,9 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
               portion: Ingredient.quantity,
             })
           })
-        }
-        handleCloseModal()
-        window.alert('Receita enviada aguarde a análise.')
-      } catch (err) {
+          handleCloseModal()
+          window.alert('Receita enviada aguarde a análise.')
+        } catch (err) {
         window.alert(err)
       }
     }
@@ -216,7 +213,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
 
   const loadIngredients = async () => {
     try {
-      await axios.get('/api/ingredient').then((Response) => {
+       await axios.get('/api/ingredient').then((Response) => {
         setIngredients(Response.data)
       })
     } catch (error) {
