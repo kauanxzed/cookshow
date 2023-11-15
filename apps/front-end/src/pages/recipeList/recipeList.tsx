@@ -1,18 +1,35 @@
-import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
-import alimentos from './alimentos';
-import Recipe from './recipe';
-import prato1 from "../../assets/images/prato1.png"
-import prato2 from "../../assets/images/prato2.png"
-import prato3 from "../../assets/images/prato3.png"
-import prato4 from "../../assets/images/prato4.png"
-import prato5 from "../../assets/images/prato5.png"
-import prato6 from "../../assets/images/prato6.png"
+import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
+import alimentos from './alimentos'
+import { typeIngredient } from '../../types/typeIngredient'
+import axios from 'axios'
+import { RecipeType } from '../profile/types/recipe.type'
+import { useParams, useSearchParams } from 'react-router-dom'
+
+const getRecipes = async (ingredients: typeIngredient[] | string[]) => {
+  const res = await axios.get('/api/recipe/search/ingredient', {
+    data: { ingredients },
+  })
+  if (res) return res.data as RecipeType
+  else return undefined
+}
 
 const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('')
-  const [chips, setChips] = useState<string[]>([])
   const [suggestions, setSuggestions] = useState<string[]>([])
+  const [chips, setChips] = useState<string[]>([])
   const [isInputFocused, setInputFocused] = useState(false)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [recipes, setRecipes] = useState<RecipeType[] | null>(null)
+  const ingredients = searchParams.get('ingredients')
+  const ingredientsId = searchParams.get('ingredientsId')
+
+  useEffect(() => {
+    if (ingredients) {
+      const ingredientsArray = ingredients.split(',')
+      setChips(ingredientsArray)
+      getRecipes(ingredientsArray)
+    }
+  }, [ingredients])
 
   const handleRemoveChip = (index: number) => {
     const newChips = [...chips]
@@ -44,9 +61,9 @@ const RecipeList: React.FC = () => {
 
   return (
     <div className="mx-auto flex w-full flex-col items-center space-y-2 md:max-w-2xl lg:max-w-4xl">
-      <div className="flex w-screen flex-col items-center justify-center pt-8 relative">
+      <div className="relative flex w-screen flex-col items-center justify-center pt-8">
         <div
-          className={`flex flex-wrap items-center border-2 w-full rounded-lg bg-white p-1 md:w-1/2 md:p-2 ${
+          className={`flex w-full flex-wrap items-center rounded-lg border-2 bg-white p-1 md:w-1/2 md:p-2 ${
             isInputFocused ? 'border-orange-500' : 'border-gray-300'
           } `}
         >
@@ -106,11 +123,11 @@ const RecipeList: React.FC = () => {
             onFocus={() => setInputFocused(true)}
             onBlur={() => setInputFocused(false)}
             placeholder="Digite os alimentos desejados..."
-            className="min-w-0 flex-1 p-1 focus:outline-none border-none focus:ring-0"
+            className="min-w-0 flex-1 border-none p-1 focus:outline-none focus:ring-0"
           />
         </div>
         {suggestions.length > 0 && (
-          <div className="w-full rounded-md mx-8 bg-gray-100 shadow md:w-1/2 absolute top-[83px] z-20">
+          <div className="absolute top-[83px] z-20 mx-8 w-full rounded-md bg-gray-100 shadow md:w-1/2">
             {suggestions.map((suggestion, index) => (
               <div
                 key={index}
@@ -123,31 +140,7 @@ const RecipeList: React.FC = () => {
           </div>
         )}
       </div>
-      <div className="w-full h-full flex flex-wrap">
-        <Recipe image = {prato1} imageAlt='foto representando o prato Pizza margherita' title='pizza marGherIta' category='ITALIANO' owner='fabiana' hours={0} minutes={50} 
-        description='"Receita de PIZZA Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"' 
-        personsLiked={80} moreLikes = {50} id='teste1' rating={4.8} />
-
-        <Recipe image = {prato2} imageAlt='foto representando o prato Sopa de Rámen' title='Sopa de Rámen' category='CHINÊS' owner='Yuri' hours={1} minutes={30} 
-        description='Diferente e delicioso!'
-        personsLiked={12} moreLikes = {42} id='teste2' rating={4.4} />
-
-        <Recipe image = {prato3} imageAlt='foto representando o prato shakshuka' title='shakshuka' category='ORIENTE MÉDIO' owner='Thiago' hours={0} minutes={5} 
-        description='Rápido e sofisticado.' 
-        personsLiked={34} moreLikes = {90} id='teste3' rating={4.9} />
-
-        <Recipe image = {prato4} imageAlt='foto representando o prato Torta de carne com ovo' title='Torta de carne com ovo' category='GREGO' owner='Marcela' hours={1} minutes={10} 
-        description='Diferente e delicioso!' 
-        personsLiked={6} moreLikes = {26} id='teste4' rating={4.7} />
-
-        <Recipe image = {prato5} imageAlt='foto representando o prato Picadinho' title='Picadinho' category='BRASILEIRO' owner='Rafa' hours={2} minutes={0} 
-        description='Típico prato brasileiro!' 
-        personsLiked={55} moreLikes = {26} id='teste5' rating={4.8} />
-
-        <Recipe image = {prato6} imageAlt='foto representando o prato Carne de panela desfiada' title='Carne de panela desfiada' category='CHINÊS' owner='Yuri' hours={1} minutes={30} 
-         description='Diferente e delicioso!' 
-         personsLiked={8} id='teste6' rating={4.1}/>
-      </div>
+      <div className="flex h-full w-full flex-wrap"></div>
     </div>
   )
 }

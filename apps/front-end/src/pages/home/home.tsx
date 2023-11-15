@@ -2,51 +2,17 @@ import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
 import Logo from '../../assets/images/Logo.png'
 import axios from 'axios'
 import { typeIngredient } from '../../types/typeIngredient'
+import { useNavigate } from 'react-router-dom'
 
 const SearchBar: React.FC = () => {
-  const alimentos: string[] = [
-    'Banana',
-    'Maçã',
-    'Laranja',
-    'Morango',
-    'Maionese',
-    'Mostarda',
-    'Molho de uva',
-    'Maminha',
-    'Uva',
-    'Pêra',
-    'Mamão',
-    'Kiwi',
-    'Melancia',
-    'Abacaxi',
-    'Carne',
-    'Feijão',
-    'Arroz',
-    'Macarrão',
-    'Peixe',
-    'Frango',
-    'Ovo',
-    'Leite',
-    'Queijo',
-    'Iogurte',
-    'Azeite',
-    'Manteiga',
-    'Açúcar',
-    'Sal',
-    'Café',
-    'Suco',
-    'Refrigerante',
-    'Bolo',
-    'Biscoito',
-  ]
-
   const [inputValue, setInputValue] = useState<string>('')
-  const [chips, setChips] = useState<string[]>([])
-  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [chips, setChips] = useState<typeIngredient[]>([])
+  const [suggestions, setSuggestions] = useState<typeIngredient[]>([])
   const [isInputFocused, setInputFocused] = useState(false)
   const [ingredients, setIngredients] = useState<typeIngredient[]>([
     { nome: '', id: 0 },
   ])
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadIngredients()
@@ -62,26 +28,20 @@ const SearchBar: React.FC = () => {
     }
   }
 
-  const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setInputValue(value)
-    const ingredientName = ingredients.map((el) => {
-      return el.nome
-    })
-    const filtered = ingredientName?.filter((item) => {
-      if (item) {
-        return (item.toLowerCase().startsWith(value.toLowerCase()) && 
-                !chips.includes(item))
-      }
-    })
+    const filtered = ingredients.filter(
+      (el) =>
+        el.nome.toLowerCase().startsWith(value.toLowerCase()) &&
+        !chips.includes(el),
+    )
     setSuggestions(value ? filtered.slice(0, 5) : [])
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && inputValue) {
-      setChips([...chips, inputValue])
+      //setChips([...chips, inputValue])
       setInputValue('')
       setSuggestions([])
     }
@@ -93,10 +53,19 @@ const SearchBar: React.FC = () => {
     setChips(newChips)
   }
 
-  const addSuggestionToChips = (suggestion: string) => {
+  const addSuggestionToChips = (suggestion: typeIngredient) => {
     setChips([...chips, suggestion])
     setInputValue('')
     setSuggestions([])
+  }
+
+  const handleSearch = () => {
+    const idAndNames = chips.map((obj) => JSON.stringify(obj))
+    console.log(idAndNames)
+    //console.log(id, nome)
+    //const joinedArray = chips.join(',')
+    //const url = `/receitas?ingredients=${joinedArray}&ingredientsId=${1}`
+    //navigate(url)
   }
 
   return (
@@ -114,9 +83,10 @@ const SearchBar: React.FC = () => {
           } rounded-lg p-1 md:p-2`}
         >
           <span
-            className="mr-1 text-lg md:mr-2"
+            className="mr-1 text-lg hover:cursor-pointer md:mr-2"
             aria-label="magnifying glass"
             role="img"
+            onClick={handleSearch}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +122,7 @@ const SearchBar: React.FC = () => {
               key={index}
               className="m-1 flex items-center rounded-xl bg-orange-500 px-1 text-white md:m-1.5 md:px-2"
             >
-              <span>{chip}</span>
+              <span>{chip.nome}</span>
               <button
                 onClick={() => handleRemoveChip(index)}
                 className="relative bottom-0.5 ml-1 text-white md:ml-2"
@@ -180,7 +150,7 @@ const SearchBar: React.FC = () => {
                 className="cursor-pointer border-t border-gray-300 p-1.5 text-orange-500 hover:bg-gray-200"
                 onClick={() => addSuggestionToChips(suggestion)}
               >
-                {suggestion}
+                {suggestion.nome}
               </div>
             ))}
           </div>
