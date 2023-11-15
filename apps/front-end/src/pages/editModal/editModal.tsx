@@ -17,10 +17,12 @@ const axiosInstance = axios.create({
 
 interface propsModal {
   show: boolean | undefined
-  setOpenModal: (value: boolean | undefined) => void
+  setOpenModalEdit: (value: boolean | undefined) => void
+  id: string,
+  edited: (value: boolean) => void
 }
 
-const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
+const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited }) => {
   interface inputIngrediente {
     id: number
     ingredient: string
@@ -49,30 +51,38 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
   ])
   const [showModal, setShowModal] = useState(show)
 
-  useEffect(() => {
-    if (!selectedFile) {
-      setPreview('')
-      return
-    }
-
-    const objectUrl = URL.createObjectURL(selectedFile)
-
-    setPreview(objectUrl)
-
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [selectedFile])
 
   useEffect(() => {
+    loadInfoRecipe()
+    deleteAllIngrediente()
     loadIngredients()
   }, [])
 
-  const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) {
-      setSelectedFile(undefined)
-      return
-    }
-    handleFieldChange('recipePhoto', '')
-    setSelectedFile(e.target.files[0])
+  const loadInfoRecipe = async () => {
+    const recipe = await axios.get('/api/recipe/' + id)
+    const recipeData = {...recipe.data}
+
+    setRecipeName(recipeData.titulo)
+    setRecipeTime(recipeData.tempo_preparo)
+    setInputList(recipeData.ingredients)
+    setRecipeMode(recipeData.description)
+    setSelectedFile(recipeData.imagem)
+    setPreview(recipeData.imagem)
+    setRecipeDifficulty(recipeData.dificuldade)
+  }
+
+  const deleteAllIngrediente = () => {
+    inputList.map((ingredient) => {
+      axiosInstance.delete('/recipe/ingredientRecipe', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        data: {
+          id_ingrediente: ingredient.id,
+          id_receita: id,
+        }
+      })
+    })
   }
 
   const LoadSuggestions = (item: inputIngrediente, inputIndex: number) => {
@@ -177,7 +187,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
         const reader = new FileReader()
         reader.readAsDataURL(selectedFile)
         reader.onloadend = async () => {
-          const Response = await axiosInstance.post('/api/recipe', {
+          const Response = await axiosInstance.put('/api/recipe/' + id, {
             titulo: recipeName,
             descricao: recipeMode,
             tempo_preparo: recipeTime,
@@ -186,6 +196,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
             imagem: reader.result,
             userId: payload.data.userId,
           })
+
           inputList.map(async (Ingredient) => {
             const urlIngredient =
               '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
@@ -221,32 +232,10 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
     setRecipeDifficulty('Facil')
     setRecipeMode('')
     setShowModal(undefined)
-    setOpenModal(undefined) // Define o valor como undefined no pai
+    setOpenModalEdit(undefined) // Define o valor como undefined no pai
   }
 
   return (
-    <>
-      {showSuccessMessage && (
-        <div
-          className="fixed top-0 right-0 mb-4 flex items-center rounded-lg border border-green-300 bg-green-50 p-4 text-sm text-green-800 dark:border-green-800 dark:bg-gray-800 dark:text-green-400"
-          role="alert"
-        >
-          <svg
-            className="mr-3 inline h-4 w-4 flex-shrink-0"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-          </svg>
-          <span className="sr-only">Info</span>
-          <div>
-            <span className="font-medium">Receita enviada</span> aguarde a
-            análise.
-          </div>
-        </div>
-      )}
       <Modal show={showModal} onClose={() => handleCloseModal()} size="5xl">
         <form onSubmit={handleSubmit}>
           <Modal.Body className="flex flex-col justify-between bg-white p-0 md:flex-row">
@@ -270,31 +259,6 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
                     {errors.recipePhoto}
                   </p>
                 )}
-              </div>
-              <div className="flex flex-col items-center justify-center p-2">
-                <p className="">Selecione uma foto do seu dispositivo</p>
-                <div className="mt-4 flex h-10 w-36 items-center justify-center rounded-md bg-[#2D3748] duration-300 hover:bg-[#1f2732]">
-                  <label
-                    htmlFor="photoRecipe"
-                    className="custom-file-upload h-full w-full cursor-pointer text-center text-sm text-white"
-                  >
-                    <p className="flex h-full w-full items-center justify-center">
-                      Selecionar
-                    </p>
-                  </label>
-                </div>
-                <input
-                  id="photoRecipe"
-                  name="photoRecipe"
-                  type="file"
-                  accept="image/*"
-                  onChange={onSelectFile}
-                  className="hidden"
-                  required
-                  onInvalid={() => {
-                    handleFieldChange('recipePhoto', 'Foto obrigatoria')
-                  }}
-                />
               </div>
             </div>
             <div className="flex max-h-[70vh] w-full flex-col space-y-6 overflow-y-auto p-5">
@@ -456,8 +420,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
           </Modal.Footer>
         </form>
       </Modal>
-    </>
   )
 }
 
-export default RegisterRecipeModal
+export default EditModal

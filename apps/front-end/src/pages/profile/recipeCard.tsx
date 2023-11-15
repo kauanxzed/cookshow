@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { RecipeType } from './types/recipe.type'
 import axios from 'axios'
 import DeletModal from '../deleteModal/deleteModal'
+import EditModal from '../editModal/editModal'
 
 interface Recipe {
   recipe: RecipeType
@@ -107,6 +108,13 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
           setOpenModalDelete={handleSetOpenModalDelete}
           id={recipe.id}
           editedDelete= {edited}
+        />)}
+      {openModalEdit === true && (
+        <EditModal
+          show={openModalEdit}
+          setOpenModalEdit={handleSetOpenModalEdit}
+          id={recipe.id}
+          edited= {edited}
         />
       )}
   </>
