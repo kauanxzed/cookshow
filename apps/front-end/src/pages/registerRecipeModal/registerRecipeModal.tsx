@@ -4,7 +4,6 @@ import TextareaAutosize from 'react-textarea-autosize'
 import axios, { AxiosError } from 'axios'
 import { typeIngredient } from '../../types/typeIngredient'
 
-
 const token =
   localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
@@ -16,13 +15,12 @@ const axiosInstance = axios.create({
   },
 })
 
-
 interface propsModal {
-  show: boolean | undefined;
-  setOpenModal: (value: boolean | undefined) => void;
+  show: boolean | undefined
+  setOpenModal: (value: boolean | undefined) => void
 }
 
-const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
+const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
   interface inputIngrediente {
     id: number
     ingredient: string
@@ -76,10 +74,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
       setSelectedFile(undefined)
       return
     }
-    handleFieldChange(
-      'recipePhoto',
-      '',
-    )
+    handleFieldChange('recipePhoto', '')
     setSelectedFile(e.target.files[0])
   }
 
@@ -204,9 +199,9 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
           })
         }
         handleCloseModal()
-        window.alert("Receita enviada aguarde a análise.")
+        window.alert('Receita enviada aguarde a análise.')
       } catch (err) {
-        window.alert("erro")
+        window.alert(err)
       }
     }
   }
@@ -222,17 +217,16 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
   }
 
   const handleCloseModal = () => {
-    setPreview("");
-    setRecipeName("");
-    setInputList([{id: 0, ingredient: "", quantity: 0}]);
-    setRecipeTime("");
-    setRecipeDifficulty("Facil");
-    setRecipeCategory("");
-    setRecipeMode("");
-    setShowModal(undefined);
-    setOpenModal(undefined); // Define o valor como undefined no pai
-  };
-
+    setPreview('')
+    setRecipeName('')
+    setInputList([{ id: 0, ingredient: '', quantity: 0 }])
+    setRecipeTime('')
+    setRecipeDifficulty('Facil')
+    setRecipeCategory('')
+    setRecipeMode('')
+    setShowModal(undefined)
+    setOpenModal(undefined) // Define o valor como undefined no pai
+  }
 
   return (
     <>
@@ -257,11 +251,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
           </div>
         </div>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => handleCloseModal()}
-        size="5xl"
-      >
+      <Modal show={showModal} onClose={() => handleCloseModal()} size="5xl">
         <form onSubmit={handleSubmit}>
           <Modal.Body className="flex flex-col justify-between bg-white p-0 md:flex-row">
             <div className="flex flex-col items-center justify-center rounded-tl-lg p-5">
@@ -280,7 +270,9 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                   />
                 )}
                 {errors.recipePhoto && (
-                  <p className="text-red-500 self-center text-center">{errors.recipePhoto}</p>
+                  <p className="self-center text-center text-red-500">
+                    {errors.recipePhoto}
+                  </p>
                 )}
               </div>
               <div className="flex flex-col items-center justify-center p-2">
@@ -304,10 +296,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({show, setOpenModal }) => {
                   className="hidden"
                   required
                   onInvalid={() => {
-                    handleFieldChange(
-                      'recipePhoto',
-                      'Foto obrigatoria',
-                    )
+                    handleFieldChange('recipePhoto', 'Foto obrigatoria')
                   }}
                 />
               </div>
