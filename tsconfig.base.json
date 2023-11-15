@@ -18,6 +18,12 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@cook-show/hooks": [
+        "libs/hooks/src/index.ts"
+      ],
+      "@cook-show/shared/types": [
+        "libs/shared/types/src/index.ts"
+      ],
       "@cook-show/shared/util-server": [
         "libs/shared/util-server/src/index.ts"
       ]

@@ -1,22 +1,21 @@
-import React, { useState } from 'react';
-import timer from "../../assets/images/relogio.png"
-import PersonsLiked from '../../components/ui/personsLiked';
-import { Link } from 'react-router-dom';
-
+import React, { useState } from 'react'
+import timer from '../../assets/images/relogio.png'
+import PersonsLiked from '../../components/ui/personsLiked'
+import { Link } from 'react-router-dom'
 
 interface RecipeProps {
-    id: string; // id da receita
-    image: string;
-    imageAlt: string;
-    title: string;
-    category: string;
-    owner: string;
-    hours: number;
-    minutes: number;
-    description: string;
-    moreLikes?: number;
-    personsLiked: number;
-    rating: number;
+  id: string // id da receita
+  image: string
+  imageAlt: string
+  title: string
+  category: string
+  owner: string
+  hours: number
+  minutes: number
+  description: string
+  moreLikes?: number
+  personsLiked: number
+  rating: number
 }
 
 const Recipe: React.FC<RecipeProps> = (props) => {
@@ -33,7 +32,7 @@ const Recipe: React.FC<RecipeProps> = (props) => {
     if (!description.endsWith('"')) {
       description = description + '"'
     }
-    return (      
+    return (
       description[0] +
       description.charAt(1).toUpperCase() +
       description.slice(2).toLowerCase()
@@ -103,8 +102,8 @@ const Recipe: React.FC<RecipeProps> = (props) => {
           <div onClick={changeStateLike} className="hidden md:block">
             {likes}
           </div>
-          <div className='flex'>
-            <PersonsLiked personsLiked={props.personsLiked}/>
+          <div className="flex">
+            <PersonsLiked personsLiked={props.personsLiked} />
           </div>
         </div>
       </div>
@@ -113,4 +112,3 @@ const Recipe: React.FC<RecipeProps> = (props) => {
 }
 
 export default Recipe
-

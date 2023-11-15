@@ -251,12 +251,13 @@ export class RecipeController {
     return await this.commentService.delete(id)
   }
 
-  @Get('/search/ingredient')
+  @Post('/search/ingredient')
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully found.',
   })
-  async fyndRecipeByIngredients(@Body() idIngredient: { id: number }[]) {
+  async findRecipeByIngredients(@Body() idIngredient: { id: number }[]) {
+    console.log(idIngredient)
     const ingredientesId = idIngredient.map((ingrediente) => ingrediente.id)
     return await this.recipeService.searchRecipeByIngredient(ingredientesId)
   }
