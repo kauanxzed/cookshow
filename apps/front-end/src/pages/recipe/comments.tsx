@@ -181,7 +181,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
             maxRows={2}
             name="comment"
             id="comment"
-            placeholder="Adicione um comentário"
+            placeholder="Adicione um comentário..."
             className="block w-full break-words rounded-lg border-2 border-transparent bg-gray-100 outline-none ring-orange-400 focus:border-orange-400 focus:ring-0 focus:ring-offset-0"
             value={comment}
             onChange={(e) => {
