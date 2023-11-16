@@ -14,7 +14,7 @@ interface ModalDeleteProps {
 const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id, editedDelete}) => {
   const [showModal, setShowModal] = useState(show)
 
-  const deleteRecipe = () => {
+  const deleteRecipe = async () => {
     const token =
       localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
@@ -28,7 +28,7 @@ const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id, ed
 
 
 
-    axiosInstace.delete("api/recipe/", {
+    const response = await axiosInstace.delete("api/recipe/", {
       headers: {
         Authorization: `Bearer ${token}`
       },
@@ -36,9 +36,11 @@ const DeletModal:React.FC<ModalDeleteProps> = ({show, setOpenModalDelete, id, ed
         id_receita: id
       }
     });
-    editedDelete(true)
-    setShowModal(undefined)
-    setOpenModalDelete(undefined)
+    if(response) {
+      editedDelete(true)
+      setShowModal(undefined)
+      setOpenModalDelete(undefined)
+    }
   }
 
   const handleCloseModal = () => {

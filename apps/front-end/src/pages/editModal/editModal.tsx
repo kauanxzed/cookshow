@@ -212,7 +212,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
               portion: el.quantity,
             })
           })
-          handleCloseModal()
+          if(Response) handleCloseModal()
           window.alert('Receita enviada aguarde a análise.')
         } catch (err) {
         window.alert(err)
@@ -238,6 +238,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
     setRecipeTime('')
     setRecipeDifficulty('Facil')
     setRecipeMode('')
+    edited(true)
     setShowModal(undefined)
     setOpenModalEdit(undefined) // Define o valor como undefined no pai
   }

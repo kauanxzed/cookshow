@@ -18,9 +18,10 @@ const axiosInstance = axios.create({
 interface propsModal {
   show: boolean | undefined
   setOpenModal: (value: boolean | undefined) => void
+  create: (value: boolean) => void
 }
 
-const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
+const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create }) => {
   interface inputIngrediente {
     id: number
     ingredient: string
@@ -177,7 +178,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
         const reader = new FileReader()
         reader.readAsDataURL(selectedFile)
         reader.onloadend = async () => {
-          const Response = await axiosInstance.post('/api/recipe', {
+          const response = await axiosInstance.post('/api/recipe', {
             titulo: recipeName,
             descricao: recipeMode,
             tempo_preparo: recipeTime,
@@ -188,14 +189,14 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
           })
           inputList.map(async (Ingredient) => {
             const urlIngredient =
-              '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
+              '/api/recipe/' + response.data.id + '/ingredient/' + Ingredient.id
 
             await axiosInstance.post(urlIngredient, {
               portion: Ingredient.quantity,
             })
           })
+          if(response) handleCloseModal()
         }
-        handleCloseModal()
         window.alert('Receita enviada aguarde a análise.')
       } catch (err) {
         window.alert(err)
@@ -220,6 +221,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal }) => {
     setRecipeTime('')
     setRecipeDifficulty('Facil')
     setRecipeMode('')
+    create(true)
     setShowModal(undefined)
     setOpenModal(undefined) // Define o valor como undefined no pai
   }
