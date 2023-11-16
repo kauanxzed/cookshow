@@ -60,7 +60,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
           const response = await axios.get("/api/ingredient/" + el.ingredient + '/getById');
           return response.data;
         });
-  
+
         Promise.all(ingredientsPromises)
           .then((ingredientsData) => {
             setInputList(ingredientsData.map((el) => ({
@@ -68,8 +68,9 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
               ingredient: el.nome,
               quantity: 0,
             })));
-          });
-  
+        });
+
+        deleteAllIngrediente()
         setSelectedFile(recipeData.imagem);
         setPreview(recipeData.imagem);
         setRecipeName(recipeData.titulo);
@@ -86,13 +87,24 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
     fetchData();
   }, []);
 
-  const deleteIngrediente = (index: number) => {
-    console.log("chamando delete")
-    const element = inputList[index]
-    axiosInstance.post('/api/recipe/ingredientRecipe', {
-        id_ingrediente: element.id,
-        id_receita: id,
-      })
+  const deleteAllIngrediente = async () => {
+    const recipe = await axios.get('/api/recipe/' + id);
+    const recipeData = { ...recipe.data };
+  
+    const ingredientsPromises = recipeData.ingredients.map(async (el: { ingredient: string }) => {
+      const response = await axios.get("/api/ingredient/" + el.ingredient + '/getById');
+      return response.data;
+    });
+
+    Promise.all(ingredientsPromises)
+          .then((ingredientsData) => {
+            ingredientsData.map((el) => {
+              axiosInstance.post('/api/recipe/ingredientRecipe', {
+                id_ingrediente: el.id,
+                id_receita: id,
+               })
+            });
+        });    
   }
 
   const LoadSuggestions = (item: inputIngrediente, inputIndex: number) => {
@@ -160,7 +172,6 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
   }
 
   const handleRemoveClick = async (index: number) => {
-    await deleteIngrediente(index)
     const list: Array<inputIngrediente> = [...inputList]
     list.splice(index, 1)
     setInputList(list)

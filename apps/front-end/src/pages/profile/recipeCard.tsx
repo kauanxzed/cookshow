@@ -47,7 +47,6 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
         if (data) setLikes(data.data)
       })
       getRating(recipe.id).then((data) => {
-        console.log(+data?.data)
         if (data) setRating(data.data)
       })
       getComments(recipe.id).then((data) => {

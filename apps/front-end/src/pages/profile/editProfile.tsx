@@ -13,12 +13,23 @@ function EditProfile() {
   const [email, setEmail] = useState('')
   const [placeholderName, setPlaceholderName] = useState('Nome')
   const [placeholderEmail, setPlaceholderEmail] = useState('Email')
-  const userId = '3739c554-34b0-4e1e-915c-ebf93dfd0559'
+
+  const token =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+  const axiosInstace = axios.create({
+    timeout: 5000,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/api/user/${userId}`)
+        const userId =  await axiosInstace.get('/api/auth')
+        const response = await axiosInstace.get(`/api/user/${userId.data.userId}`)
         const { usuario, email: userEmail } = response.data
         setName(usuario)
         setEmail(userEmail)
@@ -29,7 +40,7 @@ function EditProfile() {
       }
     }
     fetchData()
-  }, [])
+  }, [axiosInstace])
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
