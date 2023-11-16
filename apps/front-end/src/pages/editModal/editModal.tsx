@@ -30,9 +30,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
   }
 
   const [suggestions, setSuggestions] = useState<string[]>([])
-  const [inputList, setInputList] = useState([
-    { id: 0, ingredient: '', quantity: 0 },
-  ])
+  const [inputList, setInputList] = useState<inputIngrediente[]>([])
   const [recipeName, setRecipeName] = useState('')
   const [recipeTime, setRecipeTime] = useState('')
   const [recipeMode, setRecipeMode] = useState('')
@@ -51,41 +49,50 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
   ])
   const [showModal, setShowModal] = useState(show)
 
-
   useEffect(() => {
-    loadIngredients()
-    loadInfoRecipe()
-    deleteAllIngrediente()
-  }, [])
+    const fetchData = async () => {
+      try {
+        await loadIngredients();
+        const recipe = await axios.get('/api/recipe/' + id);
+        const recipeData = { ...recipe.data };
+  
+        const ingredientsPromises = recipeData.ingredients.map(async (el: { ingredient: string }) => {
+          const response = await axios.get("/api/ingredient/" + el.ingredient + '/getById');
+          return response.data;
+        });
+  
+        Promise.all(ingredientsPromises)
+          .then((ingredientsData) => {
+            setInputList(ingredientsData.map((el) => ({
+              id: el.id,
+              ingredient: el.nome,
+              quantity: 0,
+            })));
+          });
+  
+        setSelectedFile(recipeData.imagem);
+        setPreview(recipeData.imagem);
+        setRecipeName(recipeData.titulo);
+        setRecipeTime(recipeData.tempo_preparo);
+        setRecipeMode(recipeData.descricao);
+        setRecipeDifficulty(recipeData.dificuldade);
+  
+        console.log("Dados carregados");
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
-  const loadInfoRecipe = async () => {
-    const recipe = await axios.get('/api/recipe/' + id)
-    const recipeData = {...recipe.data}
-
-    console.log(recipeData)
-    setSelectedFile(recipeData.imagem)
-    setPreview(recipeData.imagem)
-    setRecipeName(recipeData.titulo)
-    setInputList(recipeData.ingredients)
-    setRecipeTime(recipeData.tempo_preparo)
-    setRecipeMode(recipeData.descricao)
-    setRecipeDifficulty(recipeData.dificuldade)
-  }
-
-  const deleteAllIngrediente = () => {
-    const inputListSpread = [...inputList]
-    inputListSpread.map((ingredient) => {
-      console.log(ingredient)
-      axiosInstance.delete('/recipe/ingredientRecipe', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        data: {
-          id_ingrediente: ingredient.id,
-          id_receita: id,
-        }
+  const deleteIngrediente = (index: number) => {
+    console.log("chamando delete")
+    const element = inputList[index]
+    axiosInstance.post('/api/recipe/ingredientRecipe', {
+        id_ingrediente: element.id,
+        id_receita: id,
       })
-    })
   }
 
   const LoadSuggestions = (item: inputIngrediente, inputIndex: number) => {
@@ -133,7 +140,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
     const { name, value } = e.target
     const list: Array<inputIngrediente> = [...inputList]
     list[index][name] = value
-    setInputList(list)
+    
     const ingredientName = ingredient.map((el) => {
       return el.nome
     })
@@ -152,7 +159,8 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
     setIsFocused(focused)
   }
 
-  const handleRemoveClick = (index: number) => {
+  const handleRemoveClick = async (index: number) => {
+    await deleteIngrediente(index)
     const list: Array<inputIngrediente> = [...inputList]
     list.splice(index, 1)
     setInputList(list)
@@ -195,12 +203,13 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
             imagem: recipe.data.imagem
           })
 
-          inputList.map(async (Ingredient) => {
+          inputList.map(async (el) => {
+            console.log(el)
             const urlIngredient =
-              '/api/recipe/' + Response.data.id + '/ingredient/' + Ingredient.id
+              '/api/recipe/' + id + '/ingredient/' + el.id
 
             await axiosInstance.post(urlIngredient, {
-              portion: Ingredient.quantity,
+              portion: el.quantity,
             })
           })
           handleCloseModal()
@@ -212,6 +221,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
   }
 
   const loadIngredients = async () => {
+    console.log("chamando load ingrediente")
     try {
        await axios.get('/api/ingredient').then((Response) => {
         setIngredients(Response.data)
@@ -224,7 +234,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
   const handleCloseModal = () => {
     setPreview('')
     setRecipeName('')
-    setInputList([{ id: 0, ingredient: '', quantity: 0 }])
+    setInputList([])
     setRecipeTime('')
     setRecipeDifficulty('Facil')
     setRecipeMode('')
@@ -320,6 +330,7 @@ const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited })
                       {inputList.length !== 1 && (
                         <button
                           className="text-red-500"
+                          type='button'
                           onClick={() => handleRemoveClick(i)}
                         >
                           Remover
