@@ -85,4 +85,18 @@ export class IngredientController {
   async delete(@Param('id') id: number) {
     return await this.ingredientService.delete(id)
   }
+
+  @Get(':id/getById')
+  @ApiParam({
+    name: 'id',
+    description: 'The id of the ingredient',
+    example: '1',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'record has been found.',
+  })
+  async findById(@Param('id') id: number) {
+    return await this.ingredientService.findById(id)
+  }
 }

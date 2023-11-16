@@ -163,7 +163,7 @@ function ProfilePage() {
         </div>
       </div>
       {openModal === true && (
-        <RegisterRecipeModal show={openModal} setOpenModal={handleAddRecipe}/>
+        <RegisterRecipeModal show={openModal} setOpenModal={handleAddRecipe} create={setEdited}/>
       )
       }
     </div>

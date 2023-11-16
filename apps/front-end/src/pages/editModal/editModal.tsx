@@ -17,11 +17,12 @@ const axiosInstance = axios.create({
 
 interface propsModal {
   show: boolean | undefined
-  setOpenModal: (value: boolean | undefined) => void
-  create: (value: boolean) => void
+  setOpenModalEdit: (value: boolean | undefined) => void
+  id: string,
+  edited: (value: boolean) => void
 }
 
-const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create }) => {
+const EditModal: React.FC<propsModal> = ({ show, setOpenModalEdit, id, edited }) => {
   interface inputIngrediente {
     id: number
     ingredient: string
@@ -29,9 +30,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
   }
 
   const [suggestions, setSuggestions] = useState<string[]>([])
-  const [inputList, setInputList] = useState([
-    { id: 0, ingredient: '', quantity: 0 },
-  ])
+  const [inputList, setInputList] = useState<inputIngrediente[]>([])
   const [recipeName, setRecipeName] = useState('')
   const [recipeTime, setRecipeTime] = useState('')
   const [recipeMode, setRecipeMode] = useState('')
@@ -51,29 +50,61 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
   const [showModal, setShowModal] = useState(show)
 
   useEffect(() => {
-    if (!selectedFile) {
-      setPreview('')
-      return
-    }
+    const fetchData = async () => {
+      try {
+        await loadIngredients();
+        const recipe = await axios.get('/api/recipe/' + id);
+        const recipeData = { ...recipe.data };
+  
+        const ingredientsPromises = recipeData.ingredients.map(async (el: { ingredient: string }) => {
+          const response = await axios.get("/api/ingredient/" + el.ingredient + '/getById');
+          return response.data;
+        });
 
-    const objectUrl = URL.createObjectURL(selectedFile)
+        Promise.all(ingredientsPromises)
+          .then((ingredientsData) => {
+            setInputList(ingredientsData.map((el) => ({
+              id: el.id,
+              ingredient: el.nome,
+              quantity: 0,
+            })));
+        });
 
-    setPreview(objectUrl)
+        deleteAllIngrediente()
+        setSelectedFile(recipeData.imagem);
+        setPreview(recipeData.imagem);
+        setRecipeName(recipeData.titulo);
+        setRecipeTime(recipeData.tempo_preparo);
+        setRecipeMode(recipeData.descricao);
+        setRecipeDifficulty(recipeData.dificuldade);
+  
+        console.log("Dados carregados");
+      } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
 
-    return () => URL.revokeObjectURL(objectUrl)
-  }, [selectedFile])
+  const deleteAllIngrediente = async () => {
+    const recipe = await axios.get('/api/recipe/' + id);
+    const recipeData = { ...recipe.data };
+  
+    const ingredientsPromises = recipeData.ingredients.map(async (el: { ingredient: string }) => {
+      const response = await axios.get("/api/ingredient/" + el.ingredient + '/getById');
+      return response.data;
+    });
 
-  useEffect(() => {
-    loadIngredients()
-  }, [])
-
-  const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) {
-      setSelectedFile(undefined)
-      return
-    }
-    handleFieldChange('recipePhoto', '')
-    setSelectedFile(e.target.files[0])
+    Promise.all(ingredientsPromises)
+          .then((ingredientsData) => {
+            ingredientsData.map((el) => {
+              axiosInstance.post('/api/recipe/ingredientRecipe', {
+                id_ingrediente: el.id,
+                id_receita: id,
+               })
+            });
+        });    
   }
 
   const LoadSuggestions = (item: inputIngrediente, inputIndex: number) => {
@@ -121,7 +152,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
     const { name, value } = e.target
     const list: Array<inputIngrediente> = [...inputList]
     list[index][name] = value
-    setInputList(list)
+    
     const ingredientName = ingredient.map((el) => {
       return el.nome
     })
@@ -140,7 +171,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
     setIsFocused(focused)
   }
 
-  const handleRemoveClick = (index: number) => {
+  const handleRemoveClick = async (index: number) => {
     const list: Array<inputIngrediente> = [...inputList]
     list.splice(index, 1)
     setInputList(list)
@@ -173,40 +204,37 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       try {
-        const payload = await axiosInstance.get('/api/auth')
-        if (!selectedFile) throw new AxiosError('imagem não definida')
-        const reader = new FileReader()
-        reader.readAsDataURL(selectedFile)
-        reader.onloadend = async () => {
-          const response = await axiosInstance.post('/api/recipe', {
+        const recipe = await axios.get('/api/recipe/' + id)
+        const Response = await axiosInstance.put('/api/recipe/' + id, {
             titulo: recipeName,
             descricao: recipeMode,
             tempo_preparo: recipeTime,
             dificuldade: recipeDifficulty,
             calorias: 0, //remover
-            imagem: reader.result,
-            userId: payload.data.userId,
+            imagem: recipe.data.imagem
           })
-          inputList.map(async (Ingredient) => {
+
+          inputList.map(async (el) => {
+            console.log(el)
             const urlIngredient =
-              '/api/recipe/' + response.data.id + '/ingredient/' + Ingredient.id
+              '/api/recipe/' + id + '/ingredient/' + el.id
 
             await axiosInstance.post(urlIngredient, {
-              portion: Ingredient.quantity,
+              portion: el.quantity,
             })
           })
-          if(response) handleCloseModal()
-        }
-        window.alert('Receita enviada aguarde a análise.')
-      } catch (err) {
+          if(Response) handleCloseModal()
+          window.alert('Receita enviada aguarde a análise.')
+        } catch (err) {
         window.alert(err)
       }
     }
   }
 
   const loadIngredients = async () => {
+    console.log("chamando load ingrediente")
     try {
-      await axios.get('/api/ingredient').then((Response) => {
+       await axios.get('/api/ingredient').then((Response) => {
         setIngredients(Response.data)
       })
     } catch (error) {
@@ -217,17 +245,16 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
   const handleCloseModal = () => {
     setPreview('')
     setRecipeName('')
-    setInputList([{ id: 0, ingredient: '', quantity: 0 }])
+    setInputList([])
     setRecipeTime('')
     setRecipeDifficulty('Facil')
     setRecipeMode('')
-    create(true)
+    edited(true)
     setShowModal(undefined)
-    setOpenModal(undefined) // Define o valor como undefined no pai
+    setOpenModalEdit(undefined) // Define o valor como undefined no pai
   }
 
   return (
-  
       <Modal show={showModal} onClose={() => handleCloseModal()} size="5xl">
         <form onSubmit={handleSubmit}>
           <Modal.Body className="flex flex-col justify-between bg-white p-0 md:flex-row">
@@ -251,31 +278,6 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
                     {errors.recipePhoto}
                   </p>
                 )}
-              </div>
-              <div className="flex flex-col items-center justify-center p-2">
-                <p className="">Selecione uma foto do seu dispositivo</p>
-                <div className="mt-4 flex h-10 w-36 items-center justify-center rounded-md bg-[#2D3748] duration-300 hover:bg-[#1f2732]">
-                  <label
-                    htmlFor="photoRecipe"
-                    className="custom-file-upload h-full w-full cursor-pointer text-center text-sm text-white"
-                  >
-                    <p className="flex h-full w-full items-center justify-center">
-                      Selecionar
-                    </p>
-                  </label>
-                </div>
-                <input
-                  id="photoRecipe"
-                  name="photoRecipe"
-                  type="file"
-                  accept="image/*"
-                  onChange={onSelectFile}
-                  className="hidden"
-                  required
-                  onInvalid={() => {
-                    handleFieldChange('recipePhoto', 'Foto obrigatoria')
-                  }}
-                />
               </div>
             </div>
             <div className="flex max-h-[70vh] w-full flex-col space-y-6 overflow-y-auto p-5">
@@ -340,6 +342,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
                       {inputList.length !== 1 && (
                         <button
                           className="text-red-500"
+                          type='button'
                           onClick={() => handleRemoveClick(i)}
                         >
                           Remover
@@ -440,4 +443,4 @@ const RegisterRecipeModal: React.FC<propsModal> = ({ show, setOpenModal, create 
   )
 }
 
-export default RegisterRecipeModal
+export default EditModal

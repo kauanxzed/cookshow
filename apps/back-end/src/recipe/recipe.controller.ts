@@ -323,7 +323,7 @@ export class RecipeController {
     return await this.recipeService.updateRecipe(recipeId, recipe)
   }
 
-  @Delete('/ingredientRecipe')
+  @Post('/ingredientRecipe')
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully deleted.',
