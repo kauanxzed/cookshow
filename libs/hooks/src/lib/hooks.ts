@@ -17,7 +17,6 @@ function useGetUserPayload() {
   })
 
   useEffect(() => {
-    console.log('fazendo')
     try {
       axiosInstance.get('/api/auth').then((res) => {
         const data = res.data as UserPayloadType

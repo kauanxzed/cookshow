@@ -18,6 +18,7 @@ import { RecipeCommentService } from './recipe.comment.service'
 import { UpdateCommentDto } from './dto/update-recipe-comment.dto'
 import { UpdateRecipeDto } from './dto/update-recipe.dto'
 import { ApiBody, ApiParam, ApiResponse } from '@nestjs/swagger'
+import { UpdateRecipeRatingDto } from './dto/update-recipe-rating.dto'
 
 @Controller('recipe')
 export class RecipeController {
@@ -150,6 +151,7 @@ export class RecipeController {
   }
 
   @Post('/:recipeId/comment')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
@@ -209,6 +211,7 @@ export class RecipeController {
   }
 
   @Put('/:recipeId/comment/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully updated.',
@@ -238,6 +241,7 @@ export class RecipeController {
   }
 
   @Delete('/:recipeId/comment/:id')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully deleted.',
@@ -291,6 +295,7 @@ export class RecipeController {
   }
 
   @Put('/:recipeId')
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully updated.',
@@ -356,6 +361,7 @@ export class RecipeController {
   }
 
   @Delete()
+  @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully deleted.',
@@ -372,5 +378,69 @@ export class RecipeController {
   })
   async deleteRecipe(@Body('id_receita') recipeId: string) {
     return await this.recipeService.deleteRecipe(recipeId)
+  }
+
+  @Get('/:recipeId/user/:userId/interaction')
+  @ApiResponse({
+    status: 200,
+    description: 'Interaction of user with recipe',
+    type: CreateRecipeRatingDto,
+  })
+  @ApiParam({
+    name: 'recipeId',
+    description: 'The uuid of the recipe',
+    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+  })
+  @ApiParam({
+    name: 'userId',
+    description: 'The uuid of the user',
+    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+  })
+  async getUserInteracted(
+    @Param('recipeId') recipeId: string,
+    @Param('userId') userId: string,
+  ) {
+    return await this.recipeRatingService.getById(recipeId, userId)
+  }
+
+  @Put('/:recipeId/user/:userId/rating')
+  @UseGuards(JwtAuthGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Update rating of recipe',
+  })
+  @ApiParam({
+    name: 'recipeId',
+    description: 'The uuid of the recipe',
+    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+  })
+  @ApiParam({
+    name: 'userId',
+    description: 'The uuid of the user',
+    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+  })
+  @ApiBody({
+    type: UpdateRecipeRatingDto,
+    examples: {
+      update: {
+        value: {
+          id_usuario: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+          id_receita: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
+          avaliacao: 5,
+          favorito: true,
+        },
+      },
+    },
+  })
+  async updateRating(
+    @Param('recipeId') recipeId: string,
+    @Param('userId') userId: string,
+    @Body() dto: UpdateRecipeRatingDto,
+  ) {
+    return await this.recipeRatingService.updateRecipeRating(
+      recipeId,
+      userId,
+      dto,
+    )
   }
 }
