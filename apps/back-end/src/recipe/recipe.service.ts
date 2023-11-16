@@ -148,6 +148,7 @@ export class RecipeService {
     const foundRecipes = await this.recipeRepository
       .createQueryBuilder('receita')
       .distinct()
+      .where('receita.publicado = true')
       .innerJoin('receita_ingredientes', 'ri', 'receita.id = ri.id_receita')
       .innerJoin(
         (subQuery) => {
@@ -218,6 +219,8 @@ export class RecipeService {
     }
 
     try {
+      console.log(ingredientId)
+      console.log(recipeId)
       await this.recipeIngredientRepository
         .createQueryBuilder()
         .delete()

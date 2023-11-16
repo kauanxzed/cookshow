@@ -12,7 +12,7 @@ import {
 export class CreateUserDto {
   @ApiProperty({
     description: 'The username of the user',
-    example: ['Admin'],
+    example: 'Admin',
   })
   @IsString()
   @IsNotEmpty({
@@ -22,7 +22,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'The email of the user',
-    example: ['gustavo@alunos.unicesumar.edu.br'],
+    example: 'gustavo@alunos.unicesumar.edu.br',
   })
   @IsEmail()
   @IsNotEmpty()
@@ -30,7 +30,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'The password of the user',
-    example: ['Abc123!@#'],
+    example: 'Abc123!@#',
   })
   @IsStrongPassword(
     {
@@ -53,16 +53,11 @@ export class CreateUserDto {
   senha: string
 
   @ApiProperty({
-    description: 'The profile picture of the user',
-    example: 'https://www.google.com.br',
-  })
-  @IsOptional()
-  foto_perfil?: string
-
-  @ApiProperty({
     description: 'foto id fot cloudinary',
     example: 'aowdnaoiwdnaoiwnd',
   })
   @IsOptional()
+  foto_perfil?: string
+
   foto_id?: string
 }

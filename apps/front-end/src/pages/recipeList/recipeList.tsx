@@ -1,32 +1,51 @@
 import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
-import Recipe from './recipe'
-import prato1 from '../../assets/images/prato1.png'
-import { IngredientType } from '../recipe/types/ingredient.type'
 import axios from 'axios'
 import { RecipeType } from '../profile/types/recipe.type'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { IngredientType } from '@cook-show/shared/types'
+import Recipe from './recipe'
 
-const getIngredients = async () => {
-  const res = await axios.get('/api/ingredient')
-  if (res) return res.data
-  else return undefined
-}
-
-const getRecipes = async (ingredients: IngredientType[] | string[]) => {
-  const res = await axios.get('/api/recipe/search/ingredient', {
-    data: { ingredients },
+const getRecipes = async (ingredients: IngredientType[]) => {
+  const idIngredients = ingredients.map((i) => {
+    return {
+      id: i.id,
+    }
   })
-  if (res) return res.data as RecipeType
-  else return undefined
+  const res = await axios.post('/api/recipe/search/ingredient', idIngredients)
+  if (res) return res.data as RecipeType[]
+  else return null
 }
 
 const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('')
-  const [chips, setChips] = useState<string[]>([])
-  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<IngredientType[]>([])
+  const [chips, setChips] = useState<IngredientType[]>([])
   const [isInputFocused, setInputFocused] = useState(false)
-  const [ingredient, setIngredients] = useState<IngredientType[]>([
-    { id: 0, nome: '' },
-  ])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [recipes, setRecipes] = useState<RecipeType[]>([])
+  const [ingredients, setIngredients] = useState<IngredientType[]>([])
+  const [ingredientsParams, setIngredientsParams] = useState<IngredientType[]>(
+    [],
+  )
+  const navigate = useNavigate()
+  const ingredientsId = searchParams.getAll('id')
+  const ingredientsName = searchParams.getAll('nome')
+  const ingredientsArray = ingredientsId.map((value, index) => {
+    return {
+      id: Number(value),
+      nome: ingredientsName[index],
+    } as IngredientType
+  })
+
+  const loadIngredients = async () => {
+    try {
+      const res = await axios.get('/api/ingredient')
+      setIngredients(res.data)
+      return res.data as IngredientType[]
+    } catch (error) {
+      alert(error)
+    }
+  }
 
   const handleRemoveChip = (index: number) => {
     const newChips = [...chips]
@@ -34,47 +53,82 @@ const RecipeList: React.FC = () => {
     setChips(newChips)
   }
 
+  const updateUrlParams = (ingredientsArray: IngredientType[]) => {
+    const updatedParams = ingredientsArray
+      .map((ingredient) => [`id=${ingredient.id}`, `nome=${ingredient.nome}`])
+      .flat()
+      .join('&')
+
+    navigate(`?${updatedParams}`, { replace: true })
+  }
+
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && inputValue) {
-      setChips([...chips, inputValue])
+      const foundIngredient = ingredients.find((ingredient) =>
+        ingredient.nome.startsWith(inputValue),
+      )
+      if (foundIngredient) setChips([...chips, foundIngredient])
+
       setInputValue('')
       setSuggestions([])
     }
   }
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
     setInputValue(value)
-
-    if (ingredient) {
-      const filteredIngredients = ingredient.filter((i) => {
-        if (i.nome) {
-          return i.nome.toLowerCase().startsWith(value.toLowerCase())
-        }
-        return false
-      })
-
-      setSuggestions(
-        value
-          ? filteredIngredients.map((ingredient) => ingredient.nome).slice(0, 5)
-          : [],
-      )
-    }
+    const filtered = ingredients.filter(
+      (el) =>
+        el.nome.toLowerCase().startsWith(value.toLowerCase()) &&
+        !chips.includes(el),
+    )
+    setSuggestions(value ? filtered.slice(0, 5) : [])
   }
 
-  const addSuggestionToChips = (suggestion: string) => {
+  const addSuggestionToChips = (suggestion: IngredientType) => {
     setChips([...chips, suggestion])
     setInputValue('')
     setSuggestions([])
   }
 
   useEffect(() => {
-    getIngredients().then((data) => {
+    loadIngredients().then((data) => {
       if (data) {
-        setIngredients(data)
+        const updatedIngredients = data.filter((ingredient) => {
+          return !ingredientsArray.some((i) => i.nome === ingredient.nome)
+        })
+
+        setIngredients(updatedIngredients)
       }
     })
   }, [])
+
+  const handleSearch = () => {
+    window.location.reload()
+  }
+
+  useEffect(() => {
+    setIngredientsParams(ingredientsArray)
+    if (ingredientsArray.length > 0) {
+      getRecipes(ingredientsArray).then((data) => {
+        if (data) setRecipes(data)
+      })
+    }
+    setChips([])
+    ingredientsArray.forEach((ingredient) => {
+      setChips((prev) => [...prev, ingredient])
+    })
+  }, [])
+
+  useEffect(() => {
+    if (ingredientsParams.length > 0) {
+      getRecipes(ingredientsParams)
+    }
+  }, [ingredientsParams])
+
+  useEffect(() => {
+    updateUrlParams(chips)
+  }, [chips])
 
   return (
     <div className="mx-auto flex w-full flex-col items-center space-y-2 md:max-w-2xl lg:max-w-4xl">
@@ -85,12 +139,10 @@ const RecipeList: React.FC = () => {
           } `}
         >
           <span
-            className="mr-1 text-lg md:mr-2"
+            className="mr-1 text-lg hover:cursor-pointer md:mr-2"
             aria-label="magnifying glass"
             role="img"
-            onClick={() => {
-              getRecipes(chips)
-            }}
+            onClick={handleSearch}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -126,7 +178,7 @@ const RecipeList: React.FC = () => {
               key={index}
               className="m-1 flex items-center rounded-xl bg-orange-500 px-1 text-white md:m-1.5 md:px-2"
             >
-              <span>{chip}</span>
+              <span>{chip.nome}</span>
               <button
                 onClick={() => handleRemoveChip(index)}
                 className="relative bottom-0.5 ml-1 text-white md:ml-2"
@@ -154,28 +206,35 @@ const RecipeList: React.FC = () => {
                 className="cursor-pointer border-b border-gray-300 p-1.5 text-orange-500 hover:bg-gray-200"
                 onClick={() => addSuggestionToChips(suggestion)}
               >
-                {suggestion}
+                {suggestion.nome}
               </div>
             ))}
           </div>
         )}
       </div>
-      <div className="scrollbar-hidden flex h-screen w-full flex-wrap overflow-y-auto overflow-x-hidden pb-60">
-        <Recipe
-          image={prato1}
-          imageAlt="foto representando o prato Pizza margherita"
-          title="pizza marGherIta"
-          category="ITALIANO"
-          owner="fabiana"
-          hours={0}
-          minutes={50}
-          description='"Receita de PIZZA Margherita deliciosa e fácil para reunir a família e apreciar com gosto!"'
-          personsLiked={80}
-          moreLikes={50}
-          id="teste1"
-          rating={4.8}
-        />
-      </div>
+      {recipes.length > 0 ? (
+        <div className="flex h-full w-full flex-wrap">
+          {recipes.map((recipe, index) => (
+            <Recipe
+              id={recipe.id}
+              image={recipe.imagem}
+              key={index}
+              imageAlt={recipe.titulo}
+              category=""
+              personsLiked={10}
+              description={recipe.descricao}
+              moreLikes={10}
+              minutes={10}
+              rating={3}
+              owner="teste"
+              hours={10}
+              title={recipe.titulo}
+            ></Recipe>
+          ))}
+        </div>
+      ) : (
+        <div>Não foi encontrada nenhuma receita</div>
+      )}
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { RecipeType } from './types/recipe.type'
 import axios from 'axios'
 import DeletModal from '../deleteModal/deleteModal'
+import EditModal from '../editModal/editModal'
 
 interface Recipe {
   recipe: RecipeType
@@ -40,6 +41,7 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
   const [openModalDelete, setOpenModalDelete] = useState<undefined | boolean>(undefined)
 
   useEffect(() => {
+    console.log(recipe.publicado)
     if (recipe.publicado) {
       getLikes(recipe.id).then((data) => {
         if (data) setLikes(data.data)
@@ -63,7 +65,7 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
 
   return (
     <>
-      <div className="m-2 w-full p-4 md:w-2/3 lg:w-2/3">
+      <div className="m-2 w-full min-w-full  p-4 md:w-2/3 lg:w-2/3">
         <img
           src={recipe.imagem}
           alt={recipe.titulo}
@@ -79,8 +81,8 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
           {recipe.tempo_preparo}
         </p>
         <p className="text-gray-400">{recipe.descricao}</p>
-        <div className="mt-2 flex justify-between space-x-4">
-          <div className='flex'>
+        <div className="mt-2 flex justify-between">
+          <div className='flex space-x-2'>
             {' '}
             <span className="flex items-center">
               <i className="far fa-heart mr-1 text-red-500"></i>{' '}
@@ -97,7 +99,7 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
           </div>
           <div>
             <i className="fa-solid fa-pen-to-square cursor-pointer" style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalEdit(true)}}></i>
-            <i className="fa-solid fa-trash-can cursor-pointer"  style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalDelete(true)}}></i>
+            <i className="fa-solid fa-trash-can cursor-pointer ml-2"  style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalDelete(true)}}></i>
           </div>
         </div>
       </div>
@@ -107,6 +109,13 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
           setOpenModalDelete={handleSetOpenModalDelete}
           id={recipe.id}
           editedDelete= {edited}
+        />)}
+      {openModalEdit === true && (
+        <EditModal
+          show={openModalEdit}
+          setOpenModalEdit={handleSetOpenModalEdit}
+          id={recipe.id}
+          edited= {edited}
         />
       )}
   </>
