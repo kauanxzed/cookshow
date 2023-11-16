@@ -1,4 +1,5 @@
 export interface typeIngredient {
-    id: number
-    nome: string
-  }
+  id: number
+  nome: string
+}
+

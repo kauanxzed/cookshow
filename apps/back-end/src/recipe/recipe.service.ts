@@ -142,10 +142,13 @@ export class RecipeService {
     }
   }
 
-  async searchRecipeByIngredient(ingredientId: number[]): Promise<RecipeEntity[]> {
+  async searchRecipeByIngredient(
+    ingredientId: number[],
+  ): Promise<RecipeEntity[]> {
     const foundRecipes = await this.recipeRepository
       .createQueryBuilder('receita')
       .distinct()
+      .where('receita.publicado = true')
       .innerJoin('receita_ingredientes', 'ri', 'receita.id = ri.id_receita')
       .innerJoin(
         (subQuery) => {
