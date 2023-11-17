@@ -80,7 +80,7 @@ function ProfilePage() {
   }
 
   const handleAddRecipe = (value: boolean | undefined) => {
-    setOpenModal(value);
+    setOpenModal(value)
   }
 
   return (
@@ -120,7 +120,7 @@ function ProfilePage() {
           }
         </div>
 
-        <div className="flex h-full max-h-[50vh] flex-col overflow-y-auto overflow-x-hidden md:max-h-[80vh]">
+        <div className="flex h-full max-h-[50vh] flex-col overflow-y-auto overflow-x-hidden md:max-h-[72vh]">
           <div
             className={
               receitas && receitas.length > 0
@@ -164,9 +164,12 @@ function ProfilePage() {
         </div>
       </div>
       {openModal === true && (
-        <RegisterRecipeModal show={openModal} setOpenModal={handleAddRecipe} create={setEdited}/>
-      )
-      }
+        <RegisterRecipeModal
+          show={openModal}
+          setOpenModal={handleAddRecipe}
+          create={setEdited}
+        />
+      )}
     </div>
   )
 }
