@@ -134,6 +134,7 @@ export class RecipeService {
         .createQueryBuilder('recipe')
         .where('recipe.id_usuario = :userId', { userId })
         .andWhere('recipe.deleted_at IS NULL')
+        .orderBy('recipe.created_at', 'DESC')
         .getMany()
 
       return allRecipes
@@ -142,10 +143,13 @@ export class RecipeService {
     }
   }
 
-  async searchRecipeByIngredient(ingredientId: number[]): Promise<any> {
+  async searchRecipeByIngredient(
+    ingredientId: number[],
+  ): Promise<RecipeEntity[]> {
     const foundRecipes = await this.recipeRepository
       .createQueryBuilder('receita')
       .distinct()
+      .where('receita.publicado = true')
       .innerJoin('receita_ingredientes', 'ri', 'receita.id = ri.id_receita')
       .innerJoin(
         (subQuery) => {
@@ -216,6 +220,8 @@ export class RecipeService {
     }
 
     try {
+      console.log(ingredientId)
+      console.log(recipeId)
       await this.recipeIngredientRepository
         .createQueryBuilder()
         .delete()

@@ -5,6 +5,7 @@ import { CreateRecipeRatingDto } from './dto/create-recipe-rating.dto'
 import { Repository } from 'typeorm'
 import { RecipeService } from './recipe.service'
 import { UserService } from '../user/user.service'
+import { UpdateRecipeRatingDto } from './dto/update-recipe-rating.dto'
 
 @Injectable()
 export class RecipeRatingService {
@@ -52,6 +53,22 @@ export class RecipeRatingService {
     }
   }
 
+  async getById(recipeId: string, userId: string) {
+    try {
+      const interacted = await this.ratingRepository
+        .createQueryBuilder('interaction')
+        .leftJoinAndSelect('interaction.usuario', 'usuario')
+        .leftJoinAndSelect('interaction.receita', 'receita')
+        .where('usuario.id = :userId', { userId })
+        .andWhere('receita.id = :recipeId', { recipeId })
+        .getOne()
+
+      return interacted
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
+  }
+
   async getRating(recipeId: string): Promise<number> {
     const recipe = await this.recipeService.findById(recipeId)
 
@@ -73,7 +90,7 @@ export class RecipeRatingService {
         return acc + rating.avaliacao
       }, 0)
 
-      return sum / ratings.length
+      return ratings.length > 0 ? sum / ratings.length : 0
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
@@ -84,8 +101,34 @@ export class RecipeRatingService {
       .createQueryBuilder('favorites')
       .where('favorites.id_receita = :id', { id: recipeId })
       .andWhere('favorites.favorito')
-      .getMany()
+      .getCount()
 
-    return favorited.length
+    return favorited
+  }
+
+  async updateRecipeRating(
+    recipeId: string,
+    userId: string,
+    updateRecipeRatingDto: UpdateRecipeRatingDto,
+  ) {
+    try {
+      console.log(updateRecipeRatingDto)
+      const rating = await this.getById(recipeId, userId)
+      if (!rating) {
+        throw new HttpException('Rating not found', HttpStatus.NOT_FOUND)
+      }
+
+      const updatedRecipe = await this.ratingRepository
+        .createQueryBuilder()
+        .update(RatingEntity)
+        .set(updateRecipeRatingDto)
+        .where('id_receita = :recipeId', { recipeId })
+        .andWhere('id_usuario = :userId', { userId })
+        .execute()
+
+      return updatedRecipe.raw[0]
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
+    }
   }
 }

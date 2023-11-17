@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react'
 import { RecipeType } from './types/recipe.type'
 import axios from 'axios'
 import DeletModal from '../deleteModal/deleteModal'
+import EditModal from '../editModal/editModal'
+import RecipeModal from '../recipe/recipe'
 
 interface Recipe {
   recipe: RecipeType
   edited: (value: boolean) => void
+  myRecipe: boolean
 }
 
 async function getLikes(recipeId: string) {
@@ -32,14 +35,16 @@ async function getComments(recipeId: string) {
   }
 }
 
-const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
+const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
   const [likes, setLikes] = useState<number>(0)
   const [rating, setRating] = useState<number>(0)
   const [comments, setComments] = useState<number>(0)
   const [openModalEdit, setOpenModalEdit] = useState<undefined | boolean>(undefined)
   const [openModalDelete, setOpenModalDelete] = useState<undefined | boolean>(undefined)
+  const [openModal, setOpenModal] = useState<undefined | boolean>(undefined)
 
   useEffect(() => {
+    console.log(recipe.publicado)
     if (recipe.publicado) {
       getLikes(recipe.id).then((data) => {
         if (data) setLikes(data.data)
@@ -61,15 +66,22 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
     setOpenModalDelete(value)
   }
 
+  const handleSetOpenModal = (value: boolean | undefined) => {
+    setOpenModal(value)
+  }
+
   return (
     <>
-      <div className="m-2 w-full p-4 md:w-2/3 lg:w-2/3">
+      <div className="m-2 w-full min-w-full  p-4 md:w-2/3 lg:w-2/3">
         <img
           src={recipe.imagem}
           alt={recipe.titulo}
           className="h-48 w-full object-cover"
+          onClick={() => {
+            handleSetOpenModal(true)
+          }}
         />
-          <h2 className="mt-2 text-xl font-bold text-orange-600">
+          <h2 className="mt-2 text-xl font-bold text-orange-600" onClick={() => {handleSetOpenModal(true)}}>
             {recipe.titulo}
           </h2>
         <p className="uppercase text-gray-400">{recipe.subtitulo}</p>
@@ -79,8 +91,8 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
           {recipe.tempo_preparo}
         </p>
         <p className="text-gray-400">{recipe.descricao}</p>
-        <div className="mt-2 flex justify-between space-x-4">
-          <div className='flex'>
+        <div className="mt-2 flex justify-between">
+          <div className='flex space-x-2'>
             {' '}
             <span className="flex items-center">
               <i className="far fa-heart mr-1 text-red-500"></i>{' '}
@@ -95,18 +107,34 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited }) => {
               <span>{rating}</span>
             </span>
           </div>
-          <div>
-            <i className="fa-solid fa-pen-to-square cursor-pointer" style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalEdit(true)}}></i>
-            <i className="fa-solid fa-trash-can cursor-pointer"  style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalDelete(true)}}></i>
-          </div>
+          {myRecipe === true && (
+            <div>
+              <i className="fa-solid fa-pen-to-square cursor-pointer" style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalEdit(true)}}></i>
+              <i className="fa-solid fa-trash-can cursor-pointer ml-2"  style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalDelete(true)}}></i>
+           </div>
+          )}
         </div>
       </div>
+      {openModal === true && (
+        <RecipeModal
+          show={openModal}
+          setOpenModal={handleSetOpenModal}
+          id={recipe.id}
+        />
+      )}
       {openModalDelete === true && (
         <DeletModal
           show={openModalDelete}
           setOpenModalDelete={handleSetOpenModalDelete}
           id={recipe.id}
           editedDelete= {edited}
+        />)}
+      {openModalEdit === true && (
+        <EditModal
+          show={openModalEdit}
+          setOpenModalEdit={handleSetOpenModalEdit}
+          id={recipe.id}
+          edited= {edited}
         />
       )}
   </>
