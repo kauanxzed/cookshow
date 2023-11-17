@@ -32,6 +32,11 @@ interface typeRecipeIngredients {
   portion: number
 }
 
+interface typeUser {
+  foto_perfil: string,
+  id: string
+}
+
 interface typeRecipe {
   id: string
   titulo: string
@@ -45,6 +50,7 @@ interface typeRecipe {
   ingredients: typeRecipeIngredients[]
   rating: number
   ingredientNames: string[]
+  user: typeUser
 }
 
 const RecipeDetails: React.FC<ModalDefaultProps> = ({
@@ -55,7 +61,8 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
   const [commentsVisible, setCommentsVisible] = useState(true)
   const [showModal, setShowModal] = useState(show)
   const [recipe, setRecipe] = useState<typeRecipe>()
-  const [rating, setRating] = React.useState(0)
+  const [rating, setRating] = useState(0)
+  const [ownerName, setOwnerName] = useState("")
 
   const getRecipeData = async (recipeId: string) => {
     try {
@@ -88,11 +95,17 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
           rating: recipeRating.data,
           ingredientNames: ingredientNames, // Adiciona os nomes dos ingredientes ao objeto recipeData
         };
+        console.log(recipeData)
+
+        axios.get("/api/user/" + recipeData.user.id).then((data) => setOwnerName(data.data.usuario))
+        
+
         return recipeData;
       } else {
         return undefined
       }
     } catch (error) {
+      console.log(error)
       alert('Algo deu errado')
       handleCloseModal()
     }
@@ -143,7 +156,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                 <div>
                   <h1 className="text-xl text-[#9C4B00]">{recipe.titulo}</h1>
                   <p className='mt-2 font-["Poppins"] text-base text-[#666565]'>
-                    TESTE ARRUMAR
+                    {ownerName}
                   </p>
                   <div className="mt-2 flex flex-row">
                     <RecipeInfo info={'🕙 ' + recipe.tempo_preparo} />
