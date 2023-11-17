@@ -7,9 +7,16 @@ import { Logger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { AppModule } from './app/app.module'
+import cors from 'cors'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
+
+  const corsOptions = {
+    origin: 'https://cookshow.com.br/',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  }
 
   const config = new DocumentBuilder()
     .setTitle('CookShow')
@@ -27,6 +34,7 @@ async function bootstrap() {
   const globalPrefix = 'api'
   app.useGlobalPipes(new ValidationPipe())
   app.setGlobalPrefix(globalPrefix)
+  app.use(cors(corsOptions))
   const port = process.env.PORT || 3000
 
   await app.listen(port)

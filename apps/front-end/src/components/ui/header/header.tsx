@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { UserIcon, LogoutIcon } from '@heroicons/react/solid'
-import { Link } from 'react-router-dom'
 
 const logOut = () => {
   if (localStorage.getItem('jwtToken')) localStorage.removeItem('jwtToken')
@@ -22,12 +21,12 @@ function Header() {
     <div className="bg-white p-5 text-black shadow-md">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <Link to="/">
+          <a href="/">
             <h1 className="font-orelega text-3xl font-bold md:text-4xl">
               <span className="text-orange-500">COOK</span>
               <span className="text-black">SHOW</span>
             </h1>
-          </Link>
+          </a>
           {/* Menu mobile (visível apenas em telas pequenas) */}
           <div className="relative md:hidden">
             <button
@@ -56,12 +55,10 @@ function Header() {
             >
               {loggedIn ? (
                 <>
-                  <Link to="/perfil">
-                    <a href="!#" className="block px-4 py-2 text-center">
-                      <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
-                      Perfil
-                    </a>
-                  </Link>
+                  <a href="/perfil" className="block px-4 py-2 text-center">
+                    <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
+                    Perfil
+                  </a>
                   <a
                     href="/"
                     className="block px-4 py-2 text-center"
@@ -72,12 +69,10 @@ function Header() {
                   </a>
                 </>
               ) : (
-                <Link to="/login">
-                  <a href="!#" className="block px-4 py-2 text-center">
-                    <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
-                    LogIn
-                  </a>
-                </Link>
+                <a href="/login" className="block px-4 py-2 text-center">
+                  <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
+                  LogIn
+                </a>
               )}
             </div>
           </div>
