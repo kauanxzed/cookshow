@@ -24,6 +24,7 @@ interface ModalDefaultProps {
   show: boolean | undefined
   setOpenModal: (value: boolean | undefined) => void
   id: string
+  editedFav: (value: boolean) => void
 }
 
 interface typeRecipeIngredients {
@@ -57,6 +58,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
   show,
   setOpenModal,
   id,
+  editedFav
 }) => {
   const [commentsVisible, setCommentsVisible] = useState(true)
   const [showModal, setShowModal] = useState(show)
@@ -182,7 +184,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                   <PersonsLiked likes={recipe.curtidas} />
                 </div>
                 <div className="flex flex-row">
-                  <Like id_receita={recipe.id} />
+                  <Like id_receita={recipe.id} editedFav={editedFav}/>
                   <p className="ml-2 cursor-pointer" onClick={showComments}>
                     {commentsVisible
                       ? 'Ocultar todos os comentários'

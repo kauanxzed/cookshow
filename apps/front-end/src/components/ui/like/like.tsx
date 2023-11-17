@@ -4,6 +4,7 @@ import { useGetUserPayload } from '@cook-show/hooks'
 
 interface likeProps {
   id_receita: string
+  editedFav?: (value: boolean) => void
 }
 
 const token =
@@ -17,7 +18,7 @@ const axiosInstace = axios.create({
   },
 })
 
-const Like: React.FC<likeProps> = ({ id_receita }) => {
+const Like: React.FC<likeProps> = ({ id_receita, editedFav }) => {
   const [stateFav, setStateFav] = useState<boolean>(false)
   const [interaction, setInteraction] = useState<boolean>(false)
   const payload = useGetUserPayload()
@@ -50,6 +51,7 @@ const Like: React.FC<likeProps> = ({ id_receita }) => {
           favorito: !stateFav,
         })
       }
+      if(editedFav) editedFav(true)
       setStateFav(!stateFav)
     } catch (error) {
       alert(error)
