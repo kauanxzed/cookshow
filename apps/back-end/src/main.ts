@@ -12,9 +12,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
       origin: [
-        'https://cookshow.com.br/',
-        'https://www.cookshow.com.br/',
-        'www.cookshow.com.br/',
+        'https://cookshow.com.br',
+        'https://www.cookshow.com.br',
+        'www.cookshow.com.br',
       ],
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       allowedHeaders: ['Content-Type', 'Authorization'],
