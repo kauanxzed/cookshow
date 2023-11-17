@@ -57,8 +57,10 @@ export class RecipeRatingService {
     try {
       const interacted = await this.ratingRepository
         .createQueryBuilder('interaction')
-        .where('interaction.id_receita = :recipeId', { recipeId })
-        .andWhere('interaction.id_usuario = :userId', { userId })
+        .leftJoinAndSelect('interaction.usuario', 'usuario')
+        .leftJoinAndSelect('interaction.receita', 'receita')
+        .where('usuario.id = :userId', { userId })
+        .andWhere('receita.id = :recipeId', { recipeId })
         .getOne()
 
       return interacted
@@ -110,17 +112,18 @@ export class RecipeRatingService {
     updateRecipeRatingDto: UpdateRecipeRatingDto,
   ) {
     try {
+      console.log(updateRecipeRatingDto)
       const rating = await this.getById(recipeId, userId)
       if (!rating) {
-        throw new HttpException('Recipe not found', HttpStatus.NOT_FOUND)
+        throw new HttpException('Rating not found', HttpStatus.NOT_FOUND)
       }
 
       const updatedRecipe = await this.ratingRepository
-        .createQueryBuilder('interaction')
+        .createQueryBuilder()
         .update(RatingEntity)
         .set(updateRecipeRatingDto)
-        .where('interaction.id_receita = :recipeId', { recipeId })
-        .andWhere('interaction.id_usuario = :userId', { userId })
+        .where('id_receita = :recipeId', { recipeId })
+        .andWhere('id_usuario = :userId', { userId })
         .execute()
 
       return updatedRecipe.raw[0]

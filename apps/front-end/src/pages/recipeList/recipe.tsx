@@ -5,6 +5,7 @@ import RecipeModal from '../recipe/recipe'
 import { Link } from 'react-router-dom'
 import { RecipeType } from '../profile/types/recipe.type'
 import axios from 'axios'
+import Like from '../../components/ui/like/like'
 
 interface RecipeProps {
   recipe: RecipeType
@@ -73,16 +74,6 @@ const Recipe: React.FC<RecipeProps> = (props) => {
 
   const recipeURL = `/receitas/${props.recipe.id}`
 
-  function changeStateLike() {
-    setStateLike(!stateLike)
-  }
-
-  const likes = stateLike ? (
-    <i className="fa-solid fa-heart fa-xl" style={{ color: '#ff8c00' }}></i>
-  ) : (
-    <i className="fa-regular fa-heart fa-xl" style={{ color: '#ff8c00' }}></i>
-  )
-
   const handleSetOpenModal = (value: boolean | undefined) => {
     setOpenModal(value)
   }
@@ -129,9 +120,7 @@ const Recipe: React.FC<RecipeProps> = (props) => {
           {formatDescription(props.recipe.descricao)}
         </p>
         <div className="mt-auto flex justify-between md:pt-8">
-          <div onClick={changeStateLike} className="hidden md:block">
-            {likes}
-          </div>
+          <Like id_receita={props.recipe.id} />
           <div className="flex">
             <PersonsLiked likes={likesNum} />
           </div>

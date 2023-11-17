@@ -423,8 +423,6 @@ export class RecipeController {
     examples: {
       update: {
         value: {
-          id_usuario: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
-          id_receita: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
           avaliacao: 5,
           favorito: true,
         },
