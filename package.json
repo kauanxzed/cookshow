@@ -8,7 +8,7 @@
     "dev:back": "npx nx serve back-end",
     "dev": "npx nx run-many -t serve",
     "build": "npx nx run-many -t build",
-    "start": "node dist/apps/back-end/main.js"
+    "start": "cd dist/apps/back-end && node main.js"
   },
   "private": true,
   "devDependencies": {
