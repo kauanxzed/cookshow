@@ -11,9 +11,14 @@ import { AppModule } from './app/app.module'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: {
-      origin: 'https://cookshow.com.br/*',
+      origin: [
+        'https://cookshow.com.br/',
+        'https://www.cookshow.com.br/',
+        'www.cookshow.com.br/',
+      ],
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      allowedHeaders: 'Content-Type,Authorization',
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      exposedHeaders: ['x-auth-token'],
       credentials: true,
     },
   })
@@ -34,11 +39,6 @@ async function bootstrap() {
   const globalPrefix = 'api'
   app.useGlobalPipes(new ValidationPipe())
   app.setGlobalPrefix(globalPrefix)
-  app.enableCors({
-    origin: 'https://www.cookshow.com.br',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  })
   const port = process.env.PORT || 3000
 
   await app.listen(port)
