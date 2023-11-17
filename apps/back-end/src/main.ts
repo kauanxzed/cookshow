@@ -9,7 +9,14 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { AppModule } from './app/app.module'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: 'https://cookshow.com.br/*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      allowedHeaders: 'Content-Type,Authorization',
+      credentials: true,
+    },
+  })
 
   const config = new DocumentBuilder()
     .setTitle('CookShow')
