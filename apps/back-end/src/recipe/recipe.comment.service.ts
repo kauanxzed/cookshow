@@ -38,7 +38,6 @@ export class RecipeCommentService {
       .where('receita_comentario.id = :id', { id })
       .andWhere('receita_comentario.deleted_at IS NULL')
       .getOne()
-    console.log(foundComment)
     return foundComment
   }
 
