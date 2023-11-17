@@ -90,6 +90,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
       if (show) {
         getRecipeData(id).then((res) => {
           if (res) setRecipe(res)
+          console.log(res)
         })
       }
     } catch (err) {
@@ -126,7 +127,6 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
               <div className="flex w-1/2 flex-col justify-between">
                 <div>
                   <h1 className="text-xl text-[#9C4B00]">{recipe.titulo}</h1>
-                  <p className="text-xs text-[#999999]">origem</p>
                   <p className='mt-2 font-["Poppins"] text-base text-[#666565]'>
                     TESTE ARRUMAR
                   </p>
@@ -137,6 +137,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                   </div>
                   <div className="mt-2 flex flex-row items-center">
                     <Rating
+                      id={recipe.id}
                       count={5}
                       value={rating}
                       edit={true}
@@ -151,7 +152,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                   </div>
                 </div>
                 <div className="flex flex-row">
-                  <PersonsLiked personsLiked={recipe.curtidas} />
+                  <PersonsLiked likes={recipe.curtidas} />
                 </div>
                 <div className="flex flex-row">
                   <Like id_receita={recipe.id} />
