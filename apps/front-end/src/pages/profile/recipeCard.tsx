@@ -44,7 +44,6 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
   const [openModal, setOpenModal] = useState<undefined | boolean>(undefined)
 
   useEffect(() => {
-    console.log(recipe.publicado)
     if (recipe.publicado) {
       getLikes(recipe.id).then((data) => {
         if (data) setLikes(data.data)

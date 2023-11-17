@@ -44,34 +44,7 @@ interface typeRecipe {
   comentarios: CommentType[]
   ingredients: typeRecipeIngredients[]
   rating: number
-}
-
-const getRecipeData = async (recipeId: string) => {
-  try {
-    const recipe = await axios.get('/api/recipe/' + recipeId)
-    const recipeLikes = await axios.get(
-      '/api/recipe/' + recipeId + '/favoritesQuantity',
-    )
-    const recipeComments = await axios.get(
-      '/api/recipe/' + recipeId + '/comment',
-    )
-    const recipeRating = await axios.get('/api/recipe/' + recipeId + '/rating')
-
-    if (recipe.status === 200 && recipeLikes.status === 200) {
-      const recipeData: typeRecipe = {
-        ...recipe.data,
-        curtidas: recipeLikes.data,
-        comentarios: recipeComments.data,
-        rating: recipeRating.data,
-      }
-
-      return recipeData
-    } else {
-      return undefined
-    }
-  } catch (error) {
-    alert('Algo deu errado')
-  }
+  ingredientNames: string[]
 }
 
 const RecipeDetails: React.FC<ModalDefaultProps> = ({
@@ -84,17 +57,59 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
   const [recipe, setRecipe] = useState<typeRecipe>()
   const [rating, setRating] = React.useState(0)
 
+  const getRecipeData = async (recipeId: string) => {
+    try {
+      const recipe = await axios.get('/api/recipe/' + recipeId)
+      const recipeLikes = await axios.get(
+        '/api/recipe/' + recipeId + '/favoritesQuantity',
+      )
+      const recipeComments = await axios.get(
+        '/api/recipe/' + recipeId + '/comment',
+      )
+      const recipeRating = await axios.get('/api/recipe/' + recipeId + '/rating')
+  
+      if (recipe.status === 200 && recipeLikes.status === 200) {
+        const ingredientsPromises = recipe.data.ingredients.map(
+          async (el: { ingredient: string }) => {
+            const response = await axios.get(
+              '/api/ingredient/' + el.ingredient + '/getById',
+            );
+            return response.data;
+          },
+        );
+  
+        const ingredientsData = await Promise.all(ingredientsPromises);
+        const ingredientNames = ingredientsData.map((el) => el.nome);
+  
+        const recipeData: typeRecipe = {
+          ...recipe.data,
+          curtidas: recipeLikes.data,
+          comentarios: recipeComments.data,
+          rating: recipeRating.data,
+          ingredientNames: ingredientNames, // Adiciona os nomes dos ingredientes ao objeto recipeData
+        };
+        return recipeData;
+      } else {
+        return undefined
+      }
+    } catch (error) {
+      alert('Algo deu errado')
+      handleCloseModal()
+    }
+  }
+
   useEffect(() => {
     try {
       if (show) {
         getRecipeData(id).then((res) => {
-          console.log(res)
-          if (res) setRecipe(res)
-          console.log(res)
-        })
+          if (res) {
+            setRecipe(res)
+          }
+        }) 
       }
     } catch (err) {
       alert('Algo deu errado')
+      handleCloseModal()
     }
   }, [show, id])
 
@@ -111,18 +126,18 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
     <Modal show={showModal} onClose={() => handleCloseModal()} size="5xl">
       {recipe ? (
         <Modal.Body className="flex h-[90vh] flex-col justify-between rounded-t-lg bg-white p-0 md:flex-row">
-          <div className="h-[90vh] rounded-tl-lg bg-gradient-to-r from-[#FF7A00] p-5">
+          <div className="h-[90vh] rounded-tl-lg bg-gradient-to-r from-[#FF7A00] p-5 pt-10 flex items-center justify-center relative md:items-start">
             <button
-              className="self-start text-xl text-black"
+              className="absolute top-5 left-5 text-xl text-black"
               onClick={() => handleCloseModal()}
             >
               X
             </button>
-            <div className="align-center flex h-72 w-72 justify-center overflow-hidden rounded-full border border-solid border-[#FF7A00] bg-white">
+            <div className="flex items-center h-72 w-72 justify-center overflow-hidden rounded-full border border-solid border-[#FF7A00] bg-white">
               <img id="photoRecipe" alt="Foto da receita" src={recipe.imagem} />
             </div>
           </div>
-          <div className="flex h-[90vh] w-full flex-col justify-between rounded-tr-lg p-3">
+          <div className="flex h-[90vh] w-full flex-col justify-between rounded-tr-lg p-5">
             <div className="flex h-3/5 flex-row">
               <div className="flex w-1/2 flex-col justify-between">
                 <div>
@@ -133,7 +148,11 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                   <div className="mt-2 flex flex-row">
                     <RecipeInfo info={'🕙 ' + recipe.tempo_preparo} />
                     <RecipeInfo info={'🍽️ ' + recipe.dificuldade} />
-                    <RecipeInfo info={'🔥 ' + recipe.calorias + ' Kcal'} />
+                  </div>
+                  <div className="mt-2 flex flex-row flex-wrap">
+                    {recipe.ingredientNames.map((ingredientName) => (
+                      <Ingredient key={ingredientName} name={ingredientName} />
+                    ))}
                   </div>
                   <div className="mt-2 flex flex-row items-center">
                     <Rating
@@ -144,11 +163,6 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                       onChange={(value) => setRating(value)}
                       className="flex flex-row"
                     />
-                  </div>
-                  <div className="mt-2 flex flex-row flex-wrap">
-                    {recipe.ingredients.map((ingredient) => {
-                      return <Ingredient name={ingredient.nome} />
-                    })}
                   </div>
                 </div>
                 <div className="flex flex-row">

@@ -104,7 +104,6 @@ export const Rating: React.FC<RatingProps> = ({
         '/api/recipe/' + id + '/user/' + payload.userId + '/interaction',
       )
       if (onChange) onChange(res.data.avaliacao);
-      console.log(res.data)
     }
     getInteraction()
   }, [id, payload])
@@ -132,7 +131,6 @@ export const Rating: React.FC<RatingProps> = ({
   const handleClick = async (index: number) => {
     if (!edit) return;
     if (onChange) onChange(index + 1);
-    console.log("clicou na estrela")
     if(!payload) return;
     axiosInstace
         .get('/api/recipe/' + id + '/user/' + payload.userId + '/interaction')
@@ -156,7 +154,6 @@ export const Rating: React.FC<RatingProps> = ({
     const fetchRating = async () => {
       try {
         const res = await getRatingRecipe();
-        console.log(res)
         setRating(res);
       } catch (error) {
         console.error('Erro ao obter a classificação da receita:', error);
@@ -200,9 +197,12 @@ export const Rating: React.FC<RatingProps> = ({
   }
 
   return (
-    <>
-      <div>{rating}</div>
+    <div className='flex flex-col'>
+      <div className='flex items-center'>
+        <p className='mr-2'>Nota: </p>
+        <div className='border border-solid border-orange-500 rounded-full text-xs font-bold h-8 w-8 flex items-center justify-center'>{Number.isInteger(rating) ? `${rating}.0` : rating}/5</div>
+      </div>
       <div className={`rating ${className}`}>{stars}</div>
-    </> 
+    </div> 
   )
 }

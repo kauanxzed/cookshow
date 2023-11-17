@@ -220,8 +220,6 @@ export class RecipeService {
     }
 
     try {
-      console.log(ingredientId)
-      console.log(recipeId)
       await this.recipeIngredientRepository
         .createQueryBuilder()
         .delete()
