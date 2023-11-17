@@ -2,6 +2,7 @@
   "name": "@cook-show/source",
   "version": "0.0.0",
   "license": "MIT",
+  "postinstall": "npm install",
   "scripts": {
     "test": "jest",
     "dev:front": "npx nx serve front-end",
