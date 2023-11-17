@@ -23,7 +23,7 @@ function LoginForm() {
       alert('Por favor, insira um email válido.')
       return
     }
-    const url = '/api/auth'
+    const url = 'https://cook-show-056b96634c68.herokuapp.com/api/auth'
 
     axios
       .post(url, {

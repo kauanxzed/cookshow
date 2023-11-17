@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { UserIcon, LogoutIcon } from '@heroicons/react/solid'
+import { Link } from 'react-router-dom'
 
 const logOut = () => {
   if (localStorage.getItem('jwtToken')) localStorage.removeItem('jwtToken')
@@ -21,12 +22,12 @@ function Header() {
     <div className="bg-white p-5 text-black shadow-md">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
-          <a href="/">
+          <Link to="/">
             <h1 className="font-orelega text-3xl font-bold md:text-4xl">
               <span className="text-orange-500">COOK</span>
               <span className="text-black">SHOW</span>
             </h1>
-          </a>
+          </Link>
           {/* Menu mobile (visível apenas em telas pequenas) */}
           <div className="relative md:hidden">
             <button
@@ -55,10 +56,12 @@ function Header() {
             >
               {loggedIn ? (
                 <>
-                  <a href="/perfil" className="block px-4 py-2 text-center">
-                    <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
-                    Perfil
-                  </a>
+                  <Link to="/perfil">
+                    <a href="!#" className="block px-4 py-2 text-center">
+                      <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
+                      Perfil
+                    </a>
+                  </Link>
                   <a
                     href="/"
                     className="block px-4 py-2 text-center"
@@ -69,10 +72,12 @@ function Header() {
                   </a>
                 </>
               ) : (
-                <a href="/login" className="block px-4 py-2 text-center">
-                  <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
-                  LogIn
-                </a>
+                <Link to="/login">
+                  <a href="!#" className="block px-4 py-2 text-center">
+                    <UserIcon className="mx-auto mb-1 h-4 w-4 text-orange-500 md:h-5 md:w-5" />
+                    LogIn
+                  </a>
+                </Link>
               )}
             </div>
           </div>
@@ -80,28 +85,34 @@ function Header() {
           <div className="hidden md:flex">
             {loggedIn ? (
               <>
+                <Link to="/perfil">
+                  <a
+                    href="!#"
+                    className="mx-14 text-center text-xl hover:text-orange-600 "
+                  >
+                    PERFIL
+                  </a>
+                </Link>
+                <Link to="/">
+                  <a
+                    href="!#"
+                    className="mx-14 text-center text-xl hover:text-orange-600 "
+                    onClick={() => logOut()}
+                  >
+                    SAIR
+                  </a>
+                </Link>
+              </>
+            ) : (
+              <Link to="/login">
                 <a
-                  href="/perfil"
-                  className="mx-14 text-center text-xl hover:text-orange-600 "
-                >
-                  PERFIL
-                </a>
-                <a
-                  href="/"
+                  href="!#"
                   className="mx-14 text-center text-xl hover:text-orange-600 "
                   onClick={() => logOut()}
                 >
-                  SAIR
+                  LOGIN
                 </a>
-              </>
-            ) : (
-              <a
-                href="/login"
-                className="mx-14 text-center text-xl hover:text-orange-600 "
-                onClick={() => logOut()}
-              >
-                LOGIN
-              </a>
+              </Link>
             )}
           </div>
         </div>
