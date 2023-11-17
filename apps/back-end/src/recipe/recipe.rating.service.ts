@@ -88,7 +88,7 @@ export class RecipeRatingService {
         return acc + rating.avaliacao
       }, 0)
 
-      return sum / ratings.length
+      return ratings.length > 0 ? sum / ratings.length : 0
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
@@ -99,9 +99,9 @@ export class RecipeRatingService {
       .createQueryBuilder('favorites')
       .where('favorites.id_receita = :id', { id: recipeId })
       .andWhere('favorites.favorito')
-      .getMany()
+      .getCount()
 
-    return favorited.length
+    return favorited
   }
 
   async updateRecipeRating(

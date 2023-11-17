@@ -88,14 +88,14 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
   useEffect(() => {
     try {
       if (show) {
-        getRecipeData('f51476c2-c3de-49b2-9396-14a21e1f673a').then((res) => {
+        getRecipeData(id).then((res) => {
           if (res) setRecipe(res)
         })
       }
     } catch (err) {
       alert('Algo deu errado')
     }
-  }, [show])
+  }, [show, id])
 
   function showComments() {
     setCommentsVisible(!commentsVisible)

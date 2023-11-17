@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
 import axios from 'axios'
 import { RecipeType } from '../profile/types/recipe.type'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { IngredientType } from '@cook-show/shared/types'
 import Recipe from './recipe'
 
@@ -27,7 +27,6 @@ const RecipeList: React.FC = () => {
   const [ingredientsParams, setIngredientsParams] = useState<IngredientType[]>(
     [],
   )
-  const navigate = useNavigate()
   const ingredientsId = searchParams.getAll('id')
   const ingredientsName = searchParams.getAll('nome')
   const ingredientsArray = ingredientsId.map((value, index) => {
@@ -59,7 +58,7 @@ const RecipeList: React.FC = () => {
       .flat()
       .join('&')
 
-    navigate(`?${updatedParams}`, { replace: true })
+    setSearchParams(updatedParams)
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -108,16 +107,18 @@ const RecipeList: React.FC = () => {
   }
 
   useEffect(() => {
-    setIngredientsParams(ingredientsArray)
-    if (ingredientsArray.length > 0) {
-      getRecipes(ingredientsArray).then((data) => {
-        if (data) setRecipes(data)
+    const fn = async () => {
+      setIngredientsParams(ingredientsArray)
+      if (ingredientsArray.length > 0) {
+        const recipes = await getRecipes(ingredientsArray)
+        if (recipes) setRecipes(recipes)
+      }
+      setChips([])
+      ingredientsArray.forEach((ingredient) => {
+        setChips((prev) => [...prev, ingredient])
       })
     }
-    setChips([])
-    ingredientsArray.forEach((ingredient) => {
-      setChips((prev) => [...prev, ingredient])
-    })
+    fn()
   }, [])
 
   useEffect(() => {
@@ -215,21 +216,7 @@ const RecipeList: React.FC = () => {
       {recipes.length > 0 ? (
         <div className="flex h-full w-full flex-wrap">
           {recipes.map((recipe, index) => (
-            <Recipe
-              id={recipe.id}
-              image={recipe.imagem}
-              key={index}
-              imageAlt={recipe.titulo}
-              category=""
-              personsLiked={10}
-              description={recipe.descricao}
-              moreLikes={10}
-              minutes={10}
-              rating={3}
-              owner="teste"
-              hours={10}
-              title={recipe.titulo}
-            ></Recipe>
+            <Recipe recipe={recipe} key={index}></Recipe>
           ))}
         </div>
       ) : (

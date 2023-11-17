@@ -1,15 +1,15 @@
 import React from 'react'
 
-interface personLikedProps {
-  personsLiked: number | undefined
+interface Props {
+  likes: number
 }
 
-const PersonsLiked: React.FC<personLikedProps> = (props) => {
+const PersonsLiked = (props: Props) => {
   return (
     <div className="relative flex">
       <div className="h-8 w-8 rounded-full bg-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.25)]">
         <span className="flex h-full w-full items-center justify-center text-xs text-[#A8A8A8]">
-          +{props.personsLiked}
+          +{props.likes}
         </span>
       </div>
       <div className="z-2 relative mt-4 -ml-2 self-end">

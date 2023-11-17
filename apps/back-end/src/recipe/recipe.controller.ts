@@ -261,7 +261,6 @@ export class RecipeController {
     description: 'The record has been successfully found.',
   })
   async findRecipeByIngredients(@Body() idIngredient: { id: number }[]) {
-    console.log(idIngredient)
     const ingredientesId = idIngredient.map((ingrediente) => ingrediente.id)
     return await this.recipeService.searchRecipeByIngredient(ingredientesId)
   }

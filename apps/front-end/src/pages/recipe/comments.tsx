@@ -25,22 +25,17 @@ const Comments: React.FC<CommentsProps> = (props) => {
   })
   const [userNames, setUserNames] = useState<string[]>([])
 
-  const getUserName = async (userId: any) => {
+  const getUserName = async (userId: string) => {
     try {
-      console.log('Obtendo nome do usuário para o userId:', userId)
       const response = await axios.get(`/api/user/${userId}`)
-      console.log('Resposta do servidor:', response)
 
       if (response?.data?.usuario) {
-        console.log('Nome do usuário obtido:', response.data.usuario)
         return response.data.usuario
       } else {
-        console.error('Dados do usuário não encontrados na resposta:', response)
         return 'Nome do usuário não encontrado'
       }
     } catch (error) {
-      console.error('Erro ao obter nome do usuário:', error)
-      return 'Nome do usuário não encontrado'
+      alert(error)
     }
   }
 
