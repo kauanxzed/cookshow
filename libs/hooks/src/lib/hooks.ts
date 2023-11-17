@@ -13,6 +13,7 @@ function useGetUserPayload() {
     localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
   const axiosInstance = axios.create({
+    baseURL: 'https://cook-show-056b96634c68.herokuapp.com',
     timeout: 5000,
     headers: {
       Authorization: `Bearer ${token}`,
