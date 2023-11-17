@@ -55,7 +55,6 @@ const getRecipeData = async (recipeId: string) => {
     const recipeComments = await axios.get(
       '/api/recipe/' + recipeId + '/comment',
     )
-
     const recipeRating = await axios.get('/api/recipe/' + recipeId + '/rating')
 
     if (recipe.status === 200 && recipeLikes.status === 200) {
@@ -88,14 +87,16 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
   useEffect(() => {
     try {
       if (show) {
-        getRecipeData('f51476c2-c3de-49b2-9396-14a21e1f673a').then((res) => {
+        getRecipeData(id).then((res) => {
+          console.log(res)
           if (res) setRecipe(res)
+          console.log(res)
         })
       }
     } catch (err) {
       alert('Algo deu errado')
     }
-  }, [show])
+  }, [show, id])
 
   function showComments() {
     setCommentsVisible(!commentsVisible)
@@ -126,7 +127,6 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
               <div className="flex w-1/2 flex-col justify-between">
                 <div>
                   <h1 className="text-xl text-[#9C4B00]">{recipe.titulo}</h1>
-                  <p className="text-xs text-[#999999]">origem</p>
                   <p className='mt-2 font-["Poppins"] text-base text-[#666565]'>
                     TESTE ARRUMAR
                   </p>
@@ -137,6 +137,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                   </div>
                   <div className="mt-2 flex flex-row items-center">
                     <Rating
+                      id={recipe.id}
                       count={5}
                       value={rating}
                       edit={true}
@@ -151,7 +152,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                   </div>
                 </div>
                 <div className="flex flex-row">
-                  <PersonsLiked personsLiked={recipe.curtidas} />
+                  <PersonsLiked likes={recipe.curtidas} />
                 </div>
                 <div className="flex flex-row">
                   <Like id_receita={recipe.id} />

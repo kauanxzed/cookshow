@@ -134,6 +134,7 @@ export class RecipeService {
         .createQueryBuilder('recipe')
         .where('recipe.id_usuario = :userId', { userId })
         .andWhere('recipe.deleted_at IS NULL')
+        .orderBy('recipe.created_at', 'DESC')
         .getMany()
 
       return allRecipes

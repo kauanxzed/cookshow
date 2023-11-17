@@ -150,16 +150,11 @@ export class RecipeController {
     return await this.recipeService.getUserRecipes(userId)
   }
 
-  @Post('/:recipeId/comment')
+  @Post('/comment')
   @UseGuards(JwtAuthGuard)
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
-  })
-  @ApiParam({
-    name: 'recipeId',
-    description: 'The uuid of the recipe',
-    example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
   })
   @ApiBody({
     type: CreateCommentDto,
@@ -177,7 +172,7 @@ export class RecipeController {
     return this.commentService.create(createCommentDto)
   }
 
-  @Get('/:recipeId/comment/:id')
+  @Get('/comment/:id')
   @ApiResponse({
     status: 200,
     description: 'The record has been successfully found.',
@@ -261,7 +256,6 @@ export class RecipeController {
     description: 'The record has been successfully found.',
   })
   async findRecipeByIngredients(@Body() idIngredient: { id: number }[]) {
-    console.log(idIngredient)
     const ingredientesId = idIngredient.map((ingrediente) => ingrediente.id)
     return await this.recipeService.searchRecipeByIngredient(ingredientesId)
   }
@@ -424,8 +418,6 @@ export class RecipeController {
     examples: {
       update: {
         value: {
-          id_usuario: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
-          id_receita: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
           avaliacao: 5,
           favorito: true,
         },

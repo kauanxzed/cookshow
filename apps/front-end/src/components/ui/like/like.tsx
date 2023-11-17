@@ -1,92 +1,56 @@
-import { UserPayloadType } from '../../../pages/profile/types/recipe.type'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useGetUserPayload } from '@cook-show/hooks'
 
 interface likeProps {
   id_receita: string
 }
 
+const token =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+const axiosInstace = axios.create({
+  timeout: 5000,
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+})
+
 const Like: React.FC<likeProps> = ({ id_receita }) => {
   const [stateFav, setStateFav] = useState<boolean>(false)
-  const [payload, setPayload] = useState<string>()
   const [interaction, setInteraction] = useState<boolean>(false)
-
-  const fetchFav = async (userId: string) => {
-    const fav = await axios.get('/api/user/' + userId + '/' + id_receita)
-    if (fav) {
-      setStateFav(true)
-    } else {
-      setStateFav(false)
-    }
-  }
+  const payload = useGetUserPayload()
 
   useEffect(() => {
-    getPayloadUser().then((payload) => {
-      if (payload) {
-        setPayload(payload.data.userId)
-        fetchFav(payload.data.userId)
-      }
-    })
-    console.log(payload)
-    if (payload) {
-      axiosInstace
-        .get('/api/recipe/' + id_receita + '/user/' + payload + '/interaction')
-        .then((res) => {
-          console.log(res)
-          setInteraction(res ? true : false)
-        })
+    if (!payload) return
+    const getInteraction = async (id_receita: string, id_usuario: string) => {
+      const res = await axiosInstace.get(
+        '/api/recipe/' + id_receita + '/user/' + id_usuario + '/interaction',
+      )
+      setInteraction(res.data ? true : false)
+      setStateFav(res.data ? res.data.favorito : false)
     }
-  }, [payload])
-
-  useEffect(() => {
-    if (payload) {
-      const fetchFav = async () => {
-        const fav = await axios.get('/api/user/' + payload + '/' + id_receita)
-        if (fav) {
-          setStateFav(true)
-        } else {
-          setStateFav(false)
-        }
-      }
-      fetchFav()
-      console.log('com dep de stateFav')
-    }
-  }, [stateFav])
-
-  const token =
-    localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-  const axiosInstace = axios.create({
-    timeout: 5000,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  })
+    getInteraction(id_receita, payload.userId)
+  }, [payload, id_receita])
 
   const handleFavorite = async (id_receita: string) => {
     try {
+      if (!payload) throw new AxiosError('Usuario nao logado')
       if (interaction) {
-        axiosInstace.put(
-          '/api/recipe/' + id_receita + '/user/' + payload + '/rating',
+        await axiosInstace.put(
+          '/api/recipe/' + id_receita + '/user/' + payload.userId + '/rating',
+          {
+            favorito: !stateFav,
+          },
         )
       } else {
-        axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
-          id_usuario: payload,
-          id_receita,
+        await axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
+          id_usuario: payload.userId,
           favorito: !stateFav,
         })
-
-        setStateFav(!stateFav)
       }
-    } catch (error) {
-      window.alert('Não foi possivel concluir a ação')
-    }
-  }
-
-  async function getPayloadUser() {
-    try {
-      return await axiosInstace.get('/api/auth')
+      setStateFav(!stateFav)
     } catch (error) {
       alert(error)
     }
