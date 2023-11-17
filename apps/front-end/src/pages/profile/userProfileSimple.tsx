@@ -59,7 +59,7 @@ function UserProfileSimplified() {
     if (payload) {
       getUserImage(payload.userId).then((data) => {
         setUserData({
-          username: payload.username,
+          username: data.username,
           profileImage: data.foto_perfil,
           fotoId: data.foto_id,
         })
@@ -93,7 +93,7 @@ function UserProfileSimplified() {
         })
         getUserImage(payload.userId).then((data) => {
           setUserData({
-            username: payload.username,
+            username: data.username,
             profileImage: data.foto_perfil,
             fotoId: data.foto_id,
           })
@@ -129,7 +129,7 @@ function UserProfileSimplified() {
                         deleteUserImage(payload.userId, userData.fotoId).then(
                           () =>
                             setUserData({
-                              username: payload.username,
+                              username: userData.username,
                               fotoId: '',
                               profileImage: '',
                             }),
