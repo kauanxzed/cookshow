@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Logo from '../../assets/images/background.png'
 import { useNavigate } from 'react-router-dom'
 import { axiosInstance } from '@cook-show/shared/axios'
+import { Link } from 'react-router-dom'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -91,11 +92,11 @@ function LoginForm() {
             >
               Login
             </button>
-            <a href="/register">
+            <Link to="/register">
               <button className="mt-5 w-36 rounded-lg bg-gray-800 p-2 text-white hover:bg-gray-700">
                 Cadastre-se
               </button>
-            </a>
+            </Link>
           </div>
           <div className="mb-4 flex w-80 justify-between space-x-4">
             <div className="flex items-center">
@@ -107,9 +108,7 @@ function LoginForm() {
               />
               <label className="mb-1  text-orange-700">Lembrar de mim</label>
             </div>
-            <a href="/forgot-password" className="text-orange-700">
-              Esqueceu a senha?
-            </a>
+            <Link to="/forgot-password">Esqueceu a senha?</Link>
           </div>
           <div className="ml-1 mt-12 mb-4 flex w-80 flex-col space-y-4"></div>
         </div>
