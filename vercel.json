@@ -1,1 +1,27 @@
-{}
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "dist/libs/**/package.json",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "dist/apps/front-end/**",
+      "use": "@vercel/static-build"
+    },
+    {
+      "src": "dist/apps/back-end/**",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "./package.json",
+      "use": "./build.sh"
+    }
+  ],
+  "routes": [
+    { "src": "/front-end/(.*)", "dest": "/dist/apps/front-end/$1" },
+    { "src": "/back-end/(.*)", "dest": "/dist/apps/back-end/$1" },
+    { "src": "/libs/(.*)", "dest": "/dist/libs/$1" },
+    { "src": "/(.*)", "dest": "/dist/apps/front-end/$1" }
+  ]
+}
