@@ -1,1 +1,7 @@
-{}
+{
+  "routes": {
+    "src": "/(.*)",
+    "dest": "/apps/back-end/src/main.ts",
+    "methods": ["GET"]
+  }
+}
