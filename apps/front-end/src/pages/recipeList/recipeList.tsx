@@ -16,6 +16,14 @@ const getRecipes = async (ingredients: IngredientType[]) => {
   else return null
 }
 
+const getFavoritesRecipesUser = async (userId: string) => {
+  try {
+    return await axios.get('/api/recipe/user/' + userId + '/favorites')
+  } catch (error) {
+    alert(error)
+  }
+}
+
 const RecipeList: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>('')
   const [suggestions, setSuggestions] = useState<IngredientType[]>([])
