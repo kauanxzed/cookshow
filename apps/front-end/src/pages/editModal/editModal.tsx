@@ -160,11 +160,15 @@ const EditModal: React.FC<propsModal> = ({
 
   const handleInputIngredientChange = (
     e: ChangeEvent<HTMLInputElement>,
-    index: number | string,
+    index: number,
   ) => {
     const { name, value } = e.target
     const list: Array<inputIngrediente> = [...inputList]
-    list[index][name] = value
+
+    list[index] = {
+      ...list[index],
+      [name]: value,
+    }
 
     const ingredientName = ingredient.map((el) => {
       return el.nome

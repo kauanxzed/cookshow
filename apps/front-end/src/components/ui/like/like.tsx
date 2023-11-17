@@ -46,6 +46,7 @@ const Like: React.FC<likeProps> = ({ id_receita }) => {
         )
       } else {
         await axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
+          id_receita,
           id_usuario: payload.userId,
           favorito: !stateFav,
         })

@@ -66,11 +66,9 @@ const getRecipeData = async (recipeId: string) => {
       }
 
       return recipeData
-    } else {
-      return undefined
     }
   } catch (error) {
-    alert('Algo deu errado')
+    alert('Receita não publicada')
   }
 }
 
@@ -88,8 +86,8 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
     try {
       if (show) {
         getRecipeData(id).then((res) => {
-          console.log(res)
           if (res) setRecipe(res)
+          else setShowModal(false)
         })
       }
     } catch (err) {

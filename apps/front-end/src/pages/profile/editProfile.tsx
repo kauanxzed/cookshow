@@ -1,35 +1,30 @@
 import React, { useState, useEffect } from 'react'
 import UserProfileSimplified from './userProfileSimple'
 import axios from 'axios'
-import { AxiosResponse } from 'axios'
+import { useGetUserPayload } from '@cook-show/hooks'
 
-interface UserProfileType {
-  usuario: string
-  email: string
-}
+const token =
+  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+const axiosInstace = axios.create({
+  timeout: 5000,
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+})
 
 function EditProfile() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [placeholderName, setPlaceholderName] = useState('Nome')
   const [placeholderEmail, setPlaceholderEmail] = useState('Email')
-
-  const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-  const axiosInstace = axios.create({
-    timeout: 5000,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  })
+  const payload = useGetUserPayload()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userId =  await axiosInstace.get('/api/auth')
-        const response = await axiosInstace.get(`/api/user/${userId.data.userId}`)
+        const response = await axiosInstace.get(`/api/user/${payload?.userId}`)
         const { usuario, email: userEmail } = response.data
         setName(usuario)
         setEmail(userEmail)
@@ -40,7 +35,7 @@ function EditProfile() {
       }
     }
     fetchData()
-  }, [axiosInstace])
+  }, [payload])
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
@@ -68,7 +63,10 @@ function EditProfile() {
         usuario: name,
         email: email,
       }
-      const response = await axios.put(`/api/user/${userId}`, updatedData)
+      const response = await axios.put(
+        `/api/user/${payload?.userId}`,
+        updatedData,
+      )
       const { usuario, email: userEmail } = response.data
       setName(usuario)
       setEmail(userEmail)

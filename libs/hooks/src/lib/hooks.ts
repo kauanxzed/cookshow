@@ -1,6 +1,10 @@
 import axios from 'axios'
-import { UserPayloadType } from '@cook-show/shared/types'
 import { useEffect, useState } from 'react'
+
+type UserPayloadType = {
+  userId: string
+  username: string
+}
 
 function useGetUserPayload() {
   const [payload, setPayload] = useState<UserPayloadType | null>(null)
