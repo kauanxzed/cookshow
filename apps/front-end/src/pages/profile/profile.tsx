@@ -133,6 +133,7 @@ function ProfilePage() {
                 <RecipeCard
                   key={recipe.id}
                   recipe={recipe}
+                  myRecipe={showPublicacoes}
                   edited={setEdited}
                 />
               ))
