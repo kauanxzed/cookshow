@@ -1,9 +1,13 @@
 {
-  "routes": [
+  "version": 2,
+  "builds": [
     {
-      "src": "/(.*)",
-      "dest": "/apps/back-end/src/main.ts",
-      "methods": ["GET"]
+      "src": "/front-end/**",
+      "use": "@vercel/static-build"
+    },
+    {
+      "src": "/back-end/**",
+      "use": "@vercel/node"
     }
   ]
 }
