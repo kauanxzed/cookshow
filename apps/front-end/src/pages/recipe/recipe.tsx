@@ -97,7 +97,6 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
           rating: recipeRating.data,
           ingredientNames: ingredientNames, // Adiciona os nomes dos ingredientes ao objeto recipeData
         };
-        console.log(recipeData)
 
         axios.get("/api/user/" + recipeData.user.id).then((data) => setOwnerName(data.data.usuario))
         
@@ -107,7 +106,6 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
         return undefined
       }
     } catch (error) {
-      console.log(error)
       alert('Algo deu errado')
       handleCloseModal()
     }
