@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useGetUserPayload } from '@cook-show/hooks'
 
@@ -36,24 +36,23 @@ const Like: React.FC<likeProps> = ({ id_receita }) => {
 
   const handleFavorite = async (id_receita: string) => {
     try {
-      if (interaction && payload) {
-        axiosInstace.put(
+      if (!payload) throw new AxiosError('Usuario nao logado')
+      if (interaction) {
+        await axiosInstace.put(
           '/api/recipe/' + id_receita + '/user/' + payload.userId + '/rating',
           {
             favorito: !stateFav,
           },
         )
       } else {
-        if (payload) {
-          axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
-            favorito: !stateFav,
-          })
-        }
-
-        setStateFav(!stateFav)
+        await axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
+          id_usuario: payload.userId,
+          favorito: !stateFav,
+        })
       }
+      setStateFav(!stateFav)
     } catch (error) {
-      window.alert('Não foi possivel concluir a ação')
+      alert(error)
     }
   }
 

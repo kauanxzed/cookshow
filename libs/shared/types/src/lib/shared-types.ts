@@ -8,4 +8,10 @@ type UserPayloadType = {
   username: string
 }
 
-export { IngredientType, UserPayloadType }
+type CommentsType = {
+  userId: string
+  username: string
+  message: string
+}
+
+export { IngredientType, UserPayloadType, CommentsType }
