@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import UserProfileSimplified from './userProfileSimple'
 import axios from 'axios'
+import { AxiosResponse } from 'axios'
 import { useGetUserPayload } from '@cook-show/hooks'
-
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstace = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
+import { useNavigate } from 'react-router-dom'
 
 function EditProfile() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [placeholderName, setPlaceholderName] = useState('Nome')
   const [placeholderEmail, setPlaceholderEmail] = useState('Email')
+  const [changeEmail, setChangeEmail] = useState(false)
+  const navigate = useNavigate()
+
+  const token =
+    localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+  const axiosInstace = axios.create({
+    timeout: 5000,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+
   const payload = useGetUserPayload()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstace.get(`/api/user/${payload?.userId}`)
+        if (!payload) return
+        const response = await axiosInstace.get(`/api/user/${payload.userId}`)
         const { usuario, email: userEmail } = response.data
         setName(usuario)
         setEmail(userEmail)
-        setPlaceholderName(usuario)
-        setPlaceholderEmail(userEmail)
       } catch (error) {
         console.error('Error fetching user data: ', error)
       }
@@ -40,38 +44,29 @@ function EditProfile() {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value
     setName(newName)
-    if (newName === name) {
-      setPlaceholderName(name)
-    } else {
-      setPlaceholderName('')
-    }
   }
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newEmail = e.target.value
     setEmail(newEmail)
-    if (newEmail === email) {
-      setPlaceholderEmail(email)
-    } else {
-      setPlaceholderEmail('')
-    }
+    setChangeEmail(true)
   }
 
   const handleUpdateProfile = async () => {
     try {
-      const updatedData = {
-        usuario: name,
-        email: email,
+      if (!payload) return
+      if (changeEmail) {
+        await axios.put(`/api/user/${payload.userId}`, {
+          usuario: name,
+          email,
+        })
+        navigate('/perfil')
+        return
       }
-      const response = await axios.put(
-        `/api/user/${payload?.userId}`,
-        updatedData,
-      )
-      const { usuario, email: userEmail } = response.data
-      setName(usuario)
-      setEmail(userEmail)
-      setPlaceholderName(usuario)
-      setPlaceholderEmail(userEmail)
+      await axios.put(`/api/user/${payload.userId}`, {
+        usuario: name,
+      })
+      navigate('/perfil')
     } catch (error) {
       alert('Erro ao atualizar perfil. Tente novamente.')
     }
@@ -92,7 +87,9 @@ function EditProfile() {
             id="name"
             name="name"
             value={name}
-            onChange={handleNameChange}
+            onChange={(e) => {
+              setName(e.target.value)
+            }}
             placeholder={placeholderName}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-500 focus:ring-opacity-50"
           />

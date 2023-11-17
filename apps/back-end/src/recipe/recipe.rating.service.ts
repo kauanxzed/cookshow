@@ -112,7 +112,6 @@ export class RecipeRatingService {
     updateRecipeRatingDto: UpdateRecipeRatingDto,
   ) {
     try {
-      console.log(updateRecipeRatingDto)
       const rating = await this.getById(recipeId, userId)
       if (!rating) {
         throw new HttpException('Rating not found', HttpStatus.NOT_FOUND)

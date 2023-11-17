@@ -86,7 +86,7 @@ function ProfilePage() {
   return (
     <div className="relative flex h-[90vh] flex-col md:flex-row">
       <div className="max-h-[40vh] w-full md:max-h-full md:w-1/4 lg:w-1/3 xl:w-1/4 ">
-        <UserProfile userId={payload?.userId} username={payload?.username} />
+        <UserProfile/>
       </div>
       <div className="relative w-full bg-white p-4 md:w-3/4 lg:w-2/3 xl:w-3/4">
         <div className="mx-auto mb-4 flex max-w-md justify-between md:max-w-lg lg:max-w-2xl">

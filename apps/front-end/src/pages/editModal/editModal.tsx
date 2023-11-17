@@ -1,7 +1,7 @@
 import { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
-import axios, { AxiosError } from 'axios'
+import axios from 'axios'
 import { typeIngredient } from '../../types/typeIngredient'
 
 const token =
@@ -79,7 +79,6 @@ const EditModal: React.FC<propsModal> = ({
             })),
           )
         })
-
         deleteAllIngrediente()
         setSelectedFile(recipeData.imagem)
         setPreview(recipeData.imagem)
@@ -87,8 +86,6 @@ const EditModal: React.FC<propsModal> = ({
         setRecipeTime(recipeData.tempo_preparo)
         setRecipeMode(recipeData.descricao)
         setRecipeDifficulty(recipeData.dificuldade)
-
-        console.log('Dados carregados')
       } catch (error) {
         console.error('Erro ao carregar dados:', error)
       }
@@ -240,7 +237,6 @@ const EditModal: React.FC<propsModal> = ({
   }
 
   const loadIngredients = async () => {
-    console.log('chamando load ingrediente')
     try {
       await axios.get('/api/ingredient').then((Response) => {
         setIngredients(Response.data)

@@ -24,12 +24,18 @@ interface ModalDefaultProps {
   show: boolean | undefined
   setOpenModal: (value: boolean | undefined) => void
   id: string
+  editedFav: (value: boolean) => void
 }
 
 interface typeRecipeIngredients {
   id: number
   nome: string
   portion: number
+}
+
+interface typeUser {
+  foto_perfil: string
+  id: string
 }
 
 interface typeRecipe {
@@ -44,54 +50,82 @@ interface typeRecipe {
   comentarios: CommentType[]
   ingredients: typeRecipeIngredients[]
   rating: number
-}
-
-const getRecipeData = async (recipeId: string) => {
-  try {
-    const recipe = await axios.get('/api/recipe/' + recipeId)
-    const recipeLikes = await axios.get(
-      '/api/recipe/' + recipeId + '/favoritesQuantity',
-    )
-    const recipeComments = await axios.get(
-      '/api/recipe/' + recipeId + '/comment',
-    )
-    const recipeRating = await axios.get('/api/recipe/' + recipeId + '/rating')
-
-    if (recipe.status === 200 && recipeLikes.status === 200) {
-      const recipeData: typeRecipe = {
-        ...recipe.data,
-        curtidas: recipeLikes.data,
-        comentarios: recipeComments.data,
-        rating: recipeRating.data,
-      }
-
-      return recipeData
-    }
-  } catch (error) {
-    alert('Receita não publicada')
-  }
+  ingredientNames: string[]
+  user: typeUser
 }
 
 const RecipeDetails: React.FC<ModalDefaultProps> = ({
   show,
   setOpenModal,
   id,
+  editedFav,
 }) => {
   const [commentsVisible, setCommentsVisible] = useState(true)
   const [showModal, setShowModal] = useState(show)
   const [recipe, setRecipe] = useState<typeRecipe>()
-  const [rating, setRating] = React.useState(0)
+  const [rating, setRating] = useState(0)
+  const [ownerName, setOwnerName] = useState('')
+
+  const getRecipeData = async (recipeId: string) => {
+    try {
+      const recipe = await axios.get('/api/recipe/' + recipeId)
+      const recipeLikes = await axios.get(
+        '/api/recipe/' + recipeId + '/favoritesQuantity',
+      )
+      const recipeComments = await axios.get(
+        '/api/recipe/' + recipeId + '/comment',
+      )
+      const recipeRating = await axios.get(
+        '/api/recipe/' + recipeId + '/rating',
+      )
+
+      if (recipe.status === 200 && recipeLikes.status === 200) {
+        const ingredientsPromises = recipe.data.ingredients.map(
+          async (el: { ingredient: string }) => {
+            const response = await axios.get(
+              '/api/ingredient/' + el.ingredient + '/getById',
+            )
+            return response.data
+          },
+        )
+
+        const ingredientsData = await Promise.all(ingredientsPromises)
+        const ingredientNames = ingredientsData.map((el) => el.nome)
+
+        const recipeData: typeRecipe = {
+          ...recipe.data,
+          curtidas: recipeLikes.data,
+          comentarios: recipeComments.data,
+          rating: recipeRating.data,
+          ingredientNames: ingredientNames, // Adiciona os nomes dos ingredientes ao objeto recipeData
+        }
+
+        axios
+          .get('/api/user/' + recipeData.user.id)
+          .then((data) => setOwnerName(data.data.usuario))
+
+        return recipeData
+      } else {
+        return undefined
+      }
+    } catch (error) {
+      alert('Algo deu errado')
+      handleCloseModal()
+    }
+  }
 
   useEffect(() => {
     try {
       if (show) {
         getRecipeData(id).then((res) => {
-          if (res) setRecipe(res)
-          else setShowModal(false)
+          if (res) {
+            setRecipe(res)
+          }
         })
       }
     } catch (err) {
       alert('Algo deu errado')
+      handleCloseModal()
     }
   }, [show, id])
 
@@ -108,33 +142,37 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
     <Modal show={showModal} onClose={() => handleCloseModal()} size="5xl">
       {recipe ? (
         <Modal.Body className="flex h-[90vh] flex-col justify-between rounded-t-lg bg-white p-0 md:flex-row">
-          <div className="h-[90vh] rounded-tl-lg bg-gradient-to-r from-[#FF7A00] p-5">
+          <div className="relative flex h-[90vh] items-center justify-center rounded-tl-lg bg-gradient-to-r from-[#FF7A00] p-5 pt-10 md:items-start">
             <button
-              className="self-start text-xl text-black"
+              className="absolute top-5 left-5 text-xl text-black"
               onClick={() => handleCloseModal()}
             >
               X
             </button>
-            <div className="align-center flex h-72 w-72 justify-center overflow-hidden rounded-full border border-solid border-[#FF7A00] bg-white">
+            <div className="flex h-72 w-72 items-center justify-center overflow-hidden rounded-full border border-solid border-[#FF7A00] bg-white">
               <img id="photoRecipe" alt="Foto da receita" src={recipe.imagem} />
             </div>
           </div>
-          <div className="flex h-[90vh] w-full flex-col justify-between rounded-tr-lg p-3">
+          <div className="flex h-[90vh] w-full flex-col justify-between rounded-tr-lg p-5">
             <div className="flex h-3/5 flex-row">
               <div className="flex w-1/2 flex-col justify-between">
                 <div>
                   <h1 className="text-xl text-[#9C4B00]">{recipe.titulo}</h1>
-                  <p className="text-xs text-[#999999]">origem</p>
                   <p className='mt-2 font-["Poppins"] text-base text-[#666565]'>
-                    TESTE ARRUMAR
+                    {ownerName}
                   </p>
                   <div className="mt-2 flex flex-row">
                     <RecipeInfo info={'🕙 ' + recipe.tempo_preparo} />
                     <RecipeInfo info={'🍽️ ' + recipe.dificuldade} />
-                    <RecipeInfo info={'🔥 ' + recipe.calorias + ' Kcal'} />
+                  </div>
+                  <div className="mt-2 flex flex-row flex-wrap">
+                    {recipe.ingredientNames.map((ingredientName) => (
+                      <Ingredient key={ingredientName} name={ingredientName} />
+                    ))}
                   </div>
                   <div className="mt-2 flex flex-row items-center">
                     <Rating
+                      id={recipe.id}
                       count={5}
                       value={rating}
                       edit={true}
@@ -142,17 +180,12 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                       className="flex flex-row"
                     />
                   </div>
-                  <div className="mt-2 flex flex-row flex-wrap">
-                    {recipe.ingredients.map((ingredient) => {
-                      return <Ingredient name={ingredient.nome} />
-                    })}
-                  </div>
                 </div>
                 <div className="flex flex-row">
                   <PersonsLiked likes={recipe.curtidas} />
                 </div>
                 <div className="flex flex-row">
-                  <Like id_receita={recipe.id} />
+                  <Like id_receita={recipe.id} editedFav={editedFav} />
                   <p className="ml-2 cursor-pointer" onClick={showComments}>
                     {commentsVisible
                       ? 'Ocultar todos os comentários'

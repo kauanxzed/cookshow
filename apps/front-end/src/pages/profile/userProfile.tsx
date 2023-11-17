@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { UserPayloadType } from './types/recipe.type'
+import { useGetUserPayload } from '@cook-show/hooks'
 
 type UserDataType = {
   username: string
@@ -20,45 +21,25 @@ const axiosInstance = axios.create({
   },
 })
 
-const getUserPayload = async () => {
-  try {
-    const res = await axiosInstance.get('/api/auth')
-    return res.data as UserPayloadType
-  } catch (error) {
-    alert('usuario não logado')
-  }
-}
-
 const getUserImage = async (userId: string) => {
   try {
     const res = await axiosInstance.get('/api/user/' + userId)
-    const user = res.data
-    return user
+    return res.data;
   } catch (error) {
     alert('usuario nao encontrado')
   }
 }
-interface UserProfileProps {
-  userId: string | undefined
-  username: string | undefined
-}
 
-function UserProfile(props: UserProfileProps) {
+function UserProfile() {
   const navigate = useNavigate()
   const [userData, setUserData] = useState<UserDataType>()
-  const [payload, setPayload] = useState<UserPayloadType>()
-
-  useEffect(() => {
-    getUserPayload().then((data) => {
-      setPayload(data)
-    })
-  }, [])
+  const payload = useGetUserPayload()
 
   useEffect(() => {
     if (payload) {
       getUserImage(payload.userId).then((data) => {
         setUserData({
-          username: payload.username,
+          username: data.usuario,
           profileImage: data.foto_perfil,
           fotoId: data.foto_id,
         })
@@ -77,9 +58,9 @@ function UserProfile(props: UserProfileProps) {
               className="relative h-24 w-24 rounded-full object-cover md:h-72 md:w-72"
             />
           ) : (
-            <div>Adicione uma foto de perfil</div>
+            <div className="relative h-24 w-24 rounded-full object-cover md:h-72 md:w-72 flex justify-center items-center">Adicione uma foto de perfil</div>
           )}
-          <h2 className="text-xl">{props.username}</h2>
+          <h2 className="text-xl">{userData.username}</h2>
           <button
             className="rounded border border-black bg-transparent px-4 py-1 text-black "
             onClick={() => navigate('/perfil/editar')}

@@ -1,6 +1,9 @@
-import React, { useState } from 'react'
+import { useGetUserPayload } from '@cook-show/hooks';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 
 interface RatingProps {
+  id: string,
   className?: string;
   count: number;
   value: number;
@@ -63,7 +66,19 @@ const EmptyStar = ({ size = 24, color = "#000000" }: IconProps) => {
   );
 };
 
+const token =
+    localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
+
+const axiosInstace = axios.create({
+  timeout: 5000,
+  headers: {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
+})
+
 export const Rating: React.FC<RatingProps> = ({
+  id,
   className,
   count,
   value,
@@ -79,6 +94,19 @@ export const Rating: React.FC<RatingProps> = ({
   fullIcon = <FullStar />
 }) => {
   const [hoverValue, setHoverValue] = useState<number | undefined>(undefined);
+  const payload = useGetUserPayload()
+  const [rating, setRating] = useState(null);
+
+  useEffect(() => {
+    if (!payload) return
+    const getInteraction = async () => {
+      const res = await axiosInstace.get(
+        '/api/recipe/' + id + '/user/' + payload.userId + '/interaction',
+      )
+      if (onChange) onChange(res.data.avaliacao);
+    }
+    getInteraction()
+  }, [id, payload])
 
   const handleMouseMove = (index: number) => {
     if (!edit) return;
@@ -90,10 +118,49 @@ export const Rating: React.FC<RatingProps> = ({
     setHoverValue(undefined);
   };
 
-  const handleClick = (index: number) => {
+  const getRatingRecipe = async () => {
+    try {
+      const res = await axios.get(`/api/recipe/${id}/rating`);
+      return res.data; // Pode ser necessário ajustar isso dependendo da estrutura da resposta
+    } catch (error) {
+      console.error('Erro ao obter a classificação da receita:', error);
+      throw error; // Ou manipule o erro de outra maneira, dependendo dos requisitos
+    }
+  };
+
+  const handleClick = async (index: number) => {
     if (!edit) return;
     if (onChange) onChange(index + 1);
+    if(!payload) return;
+    axiosInstace
+        .get('/api/recipe/' + id + '/user/' + payload.userId + '/interaction')
+        .then((res) => {
+          if (res.data) {
+            axiosInstace.put('/api/recipe/' + id + '/user/' + payload?.userId + '/rating', {
+              avaliacao: index+1,
+            })
+          } else {
+            if(!payload) return
+            axiosInstace.post('/api/recipe/' + id + '/rating', {
+              id_usuario: payload.userId,
+              id_receita: id,
+              avaliacao: index+1,
+            })
+          }
+        })
   };
+  
+  useEffect(() => {
+    const fetchRating = async () => {
+      try {
+        const res = await getRatingRecipe();
+        setRating(res);
+      } catch (error) {
+        console.error('Erro ao obter a classificação da receita:', error);
+      }
+    };
+    fetchRating()
+  }, [handleClick])
 
   const stars = [];
 
@@ -129,5 +196,13 @@ export const Rating: React.FC<RatingProps> = ({
     );
   }
 
-  return <div className={`rating ${className}`}>{stars}</div>;
-};
+  return (
+    <div className='flex flex-col'>
+      <div className='flex items-center'>
+        <p className='mr-2'>Nota: </p>
+        <div className='border border-solid border-orange-500 rounded-full text-xs font-bold h-8 w-8 flex items-center justify-center'>{Number.isInteger(rating) ? `${rating}.0` : rating}/5</div>
+      </div>
+      <div className={`rating ${className}`}>{stars}</div>
+    </div> 
+  )
+}

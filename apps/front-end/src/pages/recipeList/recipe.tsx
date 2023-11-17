@@ -99,7 +99,7 @@ const Recipe: React.FC<RecipeProps> = (props) => {
           </Link>
           <div className="h-6 w-6 rounded-full bg-[#ff8c00] md:hidden">
             <span className="font-sm flex h-full w-full items-center justify-center text-white ">
-              {rating}
+              {Number.isInteger(rating) ? `${rating}.0` : rating}
             </span>
           </div>
         </div>

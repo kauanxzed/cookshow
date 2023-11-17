@@ -41,7 +41,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({
   const [recipeMode, setRecipeMode] = useState('')
   const [isFocused, setIsFocused] = useState<boolean[]>([])
   const [selectedFile, setSelectedFile] = useState<File>()
-  const [recipeDifficulty, setRecipeDifficulty] = useState('')
+  const [recipeDifficulty, setRecipeDifficulty] = useState('Facil')
   const [preview, setPreview] = useState('')
   const [errors, setErrors] = useState({
     recipeName: '',

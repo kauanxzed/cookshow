@@ -174,6 +174,7 @@ export class RecipeService {
         .createQueryBuilder('recipe')
         .innerJoin('recipe.ratings', 'interacao')
         .where('interacao.id_usuario = :userId', { userId })
+        .andWhere('interacao.favorito = true')
         .andWhere('recipe.deleted_at IS NULL')
         .getMany()
 
@@ -220,8 +221,6 @@ export class RecipeService {
     }
 
     try {
-      console.log(ingredientId)
-      console.log(recipeId)
       await this.recipeIngredientRepository
         .createQueryBuilder()
         .delete()
