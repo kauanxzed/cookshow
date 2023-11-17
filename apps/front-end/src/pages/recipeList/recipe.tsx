@@ -38,7 +38,6 @@ const Recipe: React.FC<RecipeProps> = (props) => {
   const [hoursStr, minutesStr] = props.recipe.tempo_preparo.split(':')
   const hours = parseInt(hoursStr, 10)
   const minutes = parseInt(minutesStr, 10)
-  const [ownerName, setOwnerName] = useState('')
 
   useEffect(() => {
     const fn = async () => {
@@ -48,9 +47,6 @@ const Recipe: React.FC<RecipeProps> = (props) => {
       if (res) setLikesNum(res)
     }
     fn()
-    axiosInstance
-          .get('/api/user/' + props.recipe.user.id)
-          .then((data) => setOwnerName(data.data.usuario))
   }, [props.recipe.id])
 
   function transformCase(str: string): string {
@@ -75,13 +71,9 @@ const Recipe: React.FC<RecipeProps> = (props) => {
     return minutes.toString().padStart(2, '0')
   }
 
-  const recipeURL = `/receitas/${props.recipe.id}`
-
   const handleSetOpenModal = (value: boolean | undefined) => {
     setOpenModal(value)
   }
-
-  
 
   return (
     <div className="flex w-full pr-5 pb-2 md:w-1/2 md:flex-col md:p-8 md:pr-0 md:pb-0 lg:w-1/3">
@@ -97,9 +89,14 @@ const Recipe: React.FC<RecipeProps> = (props) => {
       </div>
       <div className="ml-1 flex h-full w-full flex-col">
         <div className="flex justify-between">
-            <h1 className="font-medium text-[#ff8c00]" onClick={() => {handleSetOpenModal(true)}}>
-              {transformCase(props.recipe.titulo)}
-            </h1>
+          <h1
+            className="font-medium text-[#ff8c00]"
+            onClick={() => {
+              handleSetOpenModal(true)
+            }}
+          >
+            {transformCase(props.recipe.titulo)}
+          </h1>
           <div className="h-6 w-6 rounded-full bg-[#ff8c00] md:hidden">
             <span className="font-sm flex h-full w-full items-center justify-center text-white ">
               {Number.isInteger(rating) ? `${rating}.0` : rating}
@@ -107,7 +104,6 @@ const Recipe: React.FC<RecipeProps> = (props) => {
           </div>
         </div>
         <div className="flex w-full justify-between">
-          <h2 className="text-black">{transformCase(ownerName)}</h2>
           <div className="flex">
             <img
               src={timer}
