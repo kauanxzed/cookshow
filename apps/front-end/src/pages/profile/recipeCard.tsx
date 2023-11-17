@@ -119,6 +119,7 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
           show={openModal}
           setOpenModal={handleSetOpenModal}
           id={recipe.id}
+          editedFav= {edited}
         />
       )}
       {openModalDelete === true && (
