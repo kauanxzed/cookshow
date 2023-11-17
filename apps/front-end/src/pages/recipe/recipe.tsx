@@ -24,7 +24,7 @@ interface ModalDefaultProps {
   show: boolean | undefined
   setOpenModal: (value: boolean | undefined) => void
   id: string
-  editedFav: (value: boolean) => void
+  editedFav?: (value: boolean) => void
 }
 
 interface typeRecipeIngredients {
