@@ -1,3 +1,8 @@
+interface typeUser {
+  foto_perfil: string
+  id: string
+}
+
 export type RecipeType = {
   id: string
   titulo: string
@@ -8,6 +13,7 @@ export type RecipeType = {
   calorias: number
   imagem: string
   publicado: boolean
+  user: typeUser
 }
 
 export type UserPayloadType = {
