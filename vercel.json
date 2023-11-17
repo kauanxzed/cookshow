@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "installCommand": "npm install",
   "buildCommand": "npx nx run-many -t build",
   "outputDirectory": "dist/apps",
   "builds": [
