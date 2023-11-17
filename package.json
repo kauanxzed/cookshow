@@ -6,7 +6,8 @@
     "test": "jest",
     "dev:front": "npx nx serve front-end",
     "dev:back": "npx nx serve back-end",
-    "dev": "npx nx run-many -t serve"
+    "dev": "npx nx run-many -t serve",
+    "build": "npx nx run-many -t build"
   },
   "private": true,
   "devDependencies": {
