@@ -55,7 +55,6 @@ const getRecipeData = async (recipeId: string) => {
     const recipeComments = await axios.get(
       '/api/recipe/' + recipeId + '/comment',
     )
-
     const recipeRating = await axios.get('/api/recipe/' + recipeId + '/rating')
 
     if (recipe.status === 200 && recipeLikes.status === 200) {
@@ -89,6 +88,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
     try {
       if (show) {
         getRecipeData(id).then((res) => {
+          console.log(res)
           if (res) setRecipe(res)
         })
       }
@@ -151,7 +151,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
                   </div>
                 </div>
                 <div className="flex flex-row">
-                  <PersonsLiked personsLiked={recipe.curtidas} />
+                  <PersonsLiked likes={recipe.curtidas} />
                 </div>
                 <div className="flex flex-row">
                   <Like id_receita={recipe.id} />
