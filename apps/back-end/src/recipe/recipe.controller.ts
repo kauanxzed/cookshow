@@ -204,8 +204,8 @@ export class RecipeController {
     description: 'The uuid of the recipe',
     example: '73de5d0f-df78-4ca4-a499-ec679125ad9a',
   })
-  async findAll() {
-    return await this.commentService.findAll()
+  async findAll(@Param('recipeId') recipeId: string) {
+    return await this.commentService.findAll(recipeId)
   }
 
   @Put('/:recipeId/comment/:id')

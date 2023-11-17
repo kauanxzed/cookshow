@@ -1,15 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateCommentDto } from '../recipe/dto/create-recipe-comment.dto';
-import { UpdateCommentDto } from '../recipe/dto/update-recipe-comment.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CommentEntity } from '../recipe/entities/recipe-comment.entity';
-import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { CreateCommentDto } from '../recipe/dto/create-recipe-comment.dto'
+import { UpdateCommentDto } from '../recipe/dto/update-recipe-comment.dto'
+import { InjectRepository } from '@nestjs/typeorm'
+import { CommentEntity } from '../recipe/entities/recipe-comment.entity'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class RecipeCommentService {
   constructor(
     @InjectRepository(CommentEntity)
-    private readonly commentRepository: Repository<CommentEntity>
+    private readonly commentRepository: Repository<CommentEntity>,
   ) {}
 
   async create(createCommentDto: CreateCommentDto): Promise<void> {
@@ -18,17 +18,18 @@ export class RecipeCommentService {
         .createQueryBuilder()
         .insert()
         .values(createCommentDto)
-        .execute();
+        .execute()
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
-  async findAll(): Promise<CommentEntity[]> {
+  async findAll(recipeId: string): Promise<CommentEntity[]> {
     const comentarios = await this.commentRepository
       .createQueryBuilder('receita_comentario')
-      .getMany();
-    return comentarios;
+      .where('receita_comentario.id_receita = :recipeId', { recipeId })
+      .getMany()
+    return comentarios
   }
 
   async findById(id: string): Promise<CommentEntity | null> {
@@ -36,17 +37,15 @@ export class RecipeCommentService {
       .createQueryBuilder('receita_comentario')
       .where('receita_comentario.id = :id', { id })
       .andWhere('receita_comentario.deleted_at IS NULL')
-      .getOne();
-    return foundComment;
+      .getOne()
+    console.log(foundComment)
+    return foundComment
   }
 
   async update(id: string, updateCommentDto: UpdateCommentDto): Promise<void> {
-    const foundComment = await this.findById(id);
+    const foundComment = await this.findById(id)
     if (!foundComment) {
-      throw new HttpException(
-        'Comentário não encontrado',
-        HttpStatus.NOT_FOUND
-      );
+      throw new HttpException('Comentário não encontrado', HttpStatus.NOT_FOUND)
     }
 
     try {
@@ -55,20 +54,17 @@ export class RecipeCommentService {
         .update(CommentEntity)
         .set({ ...updateCommentDto })
         .where('id = :id', { id })
-        .execute();
+        .execute()
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
   async delete(id: string): Promise<void> {
-    const foundComment = await this.findById(id);
+    const foundComment = await this.findById(id)
 
     if (!foundComment) {
-      throw new HttpException(
-        'Comentário não encontrado',
-        HttpStatus.NOT_FOUND
-      );
+      throw new HttpException('Comentário não encontrado', HttpStatus.NOT_FOUND)
     }
 
     try {
@@ -77,9 +73,9 @@ export class RecipeCommentService {
         .update(CommentEntity)
         .set({ deleted_at: new Date() })
         .where('id = :id', { id })
-        .execute();
+        .execute()
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
@@ -88,17 +84,17 @@ export class RecipeCommentService {
       const comments = this.commentRepository
         .createQueryBuilder('comments')
         .where('comments.id_receita = :recipeId', { recipeId })
-        .getMany();
+        .getMany()
 
-      return comments;
+      return comments
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST)
     }
   }
 
   async getQuantCommentsRecipe(recipeId: string) {
-    const comments = await this.getRecipesComments(recipeId);
+    const comments = await this.getRecipesComments(recipeId)
 
-    return comments.length;
+    return comments.length
   }
 }
