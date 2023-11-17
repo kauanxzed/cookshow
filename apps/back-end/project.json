@@ -11,7 +11,7 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist",
+        "outputPath": "dist/apps/back-end",
         "main": "apps/back-end/src/main.ts",
         "tsConfig": "apps/back-end/tsconfig.app.json",
         "assets": ["apps/back-end/src/assets"],
