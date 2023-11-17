@@ -1,5 +1,6 @@
 import React, { FormEvent, useState, useEffect } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
+import { axiosInstance } from '@cook-show/shared/axios'
 import axios from 'axios'
 import { CommentType } from './types/comment.type'
 
@@ -7,16 +8,6 @@ interface CommentsProps {
   comments: Array<CommentType>
   recipeId: string
 }
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstance = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
 
 const Comments: React.FC<CommentsProps> = (props) => {
   const [comment, setComment] = useState('')
@@ -27,7 +18,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
 
   const getUserName = async (userId: string) => {
     try {
-      const response = await axios.get(`/api/user/${userId}`)
+      const response = await axiosInstance.get(`/api/user/${userId}`)
 
       if (response?.data?.usuario) {
         return response.data.usuario

@@ -85,28 +85,34 @@ function Header() {
           <div className="hidden md:flex">
             {loggedIn ? (
               <>
+                <Link to="/perfil">
+                  <a
+                    href="!#"
+                    className="mx-14 text-center text-xl hover:text-orange-600 "
+                  >
+                    PERFIL
+                  </a>
+                </Link>
+                <Link to="/">
+                  <a
+                    href="!#"
+                    className="mx-14 text-center text-xl hover:text-orange-600 "
+                    onClick={() => logOut()}
+                  >
+                    SAIR
+                  </a>
+                </Link>
+              </>
+            ) : (
+              <Link to="/login">
                 <a
-                  href="/perfil"
-                  className="mx-14 text-center text-xl hover:text-orange-600 "
-                >
-                  PERFIL
-                </a>
-                <a
-                  href="/"
+                  href="!#"
                   className="mx-14 text-center text-xl hover:text-orange-600 "
                   onClick={() => logOut()}
                 >
-                  SAIR
+                  LOGIN
                 </a>
-              </>
-            ) : (
-              <a
-                href="/login"
-                className="mx-14 text-center text-xl hover:text-orange-600 "
-                onClick={() => logOut()}
-              >
-                LOGIN
-              </a>
+              </Link>
             )}
           </div>
         </div>

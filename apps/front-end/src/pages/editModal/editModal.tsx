@@ -1,19 +1,8 @@
 import { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import { typeIngredient } from '../../types/typeIngredient'
-
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstance = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
 
 interface propsModal {
   show: boolean | undefined
@@ -58,12 +47,12 @@ const EditModal: React.FC<propsModal> = ({
     const fetchData = async () => {
       try {
         await loadIngredients()
-        const recipe = await axios.get('/api/recipe/' + id)
+        const recipe = await axiosInstance.get('/api/recipe/' + id)
         const recipeData = { ...recipe.data }
 
         const ingredientsPromises = recipeData.ingredients.map(
           async (el: { ingredient: string }) => {
-            const response = await axios.get(
+            const response = await axiosInstance.get(
               '/api/ingredient/' + el.ingredient + '/getById',
             )
             return response.data
@@ -95,12 +84,12 @@ const EditModal: React.FC<propsModal> = ({
   }, [])
 
   const deleteAllIngrediente = async () => {
-    const recipe = await axios.get('/api/recipe/' + id)
+    const recipe = await axiosInstance.get('/api/recipe/' + id)
     const recipeData = { ...recipe.data }
 
     const ingredientsPromises = recipeData.ingredients.map(
       async (el: { ingredient: string }) => {
-        const response = await axios.get(
+        const response = await axiosInstance.get(
           '/api/ingredient/' + el.ingredient + '/getById',
         )
         return response.data
@@ -157,11 +146,15 @@ const EditModal: React.FC<propsModal> = ({
 
   const handleInputIngredientChange = (
     e: ChangeEvent<HTMLInputElement>,
-    index: number | string,
+    index: number,
   ) => {
     const { name, value } = e.target
     const list: Array<inputIngrediente> = [...inputList]
-    list[index][name] = value
+
+    list[index] = {
+      ...list[index],
+      [name]: value,
+    }
 
     const ingredientName = ingredient.map((el) => {
       return el.nome
@@ -214,7 +207,7 @@ const EditModal: React.FC<propsModal> = ({
     const hasErrors = Object.values(errors).some((error) => !!error)
     if (!hasErrors) {
       try {
-        const recipe = await axios.get('/api/recipe/' + id)
+        const recipe = await axiosInstance.get('/api/recipe/' + id)
         const Response = await axiosInstance.put('/api/recipe/' + id, {
           titulo: recipeName,
           descricao: recipeMode,
@@ -234,7 +227,7 @@ const EditModal: React.FC<propsModal> = ({
 
   const loadIngredients = async () => {
     try {
-      await axios.get('/api/ingredient').then((Response) => {
+      await axiosInstance.get('/api/ingredient').then((Response) => {
         setIngredients(Response.data)
       })
     } catch (error) {

@@ -3,7 +3,6 @@ import { ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from '../user/user.module'
 import { UserEntity } from '../user/entities/user.entity'
-import { readFileSync } from 'fs'
 import { AuthModule } from '../auth/auth.module'
 import { IngredientModule } from '../ingredient/ingredient.module'
 import { IngredientEntity } from '../ingredient/entities/ingredient.entity'
@@ -38,9 +37,7 @@ import { RatingEntity } from '../recipe/entities/recipe-rating.entity'
       logging: true,
       ssl: {
         rejectUnauthorized: false,
-        ca: readFileSync(
-          'apps/back-end/src/assets/ca-certificate.crt',
-        ).toString(),
+        ca: process.env.CRT,
       },
     }),
   ],

@@ -1,6 +1,10 @@
 import axios from 'axios'
-import { UserPayloadType } from '@cook-show/shared/types'
 import { useEffect, useState } from 'react'
+
+type UserPayloadType = {
+  userId: string
+  username: string
+}
 
 function useGetUserPayload() {
   const [payload, setPayload] = useState<UserPayloadType | null>(null)
@@ -9,6 +13,7 @@ function useGetUserPayload() {
     localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
 
   const axiosInstance = axios.create({
+    baseURL: 'https://cook-show-056b96634c68.herokuapp.com',
     timeout: 5000,
     headers: {
       Authorization: `Bearer ${token}`,

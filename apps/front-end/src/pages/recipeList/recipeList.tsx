@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import { RecipeType } from '../profile/types/recipe.type'
 import { useSearchParams } from 'react-router-dom'
 import { IngredientType } from '@cook-show/shared/types'
@@ -11,14 +11,17 @@ const getRecipes = async (ingredients: IngredientType[]) => {
       id: i.id,
     }
   })
-  const res = await axios.post('/api/recipe/search/ingredient', idIngredients)
+  const res = await axiosInstance.post(
+    '/api/recipe/search/ingredient',
+    idIngredients,
+  )
   if (res) return res.data as RecipeType[]
   else return null
 }
 
 const getFavoritesRecipesUser = async (userId: string) => {
   try {
-    return await axios.get('/api/recipe/user/' + userId + '/favorites')
+    return await axiosInstance.get('/api/recipe/user/' + userId + '/favorites')
   } catch (error) {
     alert(error)
   }
@@ -46,7 +49,7 @@ const RecipeList: React.FC = () => {
 
   const loadIngredients = async () => {
     try {
-      const res = await axios.get('/api/ingredient')
+      const res = await axiosInstance.get('/api/ingredient')
       setIngredients(res.data)
       return res.data as IngredientType[]
     } catch (error) {

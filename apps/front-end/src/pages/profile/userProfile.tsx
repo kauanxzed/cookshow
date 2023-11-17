@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { UserPayloadType } from './types/recipe.type'
+import { axiosInstance } from '@cook-show/shared/axios'
 import { useGetUserPayload } from '@cook-show/hooks'
 
 type UserDataType = {
@@ -10,21 +9,10 @@ type UserDataType = {
   fotoId: string
 }
 
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstance = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
-
 const getUserImage = async (userId: string) => {
   try {
     const res = await axiosInstance.get('/api/user/' + userId)
-    return res.data;
+    return res.data
   } catch (error) {
     alert('usuario nao encontrado')
   }
@@ -58,7 +46,9 @@ function UserProfile() {
               className="relative h-24 w-24 rounded-full object-cover md:h-72 md:w-72"
             />
           ) : (
-            <div className="relative h-24 w-24 rounded-full object-cover md:h-72 md:w-72 flex justify-center items-center">Adicione uma foto de perfil</div>
+            <div className="relative flex h-24 w-24 items-center justify-center rounded-full object-cover md:h-72 md:w-72">
+              Adicione uma foto de perfil
+            </div>
           )}
           <h2 className="text-xl">{userData.username}</h2>
           <button
