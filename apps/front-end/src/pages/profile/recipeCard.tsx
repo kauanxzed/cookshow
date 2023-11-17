@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { RecipeType } from './types/recipe.type'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import DeletModal from '../deleteModal/deleteModal'
 import EditModal from '../editModal/editModal'
 import RecipeModal from '../recipe/recipe'
@@ -13,7 +13,9 @@ interface Recipe {
 
 async function getLikes(recipeId: string) {
   try {
-    return await axios.get('/api/recipe/' + recipeId + '/favoritesQuantity')
+    return await axiosInstance.get(
+      '/api/recipe/' + recipeId + '/favoritesQuantity',
+    )
   } catch (error) {
     alert(error)
   }
@@ -21,7 +23,7 @@ async function getLikes(recipeId: string) {
 
 async function getRating(recipeId: string) {
   try {
-    return await axios.get('/api/recipe/' + recipeId + '/rating')
+    return await axiosInstance.get('/api/recipe/' + recipeId + '/rating')
   } catch (error) {
     alert(error)
   }
@@ -29,7 +31,9 @@ async function getRating(recipeId: string) {
 
 async function getComments(recipeId: string) {
   try {
-    return await axios.get('/api/recipe/' + recipeId + '/commentsQuantity')
+    return await axiosInstance.get(
+      '/api/recipe/' + recipeId + '/commentsQuantity',
+    )
   } catch (error) {
     alert(error)
   }
@@ -140,7 +144,7 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
           show={openModal}
           setOpenModal={handleSetOpenModal}
           id={recipe.id}
-          editedFav= {edited}
+          editedFav={edited}
         />
       )}
       {openModalDelete === true && (

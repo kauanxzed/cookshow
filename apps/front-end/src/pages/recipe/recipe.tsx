@@ -5,20 +5,9 @@ import { Rating } from './recipeRating'
 import Ingredient from './Ingredient'
 import Like from '../../components/ui/like/like'
 import PersonsLiked from '../../components/ui/personsLiked'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import Comments from './comments'
 import { CommentType } from './types/comment.type'
-
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstance = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
 
 interface ModalDefaultProps {
   show: boolean | undefined
@@ -68,21 +57,21 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
 
   const getRecipeData = async (recipeId: string) => {
     try {
-      const recipe = await axios.get('/api/recipe/' + recipeId)
-      const recipeLikes = await axios.get(
+      const recipe = await axiosInstance.get('/api/recipe/' + recipeId)
+      const recipeLikes = await axiosInstance.get(
         '/api/recipe/' + recipeId + '/favoritesQuantity',
       )
-      const recipeComments = await axios.get(
+      const recipeComments = await axiosInstance.get(
         '/api/recipe/' + recipeId + '/comment',
       )
-      const recipeRating = await axios.get(
+      const recipeRating = await axiosInstance.get(
         '/api/recipe/' + recipeId + '/rating',
       )
 
       if (recipe.status === 200 && recipeLikes.status === 200) {
         const ingredientsPromises = recipe.data.ingredients.map(
           async (el: { ingredient: string }) => {
-            const response = await axios.get(
+            const response = await axiosInstance.get(
               '/api/ingredient/' + el.ingredient + '/getById',
             )
             return response.data
@@ -100,7 +89,7 @@ const RecipeDetails: React.FC<ModalDefaultProps> = ({
           ingredientNames: ingredientNames, // Adiciona os nomes dos ingredientes ao objeto recipeData
         }
 
-        axios
+        axiosInstance
           .get('/api/user/' + recipeData.user.id)
           .then((data) => setOwnerName(data.data.usuario))
 

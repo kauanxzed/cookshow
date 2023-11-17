@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, KeyboardEvent, useEffect } from 'react'
 import Logo from '../../assets/images/Logo.png'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import { typeIngredient } from '../../types/typeIngredient'
 import { useNavigate } from 'react-router-dom'
 
@@ -20,7 +20,7 @@ const SearchBar: React.FC = () => {
 
   const loadIngredients = async () => {
     try {
-      await axios.get('/api/ingredient').then((Response) => {
+      await axiosInstance.get('/api/ingredient').then((Response) => {
         setIngredients(Response.data)
       })
     } catch (error) {

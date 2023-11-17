@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import UserProfileSimplified from './userProfileSimple'
-import axios from 'axios'
-import { AxiosResponse } from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import { useGetUserPayload } from '@cook-show/hooks'
 import { useNavigate } from 'react-router-dom'
 
@@ -12,25 +11,13 @@ function EditProfile() {
   const [placeholderEmail, setPlaceholderEmail] = useState('Email')
   const [changeEmail, setChangeEmail] = useState(false)
   const navigate = useNavigate()
-
-  const token =
-    localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-  const axiosInstace = axios.create({
-    timeout: 5000,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-  })
-
   const payload = useGetUserPayload()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (!payload) return
-        const response = await axiosInstace.get(`/api/user/${payload.userId}`)
+        const response = await axiosInstance.get(`/api/user/${payload.userId}`)
         const { usuario, email: userEmail } = response.data
         setName(usuario)
         setEmail(userEmail)
@@ -56,14 +43,14 @@ function EditProfile() {
     try {
       if (!payload) return
       if (changeEmail) {
-        await axios.put(`/api/user/${payload.userId}`, {
+        await axiosInstance.put(`/api/user/${payload.userId}`, {
           usuario: name,
           email,
         })
         navigate('/perfil')
         return
       }
-      await axios.put(`/api/user/${payload.userId}`, {
+      await axiosInstance.put(`/api/user/${payload.userId}`, {
         usuario: name,
       })
       navigate('/perfil')

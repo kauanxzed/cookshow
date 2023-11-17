@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
-import { GrFacebook } from 'react-icons/gr'
+import { useState } from 'react'
 import Logo from '../../assets/images/background.png'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -25,7 +23,7 @@ function LoginForm() {
     }
     const url = 'https://cook-show-056b96634c68.herokuapp.com/api/auth'
 
-    axios
+    axiosInstance
       .post(url, {
         email: email,
         senha: password,

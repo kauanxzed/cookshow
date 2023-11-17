@@ -21,6 +21,9 @@
       "@cook-show/hooks": [
         "libs/hooks/src/index.ts"
       ],
+      "@cook-show/shared/axios": [
+        "libs/shared/axios/src/index.ts"
+      ],
       "@cook-show/shared/types": [
         "libs/shared/types/src/index.ts"
       ],

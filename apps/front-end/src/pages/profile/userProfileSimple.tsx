@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import { UserPayloadType } from './types/recipe.type'
 
 type UserDataType = {
@@ -7,16 +7,6 @@ type UserDataType = {
   profileImage: string
   fotoId: string
 }
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstance = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
 
 const getUserPayload = async () => {
   try {

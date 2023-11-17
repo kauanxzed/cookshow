@@ -3,7 +3,7 @@ import timer from '../../assets/images/relogio.png'
 import PersonsLiked from '../../components/ui/personsLiked'
 import RecipeModal from '../recipe/recipe'
 import { RecipeType } from '../profile/types/recipe.type'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import Like from '../../components/ui/like/like'
 
 interface RecipeProps {
@@ -12,7 +12,7 @@ interface RecipeProps {
 
 async function getLikes(recipeId: string) {
   try {
-    const res = await axios.get(
+    const res = await axiosInstance.get(
       '/api/recipe/' + recipeId + '/favoritesQuantity',
     )
     return res.data as number
@@ -23,7 +23,7 @@ async function getLikes(recipeId: string) {
 
 async function getRating(recipeId: string) {
   try {
-    const res = await axios.get('/api/recipe/' + recipeId + '/rating')
+    const res = await axiosInstance.get('/api/recipe/' + recipeId + '/rating')
     return res.data as number
   } catch (error) {
     alert(error)

@@ -1,19 +1,9 @@
 import { useState, ChangeEvent, useEffect, FormEvent } from 'react'
 import { Modal } from 'flowbite-react'
 import TextareaAutosize from 'react-textarea-autosize'
-import axios, { AxiosError } from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
+import { AxiosError } from 'axios'
 import { typeIngredient } from '../../types/typeIngredient'
-
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstance = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
 
 interface propsModal {
   show: boolean | undefined
@@ -215,7 +205,7 @@ const RegisterRecipeModal: React.FC<propsModal> = ({
 
   const loadIngredients = async () => {
     try {
-      await axios.get('/api/ingredient').then((Response) => {
+      await axiosInstance.get('/api/ingredient').then((Response) => {
         setIngredients(Response.data)
       })
     } catch (error) {
