@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 import { GrFacebook } from 'react-icons/gr'
 import Logo from '../../assets/images/background.png'
-import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -94,11 +93,11 @@ function LoginForm() {
             >
               Login
             </button>
-            <Link to="/register">
+            <a href="/register">
               <button className="mt-5 w-36 rounded-lg bg-gray-800 p-2 text-white hover:bg-gray-700">
                 Cadastre-se
               </button>
-            </Link>
+            </a>
           </div>
           <div className="mb-4 flex w-80 justify-between space-x-4">
             <div className="flex items-center">
