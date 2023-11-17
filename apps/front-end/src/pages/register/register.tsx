@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import Imagem from '../../assets/images/background.png'
 
 function LoginForm() {
@@ -54,7 +54,7 @@ function LoginForm() {
     }
     const url = '/api/user'
 
-    axios
+    axiosInstance
       .post(
         url,
         {

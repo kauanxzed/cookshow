@@ -1,4 +1,5 @@
-import axios, { AxiosError } from 'axios'
+import { AxiosError } from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import React, { useEffect, useState } from 'react'
 import { useGetUserPayload } from '@cook-show/hooks'
 
@@ -6,17 +7,6 @@ interface likeProps {
   id_receita: string
   editedFav?: (value: boolean) => void
 }
-
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstace = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
 
 const Like: React.FC<likeProps> = ({ id_receita, editedFav }) => {
   const [stateFav, setStateFav] = useState<boolean>(false)
@@ -26,7 +16,7 @@ const Like: React.FC<likeProps> = ({ id_receita, editedFav }) => {
   useEffect(() => {
     if (!payload) return
     const getInteraction = async (id_receita: string, id_usuario: string) => {
-      const res = await axiosInstace.get(
+      const res = await axiosInstance.get(
         '/api/recipe/' + id_receita + '/user/' + id_usuario + '/interaction',
       )
       setInteraction(res.data ? true : false)
@@ -39,19 +29,20 @@ const Like: React.FC<likeProps> = ({ id_receita, editedFav }) => {
     try {
       if (!payload) throw new AxiosError('Usuario nao logado')
       if (interaction) {
-        await axiosInstace.put(
+        await axiosInstance.put(
           '/api/recipe/' + id_receita + '/user/' + payload.userId + '/rating',
           {
             favorito: !stateFav,
           },
         )
       } else {
-        await axiosInstace.post('/api/recipe/' + id_receita + '/rating', {
+        await axiosInstance.post('/api/recipe/' + id_receita + '/rating', {
+          id_receita,
           id_usuario: payload.userId,
           favorito: !stateFav,
         })
       }
-      if(editedFav) editedFav(true)
+      if (editedFav) editedFav(true)
       setStateFav(!stateFav)
     } catch (error) {
       alert(error)

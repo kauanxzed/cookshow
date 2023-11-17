@@ -1,10 +1,7 @@
-import React, { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
-import { GrFacebook } from 'react-icons/gr'
+import { useState } from 'react'
 import Logo from '../../assets/images/background.png'
-import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 
 function LoginForm() {
   const [email, setEmail] = useState('')
@@ -24,9 +21,9 @@ function LoginForm() {
       alert('Por favor, insira um email válido.')
       return
     }
-    const url = '/api/auth'
+    const url = 'https://cook-show-056b96634c68.herokuapp.com/api/auth'
 
-    axios
+    axiosInstance
       .post(url, {
         email: email,
         senha: password,
@@ -94,11 +91,11 @@ function LoginForm() {
             >
               Login
             </button>
-            <Link to="/register">
+            <a href="/register">
               <button className="mt-5 w-36 rounded-lg bg-gray-800 p-2 text-white hover:bg-gray-700">
                 Cadastre-se
               </button>
-            </Link>
+            </a>
           </div>
           <div className="mb-4 flex w-80 justify-between space-x-4">
             <div className="flex items-center">

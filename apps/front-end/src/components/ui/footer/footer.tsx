@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 function Footer() {
   return (
     <footer className="fixed bottom-0 w-full bg-white p-5 text-black">
@@ -10,15 +8,15 @@ function Footer() {
         </div>
         <div className="mb-2">Cozinhe do seu jeito!</div>
         <div className="whitespace-nowrap">
-          <Link to="/quem-somos">
+          <a href="/quem-somos">
             <a
               href="!#"
               className="mx-1 text-sm hover:text-orange-500 sm:mx-2 sm:text-base"
             >
               Quem Somos
             </a>
-          </Link>
-          <Link to="/termos">
+          </a>
+          <a href="/termos">
             {' '}
             <a
               href="!#"
@@ -26,8 +24,8 @@ function Footer() {
             >
               Termos
             </a>
-          </Link>
-          <Link to="/privacidade">
+          </a>
+          <a href="/privacidade">
             {' '}
             <a
               href="!#"
@@ -35,8 +33,8 @@ function Footer() {
             >
               Privacidade
             </a>
-          </Link>
-          <Link to="/fale-conosco">
+          </a>
+          <a href="/fale-conosco">
             {' '}
             <a
               href="!#"
@@ -44,7 +42,7 @@ function Footer() {
             >
               Fale Conosco
             </a>
-          </Link>
+          </a>
         </div>
       </div>
     </footer>

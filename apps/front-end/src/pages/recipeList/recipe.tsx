@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import timer from '../../assets/images/relogio.png'
 import PersonsLiked from '../../components/ui/personsLiked'
 import RecipeModal from '../recipe/recipe'
-import { Link } from 'react-router-dom'
 import { RecipeType } from '../profile/types/recipe.type'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import Like from '../../components/ui/like/like'
 
 interface RecipeProps {
@@ -13,7 +12,7 @@ interface RecipeProps {
 
 async function getLikes(recipeId: string) {
   try {
-    const res = await axios.get(
+    const res = await axiosInstance.get(
       '/api/recipe/' + recipeId + '/favoritesQuantity',
     )
     return res.data as number
@@ -24,7 +23,7 @@ async function getLikes(recipeId: string) {
 
 async function getRating(recipeId: string) {
   try {
-    const res = await axios.get('/api/recipe/' + recipeId + '/rating')
+    const res = await axiosInstance.get('/api/recipe/' + recipeId + '/rating')
     return res.data as number
   } catch (error) {
     alert(error)
@@ -92,11 +91,11 @@ const Recipe: React.FC<RecipeProps> = (props) => {
       </div>
       <div className="ml-1 flex h-full w-full flex-col">
         <div className="flex justify-between">
-          <Link to={recipeURL}>
+          <a href={recipeURL}>
             <h1 className="font-medium text-[#ff8c00]">
               {transformCase(props.recipe.titulo)}
             </h1>
-          </Link>
+          </a>
           <div className="h-6 w-6 rounded-full bg-[#ff8c00] md:hidden">
             <span className="font-sm flex h-full w-full items-center justify-center text-white ">
               {Number.isInteger(rating) ? `${rating}.0` : rating}

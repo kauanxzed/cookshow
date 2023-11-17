@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { RecipeType } from './types/recipe.type'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import DeletModal from '../deleteModal/deleteModal'
 import EditModal from '../editModal/editModal'
 import RecipeModal from '../recipe/recipe'
@@ -13,7 +13,9 @@ interface Recipe {
 
 async function getLikes(recipeId: string) {
   try {
-    return await axios.get('/api/recipe/' + recipeId + '/favoritesQuantity')
+    return await axiosInstance.get(
+      '/api/recipe/' + recipeId + '/favoritesQuantity',
+    )
   } catch (error) {
     alert(error)
   }
@@ -21,7 +23,7 @@ async function getLikes(recipeId: string) {
 
 async function getRating(recipeId: string) {
   try {
-    return await axios.get('/api/recipe/' + recipeId + '/rating')
+    return await axiosInstance.get('/api/recipe/' + recipeId + '/rating')
   } catch (error) {
     alert(error)
   }
@@ -29,7 +31,9 @@ async function getRating(recipeId: string) {
 
 async function getComments(recipeId: string) {
   try {
-    return await axios.get('/api/recipe/' + recipeId + '/commentsQuantity')
+    return await axiosInstance.get(
+      '/api/recipe/' + recipeId + '/commentsQuantity',
+    )
   } catch (error) {
     alert(error)
   }
@@ -39,8 +43,12 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
   const [likes, setLikes] = useState<number>(0)
   const [rating, setRating] = useState<number>(0)
   const [comments, setComments] = useState<number>(0)
-  const [openModalEdit, setOpenModalEdit] = useState<undefined | boolean>(undefined)
-  const [openModalDelete, setOpenModalDelete] = useState<undefined | boolean>(undefined)
+  const [openModalEdit, setOpenModalEdit] = useState<undefined | boolean>(
+    undefined,
+  )
+  const [openModalDelete, setOpenModalDelete] = useState<undefined | boolean>(
+    undefined,
+  )
   const [openModal, setOpenModal] = useState<undefined | boolean>(undefined)
 
   useEffect(() => {
@@ -80,9 +88,14 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
             handleSetOpenModal(true)
           }}
         />
-          <h2 className="mt-2 text-xl font-bold text-orange-600" onClick={() => {handleSetOpenModal(true)}}>
-            {recipe.titulo}
-          </h2>
+        <h2
+          className="mt-2 text-xl font-bold text-orange-600"
+          onClick={() => {
+            handleSetOpenModal(true)
+          }}
+        >
+          {recipe.titulo}
+        </h2>
         <p className="uppercase text-gray-400">{recipe.subtitulo}</p>
         <p className="mb-2 flex items-center">
           {' '}
@@ -91,7 +104,7 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
         </p>
         <p className="text-gray-400">{recipe.descricao}</p>
         <div className="mt-2 flex justify-between">
-          <div className='flex space-x-2'>
+          <div className="flex space-x-2">
             {' '}
             <span className="flex items-center">
               <i className="far fa-heart mr-1 text-red-500"></i>{' '}
@@ -108,9 +121,21 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
           </div>
           {myRecipe === true && (
             <div>
-              <i className="fa-solid fa-pen-to-square cursor-pointer" style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalEdit(true)}}></i>
-              <i className="fa-solid fa-trash-can cursor-pointer ml-2"  style={{color: "#ff8c00"}} onClick={() => {handleSetOpenModalDelete(true)}}></i>
-           </div>
+              <i
+                className="fa-solid fa-pen-to-square cursor-pointer"
+                style={{ color: '#ff8c00' }}
+                onClick={() => {
+                  handleSetOpenModalEdit(true)
+                }}
+              ></i>
+              <i
+                className="fa-solid fa-trash-can ml-2 cursor-pointer"
+                style={{ color: '#ff8c00' }}
+                onClick={() => {
+                  handleSetOpenModalDelete(true)
+                }}
+              ></i>
+            </div>
           )}
         </div>
       </div>
@@ -119,7 +144,7 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
           show={openModal}
           setOpenModal={handleSetOpenModal}
           id={recipe.id}
-          editedFav= {edited}
+          editedFav={edited}
         />
       )}
       {openModalDelete === true && (
@@ -127,17 +152,18 @@ const RecipeCard: React.FC<Recipe> = ({ recipe, edited, myRecipe }) => {
           show={openModalDelete}
           setOpenModalDelete={handleSetOpenModalDelete}
           id={recipe.id}
-          editedDelete= {edited}
-        />)}
+          editedDelete={edited}
+        />
+      )}
       {openModalEdit === true && (
         <EditModal
           show={openModalEdit}
           setOpenModalEdit={handleSetOpenModalEdit}
           id={recipe.id}
-          edited= {edited}
+          edited={edited}
         />
       )}
-  </>
+    </>
   )
 }
 

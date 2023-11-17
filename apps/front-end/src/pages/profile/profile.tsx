@@ -1,25 +1,14 @@
 import { useEffect, useState } from 'react'
 import RecipeCard from './recipeCard'
 import UserProfile from './userProfile'
-import axios from 'axios'
+import { axiosInstance } from '@cook-show/shared/axios'
 import { RecipeType, UserPayloadType } from './types/recipe.type'
 import { Backdrop, CircularProgress } from '@mui/material'
 import RegisterRecipeModal from '../registerRecipeModal/registerRecipeModal'
 
-const token =
-  localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken')
-
-const axiosInstace = axios.create({
-  timeout: 5000,
-  headers: {
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
-})
-
 async function getRecipesCreatedByUser(userId: string) {
   try {
-    return await axiosInstace.get('/api/recipe/user/' + userId)
+    return await axiosInstance.get('/api/recipe/user/' + userId)
   } catch (error) {
     alert(error)
   }
@@ -27,7 +16,7 @@ async function getRecipesCreatedByUser(userId: string) {
 
 async function getFavoritesRecipesUser(userId: string) {
   try {
-    return await axiosInstace.get('/api/recipe/user/' + userId + '/favorites')
+    return await axiosInstance.get('/api/recipe/user/' + userId + '/favorites')
   } catch (error) {
     alert(error)
   }
@@ -35,7 +24,7 @@ async function getFavoritesRecipesUser(userId: string) {
 
 async function getPayloadUser() {
   try {
-    return await axiosInstace.get('/api/auth')
+    return await axiosInstance.get('/api/auth')
   } catch (error) {
     alert(error)
   }
@@ -86,7 +75,7 @@ function ProfilePage() {
   return (
     <div className="relative flex h-[90vh] flex-col md:flex-row">
       <div className="max-h-[40vh] w-full md:max-h-full md:w-1/4 lg:w-1/3 xl:w-1/4 ">
-        <UserProfile/>
+        <UserProfile />
       </div>
       <div className="relative w-full bg-white p-4 md:w-3/4 lg:w-2/3 xl:w-3/4">
         <div className="mx-auto mb-4 flex max-w-md justify-between md:max-w-lg lg:max-w-2xl">
