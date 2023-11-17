@@ -59,17 +59,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
     try {
       const response = await axiosInstance.get('/api/auth')
       const userData = response.data
-
-      console.log('Resposta da API /api/auth:', response)
-      console.log('Dados do usuário na resposta:', userData)
-
       if (userData && 'userId' in userData && 'username' in userData) {
-        console.log(
-          'Dados do usuário completos:',
-          userData.userId,
-          userData.username,
-        )
-
         return {
           userId: userData.userId,
           username: userData.username,
@@ -99,9 +89,7 @@ const Comments: React.FC<CommentsProps> = (props) => {
     }
 
     try {
-      console.log('Antes de obter o payload do usuário')
       const userPayload = await getPayloadUser()
-      console.log('Depois de obter o payload do usuário', userPayload)
       const checkIfRecipeExists = async (
         recipeId: string,
       ): Promise<boolean> => {
@@ -121,11 +109,6 @@ const Comments: React.FC<CommentsProps> = (props) => {
           // Lógica adicional, como exibir uma mensagem ao usuário
           return
         }
-        console.log('Dados enviados para o servidor:', {
-          id_usuario: [userPayload.userId],
-          id_receita: [props.recipeId],
-          mensagem: [inputValue],
-        })
         const response = await axiosInstance.post(
           `/api/recipe/${props.recipeId}/comment`,
           {
@@ -134,8 +117,6 @@ const Comments: React.FC<CommentsProps> = (props) => {
             mensagem: inputValue,
           },
         )
-        console.log('Resposta da API de comentário:', response)
-
         window.alert(
           `Comentário de ${userPayload?.username || 'Usuário'}: ${inputValue}`,
         )

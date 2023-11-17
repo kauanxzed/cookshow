@@ -78,7 +78,6 @@ export class UserController {
 
   @Post('/deleteFoto')
   async deleteFoto(@Body() foto: { userId: string; fotoId: string }) {
-    console.log(foto.fotoId)
     return await this.userService.deleteFoto(foto.userId, foto.fotoId)
   }
 
