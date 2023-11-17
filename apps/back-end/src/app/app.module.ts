@@ -38,9 +38,7 @@ import { RatingEntity } from '../recipe/entities/recipe-rating.entity'
       logging: true,
       ssl: {
         rejectUnauthorized: false,
-        ca: readFileSync(
-          'apps/back-end/src/assets/ca-certificate.crt',
-        ).toString(),
+        ca: process.env.CRT,
       },
     }),
   ],
