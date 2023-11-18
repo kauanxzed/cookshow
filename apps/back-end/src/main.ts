@@ -7,6 +7,7 @@ import { Logger, ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import { AppModule } from './app/app.module'
+import { json } from 'body-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -25,6 +26,8 @@ async function bootstrap() {
       preflightContinue: false,
     },
   })
+
+  app.use(json({ limit: '5mb' }))
 
   const config = new DocumentBuilder()
     .setTitle('CookShow')
