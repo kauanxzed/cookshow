@@ -21,11 +21,11 @@ import { RatingEntity } from '../recipe/entities/recipe-rating.entity'
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'db-postgresql-nyc1-36951-do-user-14647314-0.b.db.ondigitalocean.com',
-      port: 25060,
-      database: 'defaultdb',
-      username: 'doadmin',
-      password: 'AVNS_u7JP2b6pyh878E8w61I',
+      host: process.ENV.DB_HOST,
+      port: process.ENV.DB_PORT,
+      database: process.ENV.DB_NAME,
+      username: process.ENV.DB_USER,
+      password: process.ENV.DB_PASSWORD,
       entities: [
         UserEntity,
         RecipeEntity,
